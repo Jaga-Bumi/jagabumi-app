@@ -12,4 +12,8 @@ class Organization extends Model
     public function quests(){
         return $this->hasMany(Quest::class);
     }
+
+    public function articles(){
+        return $this->hasMany(Article::class);
+    }
 }

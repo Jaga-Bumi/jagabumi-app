@@ -12,4 +12,12 @@ class Quest extends Model
     public function organizations(){
         return $this->belongsTo(Organization::class);
     }
+
+    public function members(){
+        return $this->belongsToMany(Member::class);
+    }
+
+    public function prizes(){
+        return $this->hasMany(Prize::class);
+    }
 }
