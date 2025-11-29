@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('desc');
             $table->date('start');
             $table->date('end');
-            $table->foreignId('org_id')->references('id')->on('organization')->cascadeOnDelete();
+            $table->foreignId('org_id')->references('id')->on('organizations')->cascadeOnDelete();
             $table->timestamps();
         });
     }
