@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Organization extends Model
+class Quest extends Model
 {
     //
     protected $guarded = [];
 
-    public function quests(){
-        return $this->hasMany(Quest::class);
+    public function organizations(){
+        return $this->belongsTo(Organization::class);
     }
 }
