@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('verifier_id')->nullable()->unique();
+            $table->string('wallet_address', 42)->nullable()->unique();
+            $table->string('profile_pic_url')->nullable();
+            $table->string('auth_provider')->default('google');
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
