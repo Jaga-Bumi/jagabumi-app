@@ -35,4 +35,27 @@ return [
         ],
     ],
 
+    'web3auth' => [
+        'client_id' => 'BFcEYcKaDaVLDOQXYPk1rpJHxJkxZa0oZsCf22YIoARnC-85o8hMZE3Kboy5V8vkcyMOws3STJQm5HfG01Da20Q',
+        'network' => 'sapphire_devnet',
+        
+        'ui' => [
+            'app_name' => 'JagaBumi',
+            'mode' => 'light',
+            'login_methods_order' => ['google'],
+            'default_language' => 'en',
+            'logo_light' => 'https://web3auth.io/images/w3a-L-Favicon-1.svg',
+        ],
+    ],
+
+    'zksync' => [
+        'chain_namespace' => 'eip155',
+        'chain_id' => '0x12c',
+        'rpc_target' => 'https://sepolia.era.zksync.dev',
+        'display_name' => 'ZKsync Sepolia Testnet',
+        'block_explorer' => 'https://sepolia.explorer.zksync.io/',
+        'ticker' => 'ETH',
+        'ticker_name' => 'Ethereum',
+    ],
+
 ];
