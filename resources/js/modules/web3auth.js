@@ -1,4 +1,4 @@
-import { LibraryLoader, getMetaContent, fetchJSON } from "../utils/helpers.js";
+import { LibraryLoader, getMetaContent } from "../utils/helpers.js";
 
 // External library CDN URLs
 const EXTERNAL_LIBS = [
@@ -18,39 +18,32 @@ export class Web3AuthService {
         // Load external libraries
         await this.loader.loadAll();
 
-        // Fetch configuration from backend
-        this.config = await this.fetchConfig();
+        // Get configuration from meta tags
+        this.config = this.getConfig();
 
         // Initialize Web3Auth
         await this.initializeWeb3Auth();
     }
 
-    async fetchConfig() {
-        const configRoute = getMetaContent("config-route");
-        if (!configRoute) {
-            throw new Error("Configuration route not found");
-        }
-
-        const config = await fetchJSON(configRoute);
-
+    getConfig() {
         return {
-            clientId: config.clientId,
-            network: config.network,
+            clientId: getMetaContent("web3auth-client-id"),
+            network: getMetaContent("web3auth-network") || "sapphire_devnet",
             chain: {
-                chainNamespace: config.chain.chain_namespace,
-                chainId: config.chain.chain_id,
-                rpcTarget: config.chain.rpc_target,
-                displayName: config.chain.display_name,
-                blockExplorer: config.chain.block_explorer,
-                ticker: config.chain.ticker,
-                tickerName: config.chain.ticker_name,
+                chainNamespace: "eip155",
+                chainId: "0x12C",
+                rpcTarget: "https://sepolia.era.zksync.dev",
+                displayName: "ZKsync Sepolia Testnet",
+                blockExplorer: "https://sepolia.explorer.zksync.io",
+                ticker: "ETH",
+                tickerName: "Ethereum",
             },
             ui: {
-                appName: config.ui.app_name,
-                mode: config.ui.mode,
-                loginMethodsOrder: config.ui.login_methods_order,
-                defaultLanguage: config.ui.default_language,
-                logoLight: config.ui.logo_light,
+                appName: "JagaBumi",
+                mode: "light",
+                loginMethodsOrder: ["google", "github"],
+                defaultLanguage: "en",
+                logoLight: "https://web3auth.io/images/web3authlog.png",
             },
         };
     }

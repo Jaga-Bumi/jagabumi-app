@@ -33,7 +33,8 @@
 
     @push('scripts')
         <meta name="auth-route" content="{{ route('auth.web3') }}">
-        <meta name="config-route" content="{{ route('web3.config') }}">
+        <meta name="web3auth-client-id" content="{{ config('services.web3auth.client_id') }}">
+        <meta name="web3auth-network" content="{{ config('services.web3auth.network') }}">
         @vite(['resources/js/auth.js'])
     @endpush
 </x-layouts.app>
