@@ -9,10 +9,11 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    @stack('styles')
+    @stack('styles') {{-- To push additional styles --}}
 </head>
 <body class="bg-gray-50 min-h-screen font-sans antialiased">
     
+    {{-- Header --}}
     @if(isset($showHeader) && $showHeader)
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -21,10 +22,14 @@
         </header>
     @endif
 
+
+    {{-- Main Content --}}
     <main class="{{ $mainClass ?? 'py-10' }}">
         {{ $slot }}
     </main>
 
+
+    {{-- Footer --}}
     @if(isset($showFooter) && $showFooter)
         <footer class="mt-8 text-center py-6">
             <p class="text-xs text-slate-500">
@@ -35,6 +40,6 @@
         </footer>
     @endif
     
-    @stack('scripts')
+    @stack('scripts') {{-- To push scripts --}}
 </body>
 </html>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\Web3LoginRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,29 +17,12 @@ class AuthController extends Controller
         return view('pages.auth.login');
     }
 
-    // Get Web3Auth configuration
-    public function getWeb3Config(): JsonResponse
-    {
-        return response()->json([
-            'clientId' => config('services.web3auth.client_id'),
-            'network' => config('services.web3auth.network'),
-            'chain' => config('services.zksync'),
-            'ui' => config('services.web3auth.ui'),
-        ]);
-    }
-
     // Handle Web3Auth login/register
-    public function web3Login(Request $request): JsonResponse
+    public function web3Login(Web3LoginRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'wallet_address' => 'required|string',
-            'user_info' => 'required|array',
-            'user_info.email' => 'required|email',
-        ]);
-
         $user = $this->findOrCreateUser(
-            $validated['user_info'],
-            $validated['wallet_address']
+            $request->user_info,
+            $request->wallet_address
         );
 
         Auth::login($user, true);
