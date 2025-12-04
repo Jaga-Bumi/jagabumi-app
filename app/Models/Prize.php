@@ -13,7 +13,7 @@ class Prize extends Model
         return $this->belongsTo(Quest::class);
     }
 
-    public function members(){
-        return $this->belongsToMany(Member::class);
+    public function users(){
+        return $this->belongsToMany(User::class);
     }
 }

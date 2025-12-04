@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prize_member', function (Blueprint $table) {
+        Schema::create('prize_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('prize_id')->references('id')->on('prizes')->cascadeOnDelete();
-            $table->foreignId('member_id')->references('id')->on('members')->cascadeOnDelete();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

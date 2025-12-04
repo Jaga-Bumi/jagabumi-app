@@ -13,7 +13,7 @@ class Article extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    public function members(){
-        return $this->belongsTo(Member::class);
+    public function users(){
+        return $this->belongsTo(User::class);
     }
 }

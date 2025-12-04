@@ -13,8 +13,8 @@ class Quest extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    public function members(){
-        return $this->belongsToMany(Member::class);
+    public function users(){
+        return $this->belongsToMany(User::class);
     }
 
     public function prizes(){
