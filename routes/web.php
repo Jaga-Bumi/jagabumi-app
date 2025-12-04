@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\PrizeController;
 use App\Http\Controllers\QuestController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -64,5 +65,10 @@ Route::prefix('prizes')->name('prizes.')->group(function(){
     Route::delete('destroy/{id}', [PrizeController::class, 'destroy'])->name('destroy');
 });
 
-
+Route::prefix('users')->name('users.')->group(function(){
+    Route::get('', [UserController::class, 'readAll'])->name('all');
+    Route::get('{id}', [UserController::class, 'readOne'])->name('one');
+    Route::put('update/{id}', [UserController::class, 'update'])->name('update');
+    Route::delete('destroy/{id}', [UserController::class, 'destroy'])->name('destroy');
+});
 
