@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QuestController;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,14 @@ Route::prefix('quests')->name('quests.')->group(function(){
     Route::post('create', [QuestController::class, 'create'])->name('create');
     Route::put('update/{id}', [QuestController::class, 'update'])->name('update');
     Route::delete('destroy/{id}', [QuestController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('articles')->name('articles.')->group(function(){
+    Route::get('', [ArticleController::class, 'getAll'])->name('all');
+    Route::get('{id}', [ArticleController::class, 'getOne'])->name('one');
+    Route::post('create', [ArticleController::class, 'create'])->name('create');
+    Route::put('update/{id}', [ArticleController::class, 'update'])->name('update');
+    Route::delete('destroy/{id}', [ArticleController::class, 'destroy'])->name('destroy');
 });
 
 
