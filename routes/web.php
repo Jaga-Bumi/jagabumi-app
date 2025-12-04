@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\QuestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +48,13 @@ Route::prefix('articles')->name('articles.')->group(function(){
     Route::delete('destroy/{id}', [ArticleController::class, 'destroy'])->name('destroy');
 });
 
-
+Route::prefix('organization')->name('org.')->group(function(){
+    Route::get('', [OrganizationController::class, 'getAll'])->name('all');
+    Route::get('{id}', [OrganizationController::class, 'getOne'])->name('one');
+    Route::post('create', [OrganizationController::class, 'create'])->name('create');
+    Route::put('update/{id}', [OrganizationController::class, 'update'])->name('update');
+    Route::delete('destroy/{id}', [OrganizationController::class, 'destroy'])->name('destroy');
+});
 
 
 
