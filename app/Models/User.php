@@ -25,6 +25,7 @@ class User extends Authenticatable
         'wallet_address', 
         'profile_pic_url',
         'auth_provider',
+        'role',
     ];
 
     /**
@@ -60,5 +61,9 @@ class User extends Authenticatable
 
     public function prizes(){
         return $this->belongsToMany(Prize::class);
+    }
+
+    public function organizations(){
+        return $this->belongsTo(Organization::class);
     }
 }
