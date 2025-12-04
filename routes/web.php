@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QuestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,23 @@ Route::post('auth/web3', [AuthController::class, 'web3Login'])->name('auth.web3'
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+Route::get('home', function(){
+    return 'home';
+});
+
+Route::prefix('quests')->name('quests.')->group(function(){
+    Route::get('', [QuestController::class, 'getAll'])->name('all');
+    Route::get('{id}', [QuestController::class, 'getOne'])->name('one');
+    Route::post('create', [QuestController::class, 'create'])->name('create');
+    Route::put('update/{id}', [QuestController::class, 'update'])->name('update');
+    Route::delete('destroy/{id}', [QuestController::class, 'destroy'])->name('destroy');
+});
+
+
+
+
+
+
+
