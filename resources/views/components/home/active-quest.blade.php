@@ -107,7 +107,7 @@ $difficultyColors = [
                                 <span class="text-xs font-medium text-accent bg-accent/10 px-2 py-1 rounded-lg">
                                     {{ $quest['reward'] }}
                                 </span>
-                                <a href="{{ route('quests.show', $quest['id']) }}">
+                                <a href="{{ route('quests.one', $quest['id']) }}">
                                     <button class="btn-hero text-sm px-4 py-2">
                                         Ikuti
                                     </button>
@@ -120,7 +120,7 @@ $difficultyColors = [
         </div>
 
         <div class="text-center mt-10">
-            <a href="{{ route('quests.index') }}">
+            <a href="{{ route('quests.all') }}">
                 <button class="btn-glass px-6 py-3 group inline-flex items-center gap-2">
                     Lihat Semua Quest
                     <x-heroicon-o-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />

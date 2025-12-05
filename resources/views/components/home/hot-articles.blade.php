@@ -47,7 +47,7 @@ $categoryColors = [
                     Baca & Pelajari
                 </h2>
             </div>
-            <a href="{{ route('articles.index') }}">
+            <a href="{{ route('articles.all') }}">
                 <button class="btn-glass px-4 py-2 group inline-flex items-center gap-2 text-sm">
                     Semua Artikel
                     <x-heroicon-o-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -58,7 +58,7 @@ $categoryColors = [
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($articles as $i => $article)
                 <div class="animate-fade-up" style="animation-delay: {{ $i * 0.1 }}s;">
-                    <a href="{{ route('articles.show', $article['id']) }}">
+                    <a href="{{ route('articles.one', $article['id']) }}">
                         <div class="glass-card overflow-hidden group h-full">
                             <div class="relative overflow-hidden">
                                 <img

@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('quest_user', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('profile_pic');
-            $table->string('email')->unique();
-            $table->string('phone_number')->unique();
+            $table->foreignId('quest_id')->references('id')->on('quests')->cascadeOnDelete();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('quest_member');
     }
 };

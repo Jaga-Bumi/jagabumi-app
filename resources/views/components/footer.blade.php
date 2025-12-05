@@ -40,8 +40,8 @@
             <div>
                 <h4 class="font-semibold mb-4">Platform</h4>
                 <ul class="space-y-3 text-sm text-primary-foreground/70">
-                    <li><a href="{{ route('quests.index') }}" class="hover:text-emerald-light transition-colors">Quest</a></li>
-                    <li><a href="{{ route('articles.index') }}" class="hover:text-emerald-light transition-colors">Artikel</a></li>
+                    <li><a href="{{ route('quests.all') }}" class="hover:text-emerald-light transition-colors">Quest</a></li>
+                    <li><a href="{{ route('articles.all') }}" class="hover:text-emerald-light transition-colors">Artikel</a></li>
                     <li><a href="{{ route('leaderboard') }}" class="hover:text-emerald-light transition-colors">Leaderboard</a></li>
                     <li><a href="#" class="hover:text-emerald-light transition-colors">Tentang Kami</a></li>
                 </ul>

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('profile_pic_url')->nullable();
             $table->string('auth_provider')->default('google');
             $table->string('password')->nullable();
+            $table->enum('role', ['user', 'admin'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

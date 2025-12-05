@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quest_member', function (Blueprint $table) {
+        Schema::create('user_organizations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quest_id')->references('id')->on('quests')->cascadeOnDelete();
-            $table->foreignId('member_id')->references('id')->on('members')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->references('id')->on('users')->nullOnDelete();
+            $table->foreignId('organization_id')->nullable()->references('id')->on('organizations')->nullOnDelete();
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quest_member');
+        Schema::dropIfExists('user_organizations');
     }
 };

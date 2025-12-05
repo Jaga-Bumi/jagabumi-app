@@ -43,7 +43,7 @@
 
                 <!-- CTA Buttons -->
                 <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start" style="animation: fade-up 0.8s ease-out 0.4s both;">
-                    <a href="{{ route('quests.index') }}" class="group relative overflow-hidden px-6 py-3 bg-gradient-to-r from-primary to-emerald-light rounded-xl font-semibold text-white text-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <a href="{{ route('quests.all') }}" class="group relative overflow-hidden px-6 py-3 bg-gradient-to-r from-primary to-emerald-light rounded-xl font-semibold text-white text-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                         <span class="relative z-10 flex items-center justify-center gap-2">
                             <x-heroicon-o-bolt class="w-4 h-4" />
                             Mulai Quest Sekarang

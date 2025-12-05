@@ -42,7 +42,7 @@ $quest = [
     <div class="absolute inset-0 flex items-end">
         <div class="container mx-auto px-4 pb-8">
             <div class="max-w-3xl animate-fade-in">
-                <a href="{{ route('quests.index') }}" class="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground mb-4">
+                <a href="{{ route('quests.all') }}" class="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground mb-4">
                     <x-heroicon-o-arrow-left class="w-4 h-4" />
                     Kembali ke Quest
                 </a>

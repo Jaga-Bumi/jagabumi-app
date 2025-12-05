@@ -16,8 +16,8 @@
                 @php
                     $navLinks = [
                         ['href' => route('home'), 'label' => 'Beranda'],
-                        ['href' => route('quests.index'), 'label' => 'Quest'],
-                        ['href' => route('articles.index'), 'label' => 'Artikel'],
+                        ['href' => route('quests.all'), 'label' => 'Quest'],
+                        ['href' => route('articles.all'), 'label' => 'Artikel'],
                         ['href' => route('leaderboard'), 'label' => 'Leaderboard'],
                     ];
                 @endphp

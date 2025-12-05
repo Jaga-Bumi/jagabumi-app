@@ -123,7 +123,7 @@ $difficultyColors = [
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($quests as $i => $quest)
                 <div class="animate-fade-up" style="animation-delay: {{ $i * 0.05 }}s;">
-                    <a href="{{ route('quests.show', $quest['id']) }}">
+                    <a href="{{ route('quests.one', $quest['id']) }}">
                         <div class="card-quest group h-full">
                             <div class="relative">
                                 <img
