@@ -16,4 +16,8 @@ class Organization extends Model
     public function articles(){
         return $this->hasMany(Article::class);
     }
+
+    public function users(){
+        return $this->hasMany(User::class);
+    }
 }
