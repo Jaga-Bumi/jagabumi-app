@@ -11,15 +11,19 @@ class QuestController extends Controller
     // Read all / one
     public function readAll(){
 
-        $quests = Quest::all();
+        // $quests = Quest::all();
 
-        dd($quests);
+        // dd($quests);
+        
+        return view('pages.quests.index');
     }
 
     public function readOne($id){
-        $quest = Quest::find($id);
+        // $quest = Quest::find($id);
 
-        dd($quest);
+        // dd($quest);
+
+        return view('pages.quests.show', compact('id'));
     }
 
     // Create quest

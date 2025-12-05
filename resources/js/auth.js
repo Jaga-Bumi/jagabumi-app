@@ -6,12 +6,26 @@ import {
     fetchJSON,
 } from "./utils/helpers.js";
 
+// Manages user authentication flow using Web3Auth
 class AuthManager {
     constructor() {
-        this.web3Service = new Web3AuthService();
-        this.apiRoute = getMetaContent("auth-route");
-        this.csrfToken = getMetaContent("csrf-token");
+        this.#initializeServices();
+        this.#initializeConfig();
+        this.#initializeUIManager();
+    }
 
+    #initializeServices() {
+        this.web3Service = new Web3AuthService();
+    }
+
+    #initializeConfig() {
+        this.config = {
+            apiRoute: getMetaContent("auth-route"),
+            csrfToken: getMetaContent("csrf-token"),
+        };
+    }
+
+    #initializeUIManager() {
         this.uiManager = new UIStateManager({
             authBtn: getElement("auth-btn"),
             buttonContainer: getElement("auth-buttons"),
@@ -24,14 +38,14 @@ class AuthManager {
         try {
             this.uiManager.setInitState();
             await this.web3Service.initialize();
-            this.attachEventListeners();
+            this.#attachEventListeners();
             this.uiManager.setReadyState();
         } catch (error) {
-            this.uiManager.showError("Failed to load. Please refresh.", 0);
+            this.#handleInitializationError(error);
         }
     }
 
-    attachEventListeners() {
+    #attachEventListeners() {
         const authBtn = getElement("auth-btn");
         authBtn?.addEventListener("click", () => this.handleAuth());
     }
@@ -40,51 +54,79 @@ class AuthManager {
         this.uiManager.setLoadingState();
 
         try {
-            await this.web3Service.ensureFreshSession();
-            await this.web3Service.connect();
-
-            const authData = await this.fetchAuthenticationData();
-            await this.authenticateWithBackend(authData);
+            await this.#performAuthentication();
         } catch (error) {
-            this.handleAuthError(error);
+            this.#handleAuthError(error);
         }
     }
 
-    async fetchAuthenticationData() {
-        const userInfo = await this.web3Service.getUserInfo();
-        const walletAddress = await this.web3Service.getWalletAddress();
+    async #performAuthentication() {
+        await this.web3Service.ensureFreshSession();
+        await this.web3Service.connect();
+
+        const authData = await this.#fetchAuthenticationData();
+        await this.#authenticateWithBackend(authData);
+    }
+
+    async #fetchAuthenticationData() {
+        const [userInfo, walletAddress] = await Promise.all([
+            this.web3Service.getUserInfo(),
+            this.web3Service.getWalletAddress(),
+        ]);
+
         return { userInfo, walletAddress };
     }
 
-    async authenticateWithBackend({ userInfo, walletAddress }) {
-        const data = await fetchJSON(this.apiRoute, {
+    async #authenticateWithBackend({ userInfo, walletAddress }) {
+        const data = await fetchJSON(this.config.apiRoute, {
             method: "POST",
-            headers: { "X-CSRF-TOKEN": this.csrfToken },
+            headers: {
+                "X-CSRF-TOKEN": this.config.csrfToken,
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 wallet_address: walletAddress,
                 user_info: userInfo,
             }),
         });
 
-        window.location.href = data.redirect;
+        this.#redirectToDestination(data.redirect);
     }
 
-    handleAuthError(error) {
-        const message =
-            error.message === "User closed the modal"
-                ? "Login cancelled"
-                : "Login failed. Please try again.";
+    #redirectToDestination(url) {
+        window.location.href = url;
+    }
 
-        this.uiManager.showError(message);
+    #handleInitializationError(error) {
+        console.error("Initialization error:", error);
+        this.uiManager.showError("Gagal memuat. Silakan refresh halaman.", 0);
+    }
+
+    #handleAuthError(error) {
+        console.error("Authentication error:", error);
+
+        const errorMessage = this.#getErrorMessage(error);
+        this.uiManager.showError(errorMessage);
         this.uiManager.setReadyState();
+    }
+
+    #getErrorMessage(error) {
+        const errorMessages = {
+            "User closed the modal": "Login dibatalkan",
+            default: "Login gagal. Silakan coba lagi.",
+        };
+
+        return errorMessages[error.message] || errorMessages.default;
     }
 }
 
-// Initialize
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-        new AuthManager().init();
-    });
-} else {
+// Initialize authentication when DOM is ready
+function initializeAuth() {
     new AuthManager().init();
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeAuth);
+} else {
+    initializeAuth();
 }
