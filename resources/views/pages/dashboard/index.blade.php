@@ -1,63 +1,86 @@
-<x-layouts.app :showHeader="true">
-    <x-slot name="title">Dashboard - JagaBumi</x-slot>
+@extends('layouts.main')
 
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
-            @auth
-                <button 
-                    id="logout-btn" 
-                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    Logout
-                </button>
-            @endauth
-        </div>
-    </x-slot>
+@section('title', 'Dashboard - JagaBumi.id')
 
-    <div class="max-w-2xl mx-auto px-4">
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h1 class="text-2xl font-bold mb-4">Selamat Datang, {{ $user->name }}!</h1>
-            
-            @auth
-                <div class="bg-green-50 p-4 rounded border border-green-200 mb-4">
-                    <p class="font-bold text-green-800">Status: Login Berhasil via MySQL</p>
-                </div>
+@section('content')
+<section class="py-12 bg-background min-h-screen">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-foreground">Dashboard</h1>
+                @auth
+                    <button 
+                        id="logout-btn" 
+                        class="btn-glass px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Logout
+                    </button>
+                @endauth
+            </div>
 
-                <ul class="list-disc pl-5 space-y-2">
-                    <li><strong>Email:</strong> {{ $user->email }}</li>
-                    <li><strong>Verifier ID (Google):</strong> {{ $user->verifier_id }}</li>
-                    <li>
-                        <strong>Wallet Address (Auto-Generated):</strong> 
-                        <code class="bg-gray-200 px-1 rounded">{{ $user->wallet_address }}</code>
-                    </li>
-                </ul>
-            @endauth
+            <!-- Main Card -->
+            <div class="glass-card p-8">
+                <h2 class="text-2xl font-bold text-foreground mb-6">Selamat Datang, {{ $user->name }}! 👋</h2>
+                
+                @auth
+                    <div class="bg-gradient-to-r from-primary/10 to-emerald-light/10 border border-primary/30 rounded-xl p-4 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                <x-heroicon-o-check-circle class="w-6 h-6 text-primary" />
+                            </div>
+                            <div>
+                                <p class="font-bold text-primary">Status: Login Berhasil</p>
+                                <p class="text-sm text-muted-foreground">Akun Anda telah terverifikasi</p>
+                            </div>
+                        </div>
+                    </div>
 
-            @guest
-                <div class="p-4 bg-yellow-50 border border-yellow-200 rounded mb-4">
-                    <p class="text-yellow-800 text-sm mb-3">
-                        ⚠️ Anda dapat melihat page ini, namun untuk melaksanakan Quest, silakan login terlebih dahulu.
-                    </p>
-                </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-secondary/30 rounded-xl">
+                            <div class="text-sm text-muted-foreground mb-1">Email</div>
+                            <div class="font-medium text-foreground">{{ $user->email }}</div>
+                        </div>
+                        
+                        <div class="p-4 bg-secondary/30 rounded-xl">
+                            <div class="text-sm text-muted-foreground mb-1">Verifier ID (Google)</div>
+                            <div class="font-medium text-foreground">{{ $user->verifier_id }}</div>
+                        </div>
+                        
+                        <div class="p-4 bg-secondary/30 rounded-xl">
+                            <div class="text-sm text-muted-foreground mb-1">Wallet Address (Auto-Generated)</div>
+                            <code class="font-mono text-sm bg-card px-2 py-1 rounded text-primary break-all">{{ $user->wallet_address }}</code>
+                        </div>
+                    </div>
+                @endauth
 
-                <a 
-                    href="{{ route('login') }}" 
-                    class="inline-flex items-center justify-center w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                >
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                    </svg>
-                    Login dengan Web3Auth
-                </a>
-            @endguest
+                @guest
+                    <div class="bg-gradient-to-r from-gold/10 to-accent/10 border border-gold/30 rounded-xl p-6 mb-6">
+                        <div class="flex items-start gap-3">
+                            <x-heroicon-o-exclamation-triangle class="w-6 h-6 text-gold flex-shrink-0 mt-0.5" />
+                            <div>
+                                <p class="font-medium text-foreground mb-2">Perhatian</p>
+                                <p class="text-sm text-muted-foreground">
+                                    Anda dapat melihat halaman ini, namun untuk melaksanakan Quest, silakan login terlebih dahulu.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('login') }}" class="w-full btn-hero justify-center group">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            <x-heroicon-o-arrow-right-on-rectangle class="w-5 h-5" />
+                            <span>Login dengan Web3Auth</span>
+                        </span>
+                    </a>
+                @endguest
+            </div>
         </div>
     </div>
+</section>
 
-    @auth
-        @push('scripts')
-            <meta name="logout-route" content="{{ route('logout') }}">
-            @vite(['resources/js/logout.js'])
-        @endpush
-    @endauth
-</x-layouts.app>
+@auth
+    <meta name="logout-route" content="{{ route('logout') }}">
+    @vite(['resources/js/logout.js'])
+@endauth
+@endsection
