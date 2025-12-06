@@ -2,47 +2,35 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'users';
+
     protected $fillable = [
         'name',
+        'handle',
         'email',
-        'password',
+        'bio',
+        'phone',
         'verifier_id',
-        'wallet_address', 
-        'profile_pic_url',
+        'wallet_address',
+        'avatar_url',
         'auth_provider',
+        'password',
         'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -51,19 +39,51 @@ class User extends Authenticatable
         ];
     }
 
-    public function article(){
+    // Relationships
+    public function createdOrganizations()
+    {
+        return $this->hasMany(Organization::class, 'created_by');
+    }
+
+    public function articles()
+    {
         return $this->hasMany(Article::class);
     }
 
-    public function quests(){
-        return $this->belongsToMany(Quest::class);
+    public function questParticipants()
+    {
+        return $this->hasMany(QuestParticipant::class);
     }
 
-    public function prizes(){
-        return $this->belongsToMany(Prize::class);
+    public function prizeUsers()
+    {
+        return $this->hasMany(PrizeUser::class);
     }
 
-    public function organizations(){
-        return $this->belongsTo(Organization::class);
+    public function questWinners()
+    {
+        return $this->hasMany(QuestWinner::class);
+    }
+
+    public function organizationRequests()
+    {
+        return $this->hasMany(OrganizationRequest::class);
+    }
+
+    public function approvedRequests()
+    {
+        return $this->hasMany(OrganizationRequest::class, 'approved_by');
+    }
+
+    public function organizationMembers()
+    {
+        return $this->hasMany(OrganizationMember::class);
+    }
+
+    public function organizations()
+    {
+        return $this->belongsToMany(Organization::class, 'organization_members')
+            ->withPivot('role', 'joined_at')
+            ->withTimestamps();
     }
 }
