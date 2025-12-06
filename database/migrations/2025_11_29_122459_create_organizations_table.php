@@ -13,10 +13,19 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->string('name', 30);
+            $table->string('slug')->unique();
+            $table->string('handle', 30)->unique();
+            $table->string('org_email')->unique();
+            $table->text('desc');
+            $table->string('motto');
             $table->text('banner_img');
             $table->text('logo_img');
-            $table->string('motto', 50);
+            $table->boolean('is_verified')->default(false);
+            $table->text('website_url')->nullable();
+            $table->text('instagram_url')->nullable();
+            $table->text('x_url')->nullable();
             $table->timestamps();
         });
     }

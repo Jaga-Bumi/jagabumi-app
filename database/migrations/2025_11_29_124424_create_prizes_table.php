@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('prizes', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('desc');
+            $table->string('name');
+            $table->enum('type', ['CERTIFICATE', 'COUPON']);
+            $table->text('image_url');
+            $table->text('description');
             $table->foreignId('quest_id')->references('id')->on('quests')->cascadeOnDelete();
             $table->timestamps();
         });
