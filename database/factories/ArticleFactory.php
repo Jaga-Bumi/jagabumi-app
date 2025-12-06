@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Article;
+use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -29,8 +31,8 @@ class ArticleFactory extends Factory
             'thumbnail'   => fake()->imageUrl(800, 600, 'news', true),
             'is_deleted'  => false,
             'rating'      => fake()->randomFloat(1, 0, 5),  // 0.0 → 5.0
-            'org_id'      => fake()->optional()->randomElement([null, 1, 2, 3]),
-            'user_id'     => fake()->optional()->randomElement([null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+            'org_id'      => fake()->optional()->randomElement(Organization::pluck('id')),
+            'user_id'     => fake()->optional()->randomElement(User::pluck('id')),
             'date_up'     => fake()->optional()->dateTimeBetween('-1 month', 'now'),
         ];
     }
