@@ -60,6 +60,17 @@ return [
             'report' => false,
         ],
 
+        'filebase' => [
+            'driver' => 's3',
+            'key' => env('FILEBASE_ACCESS_KEY'),
+            'secret' => env('FILEBASE_SECRET_KEY'),
+            'region' => 'ap-southeast-3',
+            'bucket' => env('FILEBASE_BUCKET'),
+            'endpoint' => 'https://s3.filebase.com',
+            'use_path_style_endpoint' => true,
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

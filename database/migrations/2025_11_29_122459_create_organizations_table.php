@@ -22,10 +22,11 @@ return new class extends Migration
             $table->string('motto');
             $table->text('banner_img');
             $table->text('logo_img');
-            $table->boolean('is_verified')->default(false);
             $table->text('website_url')->nullable();
             $table->text('instagram_url')->nullable();
             $table->text('x_url')->nullable();
+            $table->text('facebook_url')->nullable();
+            $table->enum('status', ['INACTIVE', 'ACTIVE', 'HIATUS'])->default('ACTIVE');
             $table->timestamps();
         });
     }

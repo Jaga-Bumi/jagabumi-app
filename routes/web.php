@@ -1,12 +1,7 @@
 <?php
 
-use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\PrizeController;
 use App\Http\Controllers\QuestController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

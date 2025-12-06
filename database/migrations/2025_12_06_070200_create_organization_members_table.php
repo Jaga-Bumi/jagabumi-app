@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('role', ['MAKER', 'MANAGER'])->default('MANAGER');
+            $table->enum('role', ['CREATOR', 'MANAGER'])->default('MANAGER');
+            $table->enum('status', ['PENDING', 'ACTIVE'])->default('PENDING');
             $table->timestamp('joined_at')->nullable();
             $table->timestamps();
             $table->unique(['organization_id', 'user_id']);
