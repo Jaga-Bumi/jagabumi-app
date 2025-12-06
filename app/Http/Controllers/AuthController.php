@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\Web3LoginRequest;
+use App\Http\Responses\ApiResponse;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,16 +18,30 @@ class AuthController extends Controller
     }
     
     // Process Web3Auth login/registration
-    public function web3Login(Web3LoginRequest $request): JsonResponse
+    public function web3Login(Web3LoginRequest $request): ApiResponse
     {
         $user = $this->findOrCreateUser(
             $request->user_info,
             $request->wallet_address
         );
 
-        $this->loginUser($user);
+        Auth::login($user, true);
 
-        return $this->successResponse($user);
+        $message = $user->wasRecentlyCreated
+            ? "Welcome, {$user->name}!"
+            : "Welcome back!";
+
+        return ApiResponse::success(
+            [
+                'redirect' => route('dashboard'),
+                'user' => [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'wallet_address' => $user->wallet_address,
+                ]
+            ],
+            $message
+        );
     }
 
     // Find existing user or create new one
@@ -36,43 +50,13 @@ class AuthController extends Controller
         return User::updateOrCreate(
             ['email' => $userInfo['email']],
             [
-                'name' => $this->extractName($userInfo),
+                'name' => $userInfo['name'] ?? explode('@', $userInfo['email'])[0],
                 'verifier_id' => $userInfo['verifierId'] ?? $userInfo['email'],
                 'wallet_address' => $walletAddress,
-                'profile_pic_url' => $userInfo['profileImage'] ?? null,
+                'avatar_url' => $userInfo['profileImage'] ?? null,
                 'auth_provider' => $userInfo['typeOfLogin'] ?? 'google',
             ]
         );
-    }
-
-    // Extract user name from info or generate from email
-    private function extractName(array $userInfo): string
-    {
-        return $userInfo['name'] ?? explode('@', $userInfo['email'])[0];
-    }
-
-    // Log the user into the application
-    private function loginUser(User $user): void
-    {
-        Auth::login($user, true);
-    }
-
-    // Create successful authentication response
-    private function successResponse(User $user): JsonResponse
-    {
-        return response()->json([
-            'success' => true,
-            'redirect' => route('dashboard'),
-            'message' => $this->getWelcomeMessage($user),
-        ]);
-    }
-
-    // Get appropriate welcome message
-    private function getWelcomeMessage(User $user): string
-    {
-        return $user->wasRecentlyCreated
-            ? "Welcome, {$user->name}!"
-            : "Welcome back!";
     }
 
     // Log out the user and invalidate session
@@ -80,15 +64,10 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        $this->invalidateSession($request);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('login');
     }
 
-    // Invalidate and regenerate session tokens
-    private function invalidateSession(Request $request): void
-    {
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-    }
 }

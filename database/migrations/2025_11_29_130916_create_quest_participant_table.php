@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->dateTime('joined_at');
             $table->enum('status', ['REGISTERED', 'COMPLETED', 'APPROVED', 'REJECTED'])->default('REGISTERED');
-            // $table->decimal('proof_latitude', 10, 8)->nullable();
-            // $table->decimal('proof_longitude', 11, 8)->nullable();
             $table->text('video_url')->nullable();
             $table->longText('description')->nullable();
             $table->dateTime('submission_date')->nullable();

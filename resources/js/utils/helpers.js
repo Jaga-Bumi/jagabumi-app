@@ -131,6 +131,7 @@ export function getMetaContent(name) {
 }
 
 // Fetch JSON data with error handling
+// Expects ApiResponse format: { status: boolean, message: string, data: object }
 export async function fetchJSON(url, options = {}) {
     const response = await fetch(url, {
         method: options.method || "GET",
@@ -143,11 +144,11 @@ export async function fetchJSON(url, options = {}) {
         credentials: "same-origin",
     });
 
-    const data = await response.json();
+    const json = await response.json();
 
-    if (!response.ok) {
-        throw new Error(data.message || "Request failed");
+    if (!response.ok || !json.status) {
+        throw new Error(json.message || "Request failed");
     }
 
-    return data;
+    return json.data;
 }

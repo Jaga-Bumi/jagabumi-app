@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\OrganizationMember;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class QuestRequest extends FormRequest
+class InviteMemberRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,10 +23,6 @@ class QuestRequest extends FormRequest
     {
         return [
             //
-            'title' => ['required', 'string', 'max:30'],
-            'desc' => ['required', 'string'],
-            'start' => ['required', 'date'],
-            'end' => ['required', 'date']
         ];
     }
 }
