@@ -26,15 +26,15 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'handle' => fake()->optional()->unique()->bothify(str_repeat('#', 30)),
+            'handle' => fake()->optional()->bothify(str_repeat('#', 30)),
             'email' => fake()->unique()->safeEmail(),
             'bio' => fake()->optional()->text,
             'phone' => fake()->optional()->phoneNumber,
-            'verifier_id' => fake()->optional()->unique()->numberBetween(1,100),
-            'wallet_address' => fake()->optional()->unique()->bothify(str_repeat('#', 42)),
+            'verifier_id' => fake()->optional()->numberBetween(1, 100),
+            'wallet_address' => fake()->optional()->bothify(str_repeat('#', 42)),
             'avatar_url' => fake()->optional()->imageUrl,
             'role' => fake()->randomElement(['USER', 'ORG_MAKER']),
-            'email_verified_at' => now(),
+            // 'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
