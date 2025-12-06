@@ -23,7 +23,7 @@
                 @endphp
 
                 @foreach($navLinks as $link)
-                    <a href="{{ $link['href'] }}" 
+                    <a href="{{ $link['href'] }}"
                        class="relative text-sm font-medium transition-colors duration-200 hover:text-primary {{ request()->url() == $link['href'] ? 'text-primary' : 'text-muted-foreground' }}">
                         {{ $link['label'] }}
                         @if(request()->url() == $link['href'])
@@ -84,17 +84,19 @@
     </div>
 </nav>
 
-@push('scripts')
 <script>
-    const menuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const openIcon = document.getElementById('menu-open-icon');
-    const closeIcon = document.getElementById('menu-close-icon');
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const openIcon = document.getElementById('menu-open-icon');
+        const closeIcon = document.getElementById('menu-close-icon');
 
-    menuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-        openIcon.classList.toggle('hidden');
-        closeIcon.classList.toggle('hidden');
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                openIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+        }
     });
 </script>
-@endpush

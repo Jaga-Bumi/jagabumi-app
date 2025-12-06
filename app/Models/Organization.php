@@ -21,10 +21,11 @@ class Organization extends Model
         'motto',
         'banner_img',
         'logo_img',
-        'is_verified',
         'website_url',
         'instagram_url',
         'x_url',
+        'facebook_url',
+        'status',
     ];
 
     protected $casts = [
