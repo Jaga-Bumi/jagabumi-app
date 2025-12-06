@@ -11,11 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prize_user', function (Blueprint $table) {
+        Schema::create('prize_users', function (Blueprint $table) {
             $table->id();
+            
+            // NFT
+            $table->string('nft_token_id')->nullable(); 
+            $table->string('tx_hash')->nullable(); 
+            $table->text('token_uri')->nullable();
+
             $table->foreignId('prize_id')->references('id')->on('prizes')->cascadeOnDelete();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
+            $table->index(['user_id', 'prize_id']);
         });
     }
 
@@ -24,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prize_member');
+        Schema::dropIfExists('prize_users');
     }
 };
