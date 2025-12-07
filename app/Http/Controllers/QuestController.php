@@ -20,7 +20,16 @@ class QuestController extends Controller
     // Read all quests
     public function readAll()
     {
-        return view('pages.quests.index');
+        $quests = Quest::all();
+
+        return response()->json(['quests' => $quests], 200);
+    }
+
+    public function readOne($id)
+    {
+        $quest = Quest::find($id);
+
+        return response()->json(['quests' => $quest], 200);
     }
 
     // Create quest
