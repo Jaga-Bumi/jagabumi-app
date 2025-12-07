@@ -181,9 +181,6 @@ class QuestController extends Controller
                 ], 403);
             }
 
-            // Authorization is handled by IsOrgManager middleware
-            $organization = $request->_organization ?? Organization::findOrFail($quest->org_id);
-
             DB::beginTransaction();
 
             // Delete banner image if exists

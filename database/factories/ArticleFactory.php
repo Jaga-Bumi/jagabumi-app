@@ -32,7 +32,6 @@ class ArticleFactory extends Factory
             'is_deleted'  => false,
             'org_id'      => fake()->optional()->randomElement(Organization::pluck('id')),
             'user_id'     => fake()->optional()->randomElement(User::pluck('id')),
-            'date_up'     => fake()->optional()->dateTimeBetween('-1 month', 'now'),
         ];
     }
 }

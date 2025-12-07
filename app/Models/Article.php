@@ -19,12 +19,10 @@ class Article extends Model
         'is_deleted',
         'org_id',
         'user_id',
-        'date_up',
     ];
 
     protected $casts = [
         'is_deleted' => 'boolean',
-        'date_up' => 'datetime',
     ];
 
     // Relationships

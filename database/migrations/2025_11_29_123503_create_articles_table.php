@@ -20,7 +20,6 @@ return new class extends Migration
             $table->boolean('is_deleted')->default(false);
             $table->foreignId('org_id')->nullable()->references('id')->on('organizations')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
-            $table->dateTime('date_up')->nullable();
             $table->timestamps();
         });
     }
