@@ -17,16 +17,12 @@ class Article extends Model
         'body',
         'thumbnail',
         'is_deleted',
-        'rating',
         'org_id',
         'user_id',
-        'date_up',
     ];
 
     protected $casts = [
         'is_deleted' => 'boolean',
-        'rating' => 'decimal:1',
-        'date_up' => 'datetime',
     ];
 
     // Relationships

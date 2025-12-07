@@ -30,10 +30,9 @@ class ArticleFactory extends Factory
             'body'        => fake()->paragraphs(6, true),
             'thumbnail'   => fake()->imageUrl(800, 600, 'news', true),
             'is_deleted'  => false,
-            'rating'      => fake()->randomFloat(1, 0, 5),  // 0.0 → 5.0
             'org_id'      => fake()->optional()->randomElement(Organization::pluck('id')),
             'user_id'     => fake()->optional()->randomElement(User::pluck('id')),
-            'date_up'     => fake()->optional()->dateTimeBetween('-1 month', 'now'),
         ];
     }
 }
+    

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Organization;
 use App\Models\OrganizationRequest;
 use App\Models\Quest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -357,4 +359,33 @@ class AdminController extends Controller
             ]
         ]);
     }
+
+    public function removeUser($userId) // logic remove image avatar belum
+    {
+        $user = User::find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $user->is_removed = true;
+        $user->save();
+
+        // avatar_url yang non social belum dihapus dari storage
+        return response()->json(['message' => 'User removed successfully'], 200);
+    }
+
+    public function removeOrganization($orgId)
+    {
+        $organization = Organization::find($orgId);
+        if (!$organization) {
+            return response()->json(['error' => 'Organization not found'], 404);
+        }
+
+        // Turns to inactive
+        $organization->status = 'INACTIVE';
+        $organization->save();
+
+        return response()->json(['message' => 'Organization removed successfully'], 200);
+    }
+
 }

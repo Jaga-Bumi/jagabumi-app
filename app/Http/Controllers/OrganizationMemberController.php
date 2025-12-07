@@ -6,7 +6,6 @@ use App\Http\Requests\OrganizationMember\InviteMemberRequest;
 use App\Models\Organization;
 use App\Models\OrganizationMember;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class OrganizationMemberController extends Controller
@@ -17,12 +16,34 @@ class OrganizationMemberController extends Controller
     {
         $organization = Organization::findOrFail($organizationId);
         
-        // Check authorization: hanya creator yang bisa invite
+        // Check authorization: only creator can invite
         if ($organization->created_by !== Auth::id()) {
-            abort(403, 'Hanya founder organisasi yang bisa mengundang member.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Only organization creator can invite members.'
+            ], 403);
         }
 
         $invitedUser = User::where('email', $request->email)->first();
+
+        if (!$invitedUser) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User with this email not found.'
+            ], 404);
+        }
+
+        // Check if already member
+        $existingMember = OrganizationMember::where('organization_id', $organizationId)
+            ->where('user_id', $invitedUser->id)
+            ->first();
+
+        if ($existingMember) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is already a member or has pending invitation.'
+            ], 400);
+        }
 
         // Create invitation
         OrganizationMember::create([
@@ -34,8 +55,8 @@ class OrganizationMemberController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Undangan berhasil dikirim ke ' . $invitedUser->name
-        ]);
+            'message' => 'Invitation sent successfully to ' . $invitedUser->name
+        ], 201);
     }
 
     // Accept invitation
@@ -44,13 +65,16 @@ class OrganizationMemberController extends Controller
         $membership = OrganizationMember::findOrFail($membershipId);
 
         if ($membership->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized.'
+            ], 403);
         }
 
         if ($membership->status !== 'PENDING') {
             return response()->json([
                 'success' => false,
-                'message' => 'Invitation sudah tidak valid.'
+                'message' => 'Invitation is no longer valid.'
             ], 400);
         }
 
@@ -61,8 +85,8 @@ class OrganizationMemberController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Anda telah bergabung dengan organisasi sebagai ' . $membership->role . '.'
-        ]);
+            'message' => 'You have joined the organization as ' . $membership->role . '.'
+        ], 200);
     }
 
     // Remove member
@@ -71,15 +95,18 @@ class OrganizationMemberController extends Controller
         $membership = OrganizationMember::findOrFail($membershipId);
 
         // Only creator can remove
-        if ( $membership->organization->created_by !== Auth::id()) {
-            abort(403);
+        if ($membership->organization->created_by !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only organization creator can remove members.'
+            ], 403);
         }
 
-        // Cannot remove MAKER
+        // Cannot remove CREATOR
         if ($membership->role === 'CREATOR') {
             return response()->json([
                 'success' => false,
-                'message' => 'Tidak dapat menghapus member dengan peran CREATOR.'
+                'message' => 'Cannot remove member with CREATOR role.'
             ], 400);
         }
 
@@ -87,8 +114,8 @@ class OrganizationMemberController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Member berhasil dihapus dari organisasi.'
-        ]);
+            'message' => 'Member removed successfully from organization.'
+        ], 200);
     }
 
     public function leave($membershipId)
@@ -96,14 +123,17 @@ class OrganizationMemberController extends Controller
         $membership = OrganizationMember::findOrFail($membershipId);
 
         if ($membership->user_id !== Auth::id()) {
-            abort(403);
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized.'
+            ], 403);
         }
 
         // Cannot leave if CREATOR
         if ($membership->role === 'CREATOR') {
             return response()->json([
                 'success' => false,
-                'message' => 'CREATOR tidak dapat meninggalkan organisasi.'
+                'message' => 'CREATOR cannot leave the organization.'
             ], 400);
         }
 
@@ -111,7 +141,7 @@ class OrganizationMemberController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Anda telah meninggalkan organisasi.'
-        ]);
+            'message' => 'You have left the organization.'
+        ], 200);
     }
 }

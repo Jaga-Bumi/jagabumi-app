@@ -15,7 +15,6 @@ class OrganizationRequestController extends Controller
         $user = Auth::user();
         
         $existingRequest = OrganizationRequest::where('user_id', $user->id)
-            ->whereIn('status', ['PENDING', 'APPROVED', 'REJECTED'])
             ->latest()
             ->first();
 
@@ -37,7 +36,7 @@ class OrganizationRequestController extends Controller
             ] : null,
             'is_member' => $isMember,
             'can_create_organization' => $existingRequest && $existingRequest->status === 'APPROVED',
-        ]);
+        ], 200);
     }
 
     public function store(StoreOrganizationRequestRequest $request)
@@ -111,15 +110,7 @@ class OrganizationRequestController extends Controller
                 'created_at' => $request->created_at,
                 'responded_at' => $request->responded_at,
             ]
-        ]);
+        ], 200);
     }
 
-    public function getLastRequest()
-    {
-        $lastRequest = OrganizationRequest::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        return $lastRequest;
-    }
 }
