@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Quest\CreateQuestRequest;
 use App\Http\Requests\Quest\AddWinnersRequest;
-use App\Http\Responses\ApiResponse;
+use App\Http\Requests\Quest\UpdateQuestRequest;
 use App\Models\Organization;
 use App\Models\OrganizationMember;
 use App\Models\Prize;
@@ -14,7 +14,6 @@ use App\Services\BlockchainService;
 use App\Services\FilebaseService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class QuestController extends Controller
@@ -129,12 +128,6 @@ class QuestController extends Controller
 
             DB::commit();
 
-            Log::info('Quest created successfully', [
-                'quest_id' => $quest->id,
-                'organization_id' => $organization->id,
-                'created_by' => Auth::id(),
-            ]);
-
             $prizes = [$certificatePrize];
             if ($couponPrize) {
                 $prizes[] = $couponPrize;
@@ -181,12 +174,6 @@ class QuestController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Failed to create quest', [
-                'user_id' => Auth::id(),
-                'org_id' => $request->org_id ?? null,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
 
             return response()->json([
                 'success' => false,
@@ -196,20 +183,250 @@ class QuestController extends Controller
     }
 
     // Delete quest
-    public function destroy($id): ApiResponse
+    public function destroy($id)
     {
-        $quest = Quest::find($id);
+        try {
+            $quest = Quest::with('prizes')->findOrFail($id);
+            
+            if ($quest->status !== 'IN REVIEW') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only quests with IN REVIEW status can be deleted.'
+                ], 403);
+            }
 
-        if (!$quest) {
-            return ApiResponse::notFound('Quest not found');
+            $organization = Organization::findOrFail($quest->org_id);
+            
+            $isManager = OrganizationMember::where('organization_id', $organization->id)
+                ->where('user_id', Auth::id())
+                ->where('role', 'MANAGER')
+                ->exists();
+
+            $isCreator = $organization->created_by === Auth::id();
+
+            if (!$isManager && !$isCreator) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to delete quests for this organization.',
+                ], 403);
+            }
+
+            DB::beginTransaction();
+
+            // Delete banner image if exists
+            if ($quest->banner_url && file_exists(public_path($quest->banner_url))) {
+                unlink(public_path($quest->banner_url));
+            }
+
+            // Delete all prize images
+            foreach ($quest->prizes as $prize) {
+                if ($prize->image_url && file_exists(public_path($prize->image_url))) {
+                    unlink(public_path($prize->image_url));
+                }
+            }
+
+            $quest->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Quest and all associated images deleted successfully.'
+            ], 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quest not found.',
+            ], 404);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete quest. Please try again.',
+            ], 500);
         }
+    }
+    
+    // Update quest
+    public function update($id, UpdateQuestRequest $request)
+    {
+        try {
+            $quest = Quest::with('prizes')->findOrFail($id);
 
-        $quest->delete();
+            if ($quest->status !== 'IN REVIEW') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only quests with IN REVIEW status can be updated.'
+                ], 403);
+            }
 
-        return ApiResponse::success(
-            [],
-            'Quest deleted successfully'
-        );
+            $organization = Organization::findOrFail($quest->org_id);
+            
+            $isManager = OrganizationMember::where('organization_id', $organization->id)
+                ->where('user_id', Auth::id())
+                ->where('role', 'MANAGER')
+                ->exists();
+
+            $isCreator = $organization->created_by === Auth::id();
+
+            if (!$isManager && !$isCreator) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to update quests for this organization.',
+                ], 403);
+            }
+
+            DB::beginTransaction();
+
+            // Update slug if title changed
+            if ($request->title !== $quest->title) {
+                $slug = Str::slug($request->title);
+                $originalSlug = $slug;
+                $counter = 1;
+                
+                while (Quest::where('slug', $slug)->where('id', '!=', $id)->exists()) {
+                    $slug = $originalSlug . '-' . $counter;
+                    $counter++;
+                }
+                $quest->slug = $slug;
+            }
+
+            // Handle banner upload if provided
+            if ($request->hasFile('banner')) {
+                // Delete old banner if exists
+                if ($quest->banner_url && file_exists(public_path($quest->banner_url))) {
+                    unlink(public_path($quest->banner_url));
+                }
+
+                $bannerFile = $request->file('banner');
+                $bannerName = time() . '_' . $bannerFile->getClientOriginalName();
+                $bannerFile->storeAs('public/QuestStorage/Banner/' . $bannerName);
+                $quest->banner_url = '/storage/QuestStorage/Banner/' . $bannerName;
+            }
+
+            // Update quest fields
+            $quest->title = $request->title;
+            $quest->desc = $request->desc;
+            $quest->location_name = $request->location_name;
+            $quest->latitude = $request->latitude;
+            $quest->longitude = $request->longitude;
+            $quest->radius_meter = $request->radius_meter;
+            $quest->liveness_code = $request->liveness_code;
+            $quest->registration_start_at = $request->registration_start_at;
+            $quest->registration_end_at = $request->registration_end_at;
+            $quest->quest_start_at = $request->quest_start_at;
+            $quest->quest_end_at = $request->quest_end_at;
+            $quest->judging_start_at = $request->judging_start_at;
+            $quest->judging_end_at = $request->judging_end_at;
+            $quest->prize_distribution_date = $request->prize_distribution_date;
+            $quest->participant_limit = $request->participant_limit;
+            $quest->winner_limit = $request->winner_limit;
+            $quest->save();
+
+            // Update certificate prize
+            $certificatePrize = $quest->prizes()->where('type', 'CERTIFICATE')->first();
+
+            $certImageUrl = $certificatePrize ? $certificatePrize->image_url : null;
+            if ($request->hasFile('cert_image')) {
+                // Delete old certificate image if exists
+                if ($certImageUrl && file_exists(public_path($certImageUrl))) {
+                    unlink(public_path($certImageUrl));
+                }
+
+                $certFile = $request->file('cert_image');
+                $certName = time() . '_cert_' . $certFile->getClientOriginalName();
+                $certFile->storeAs('public/PrizeStorage/' . $certName);
+                $certImageUrl = '/storage/PrizeStorage/' . $certName;
+            }
+
+            $certificatePrize->update([
+                'name' => $request->cert_name,
+                'description' => $request->cert_description,
+                'image_url' => $certImageUrl,
+            ]);
+
+            // Update or create coupon prize if provided
+            if ($request->coupon_name) {
+                $couponPrize = $quest->prizes()->where('type', 'COUPON')->first();
+
+                $couponImageUrl = $couponPrize ? $couponPrize->image_url : null;
+                if ($request->hasFile('coupon_image')) {
+                    // Delete old coupon image if exists
+                    if ($couponImageUrl && file_exists(public_path($couponImageUrl))) {
+                        unlink(public_path($couponImageUrl));
+                    }
+
+                    $couponFile = $request->file('coupon_image');
+                    $couponName = time() . '_coupon_' . $couponFile->getClientOriginalName();
+                    $couponFile->storeAs('public/PrizeStorage/' . $couponName);
+                    $couponImageUrl = '/storage/PrizeStorage/' . $couponName;
+                }
+
+                if ($couponPrize) {
+                    $couponPrize->update([
+                        'name' => $request->coupon_name,
+                        'description' => $request->coupon_description,
+                        'image_url' => $couponImageUrl,
+                    ]);
+                } else {
+                    $couponPrize = Prize::create([
+                        'name' => $request->coupon_name,
+                        'type' => 'COUPON',
+                        'description' => $request->coupon_description,
+                        'image_url' => $couponImageUrl,
+                        'quest_id' => $quest->id,
+                    ]);
+                }
+            } else {
+                // Delete coupon prize if it exists but no longer provided
+                $quest->prizes()->where('type', 'COUPON')->delete();
+            }
+
+            DB::commit();
+
+            $prizes = $quest->prizes()->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Quest updated successfully.',
+                'data' => [
+                    'quest' => [
+                        'id' => $quest->id,
+                        'title' => $quest->title,
+                        'slug' => $quest->slug,
+                        'status' => $quest->status,
+                        'organization' => [
+                            'id' => $organization->id,
+                            'name' => $organization->name,
+                        ],
+                        'prizes' => $prizes->map(function ($prize) {
+                            return [
+                                'id' => $prize->id,
+                                'name' => $prize->name,
+                                'type' => $prize->type,
+                            ];
+                        }),
+                        'updated_at' => $quest->updated_at,
+                    ],
+                ],
+            ], 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quest not found.',
+            ], 404);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update quest. Please try again.',
+            ], 500);
+        }
     }
 
     // Distribute Rewards to Winners
@@ -251,7 +468,6 @@ class QuestController extends Controller
 
             foreach ($winners as $winner) {
                 if (!$winner->user->wallet_address) {
-                    Log::warning("Winner user_id {$winner->user_id} tidak punya wallet_address, skip.");
                     continue;
                 }
 
@@ -329,7 +545,6 @@ class QuestController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Distribute rewards failed: ' . $e->getMessage());
             
             return response()->json([
                 'error' => 'Gagal mendistribusikan rewards: ' . $e->getMessage()
@@ -396,6 +611,26 @@ class QuestController extends Controller
         return response()->json([
             'quest' => $quest->only(['id', 'title', 'slug']),
             'winners' => $winners
+        ]);
+    }
+
+    public function changeStatus($questId, $newStatus)
+    {
+        $quest = Quest::findOrFail($questId);
+
+        $validStatuses = ['ACTIVE', 'ENDED', 'CANCELLED'];
+        if (!in_array($newStatus, $validStatuses)) {
+            return response()->json([
+                'error' => 'Invalid status value.'
+            ], 400);
+        }
+
+        $quest->status = $newStatus;
+        $quest->save();
+
+        return response()->json([
+            'message' => 'Quest status updated successfully.',
+            'quest' => $quest
         ]);
     }
 
