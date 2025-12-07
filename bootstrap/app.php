@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            
+            'org.manager' => \App\Http\Middleware\IsOrgManager::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

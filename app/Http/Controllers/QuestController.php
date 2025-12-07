@@ -6,7 +6,6 @@ use App\Http\Requests\Quest\CreateQuestRequest;
 use App\Http\Requests\Quest\AddWinnersRequest;
 use App\Http\Requests\Quest\UpdateQuestRequest;
 use App\Models\Organization;
-use App\Models\OrganizationMember;
 use App\Models\Prize;
 use App\Models\Quest;
 use App\Models\QuestWinner;
@@ -28,21 +27,8 @@ class QuestController extends Controller
     public function create(CreateQuestRequest $request)
     {
         try {
-            $organization = Organization::findOrFail($request->org_id);
-            
-            $isManager = OrganizationMember::where('organization_id', $organization->id)
-                ->where('user_id', Auth::id())
-                ->where('role', 'MANAGER')
-                ->exists();
-
-            $isCreator = $organization->created_by === Auth::id();
-
-            if (!$isManager && !$isCreator) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You do not have permission to create quests for this organization.',
-                ], 403);
-            }
+            // Organization validation is handled by IsOrgManager middleware
+            $organization = $request->_organization ?? Organization::findOrFail($request->org_id);
 
             DB::beginTransaction();
 
@@ -195,21 +181,8 @@ class QuestController extends Controller
                 ], 403);
             }
 
-            $organization = Organization::findOrFail($quest->org_id);
-            
-            $isManager = OrganizationMember::where('organization_id', $organization->id)
-                ->where('user_id', Auth::id())
-                ->where('role', 'MANAGER')
-                ->exists();
-
-            $isCreator = $organization->created_by === Auth::id();
-
-            if (!$isManager && !$isCreator) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You do not have permission to delete quests for this organization.',
-                ], 403);
-            }
+            // Authorization is handled by IsOrgManager middleware
+            $organization = $request->_organization ?? Organization::findOrFail($quest->org_id);
 
             DB::beginTransaction();
 
@@ -262,21 +235,8 @@ class QuestController extends Controller
                 ], 403);
             }
 
-            $organization = Organization::findOrFail($quest->org_id);
-            
-            $isManager = OrganizationMember::where('organization_id', $organization->id)
-                ->where('user_id', Auth::id())
-                ->where('role', 'MANAGER')
-                ->exists();
-
-            $isCreator = $organization->created_by === Auth::id();
-
-            if (!$isManager && !$isCreator) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You do not have permission to update quests for this organization.',
-                ], 403);
-            }
+            // Authorization is handled by IsOrgManager middleware
+            $organization = $request->_organization ?? Organization::findOrFail($quest->org_id);
 
             DB::beginTransaction();
 
