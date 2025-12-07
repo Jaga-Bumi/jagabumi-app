@@ -232,4 +232,18 @@ class ArticleController extends Controller
         return response()->json(['message' => 'Article deleted successfully'], 200);
     }
 
+    public function readAll(){
+
+        $articles = Article::all();
+
+        return response()->json(['article' => $articles], 200);
+
+    }
+
+    public function readOne($id){
+        
+        $article = Article::find($id);
+
+        return response()->json(['article' => $article], 200);
+    }
 }
