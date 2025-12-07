@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\QuestController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,12 +51,12 @@ Route::get('dashboard', function () {
     return redirect()->route('home');
 })->name('dashboard');
 
-// Route::prefix('organizations')->name('org.')->group(function(){
-//     Route::get('', [OrganizationController::class, 'readAll'])->name('all');
-//     Route::get('{id}', [OrganizationController::class, 'readOne'])->name('one');
+Route::prefix('organizations')->name('org.')->group(function(){
+    Route::get('', [OrganizationController::class, 'readAll'])->name('all');
+    Route::get('{id}', [OrganizationController::class, 'readOne'])->name('one');
 //     Route::put('update/{id}', [OrganizationController::class, 'update'])->name('update');
 //     Route::delete('destroy/{id}', [OrganizationController::class, 'destroy'])->name('destroy');
-// });
+});
 
 // Route::prefix('prizes')->name('prizes.')->group(function(){
 //     Route::get('', [PrizeController::class, 'readAll'])->name('all');
