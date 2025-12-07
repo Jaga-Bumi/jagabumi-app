@@ -367,10 +367,10 @@ class AdminController extends Controller
             return response()->json(['error' => 'User not found'], 404);
         }
 
-        $user->delete();
+        $user->is_removed = true;
+        $user->save();
 
         // avatar_url yang non social belum dihapus dari storage
-
         return response()->json(['message' => 'User removed successfully'], 200);
     }
 

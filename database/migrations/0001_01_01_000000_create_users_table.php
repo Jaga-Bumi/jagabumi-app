@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('avatar_url')->nullable();
             $table->string('auth_provider')->default('google');
             $table->string('password')->nullable();
+            $table->boolean('is_removed')->default(false);
             $table->enum('role', ['USER', 'ORG_MAKER', 'SUPER_ADMIN'])->default('USER');
             $table->rememberToken();
             $table->timestamps();
