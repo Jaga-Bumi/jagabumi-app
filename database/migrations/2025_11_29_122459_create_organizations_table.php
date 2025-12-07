@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('motto');
             $table->text('banner_img');
             $table->text('logo_img');
-            $table->decimal('rating', 2, 1)->default(0);
             $table->text('website_url')->nullable();
             $table->text('instagram_url')->nullable();
             $table->text('x_url')->nullable();

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->longText('body');
             $table->text('thumbnail');
             $table->boolean('is_deleted')->default(false);
-            $table->decimal('rating', 2, 1)->default(0);
             $table->foreignId('org_id')->nullable()->references('id')->on('organizations')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
             $table->dateTime('date_up')->nullable();

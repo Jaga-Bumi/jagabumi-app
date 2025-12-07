@@ -26,7 +26,6 @@ class Organization extends Model
         'x_url',
         'facebook_url',
         'status',
-        'rating',
     ];
 
     protected $casts = [
