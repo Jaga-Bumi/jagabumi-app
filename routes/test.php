@@ -7,6 +7,7 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationRequestController;
 use App\Http\Controllers\QuestController;
+use App\Http\Controllers\QuestParticipantController;
 use Illuminate\Support\Facades\Route;
 
 // Test routes
@@ -29,3 +30,7 @@ Route::middleware('auth')->group(function () {
   Route::post('logout', [AuthController::class, 'logout'])->name('logout');
   Route::post('/join-us/submit', [OrganizationRequestController::class, 'store'])->name('join-us.store');
 });
+
+
+// aaron routes
+Route::get('/my-participations/{id}', [QuestParticipantController::class, 'myParticipations']);
