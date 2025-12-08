@@ -60,7 +60,8 @@
           Location: {{ $quest->location_name }}<br>
           Participants: {{ $quest->quest_participants_count }}/{{ $quest->participant_limit }}<br>
           Starts in: {{ $quest->quest_start_at->diffForHumans() }}<br>
-          Status: {{ $quest->status }}
+          Status: {{ $quest->status }}<br>
+          <a href="{{ route('quests.detail', $quest->slug) }}" style="color: #007bff;">View Details →</a>
         </li>
       @endforeach
     </ul>

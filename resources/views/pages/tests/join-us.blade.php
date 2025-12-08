@@ -85,6 +85,7 @@
         <div class="status-box status-pending">
           <h3>Your Request is Pending</h3>
           <p><strong>Organization Name:</strong> {{ $latestRequest->organization_name }}</p>
+          <p><strong>Organization Type:</strong> {{ $latestRequest->organization_type }}</p>
           <p><strong>Status:</strong> <strong>PENDING</strong></p>
           <p><strong>Submitted:</strong> {{ $latestRequest->created_at->format('M d, Y H:i') }}</p>
           <p><em>Your request is currently being reviewed by our admin team. Please wait for approval.</em></p>
@@ -94,10 +95,18 @@
         <div class="status-box status-approved">
           <h3>✓ Your Request Has Been Approved!</h3>
           <p><strong>Organization Name:</strong> {{ $latestRequest->organization_name }}</p>
+          <p><strong>Organization Type:</strong> {{ $latestRequest->organization_type }}</p>
           <p><strong>Status:</strong> <strong>APPROVED</strong></p>
           <p><strong>Submitted:</strong> {{ $latestRequest->created_at->format('M d, Y H:i') }}</p>
           @if($latestRequest->responded_at)
-            <p><strong>Approved:</strong> {{ $latestRequest->responded_at->format('M d, Y H:i') }}</p>
+            <p><strong>Approved At:</strong> {{ $latestRequest->responded_at->format('M d, Y H:i') }}</p>
+          @endif
+          @if($latestRequest->approver)
+            <p><strong>Approved By:</strong> {{ $latestRequest->approver->name }} (@{{ $latestRequest->approver->handle }})</p>
+          @endif
+          @if($latestRequest->admin_notes)
+            <p><strong>Admin Message:</strong></p>
+            <p style="background: #f8f9fa; padding: 10px; border-left: 3px solid #28a745;">{{ $latestRequest->admin_notes }}</p>
           @endif
           <p><em>Congratulations! Your request to create organization "{{ $latestRequest->organization_name }}" has been approved.</em></p>
           <p><em>You can now proceed to create your organization.</em></p>
@@ -107,10 +116,18 @@
         <div class="status-box status-rejected">
           <h3>Your Previous Request Was Rejected</h3>
           <p><strong>Organization Name:</strong> {{ $latestRequest->organization_name }}</p>
+          <p><strong>Organization Type:</strong> {{ $latestRequest->organization_type }}</p>
           <p><strong>Status:</strong> <strong>REJECTED</strong></p>
           <p><strong>Submitted:</strong> {{ $latestRequest->created_at->format('M d, Y H:i') }}</p>
           @if($latestRequest->responded_at)
-            <p><strong>Rejected:</strong> {{ $latestRequest->responded_at->format('M d, Y H:i') }}</p>
+            <p><strong>Rejected At:</strong> {{ $latestRequest->responded_at->format('M d, Y H:i') }}</p>
+          @endif
+          @if($latestRequest->approver)
+            <p><strong>Rejected By:</strong> {{ $latestRequest->approver->name }} (@{{ $latestRequest->approver->handle }})</p>
+          @endif
+          @if($latestRequest->admin_notes)
+            <p><strong>Admin Message:</strong></p>
+            <p style="background: #f8f9fa; padding: 10px; border-left: 3px solid #dc3545;">{{ $latestRequest->admin_notes }}</p>
           @endif
           <p><em>Unfortunately, your previous request was rejected. You can submit a new request below.</em></p>
         </div>
@@ -129,26 +146,60 @@
         <div class="form-group">
           <label for="organization_name">Organization Name *</label>
           <input type="text" id="organization_name" name="organization_name" value="{{ old('organization_name') }}" required maxlength="30">
+          <small>3-30 characters. Letters, numbers, spaces, hyphens, and underscores only.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="organization_type">Organization Type *</label>
+          <select id="organization_type" name="organization_type" required style="width: 100%; max-width: 500px; padding: 8px;">
+            <option value="">-- Select Type --</option>
+            <option value="NGO" {{ old('organization_type') === 'NGO' ? 'selected' : '' }}>NGO / Non-Profit</option>
+            <option value="Community Group" {{ old('organization_type') === 'Community Group' ? 'selected' : '' }}>Community Group</option>
+            <option value="Educational" {{ old('organization_type') === 'Educational' ? 'selected' : '' }}>Educational Institution</option>
+            <option value="Corporate CSR" {{ old('organization_type') === 'Corporate CSR' ? 'selected' : '' }}>Corporate CSR</option>
+            <option value="Environmental" {{ old('organization_type') === 'Environmental' ? 'selected' : '' }}>Environmental Organization</option>
+            <option value="Other" {{ old('organization_type') === 'Other' ? 'selected' : '' }}>Other</option>
+          </select>
         </div>
 
         <div class="form-group">
           <label for="organization_description">Organization Description *</label>
           <textarea id="organization_description" name="organization_description" required>{{ old('organization_description') }}</textarea>
+          <small>50-1000 characters. Describe your organization's mission and purpose.</small>
         </div>
 
         <div class="form-group">
-          <label for="phone_number">Phone Number *</label>
-          <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" required maxlength="20">
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+          <label for="planned_activities">Planned Activities *</label>
+          <textarea id="planned_activities" name="planned_activities" required>{{ old('planned_activities') }}</textarea>
+          <small>50-1000 characters. What quests or activities do you plan to organize?</small>
         </div>
 
         <div class="form-group">
           <label for="reason">Reason for Creating Organization *</label>
           <textarea id="reason" name="reason" required>{{ old('reason') }}</textarea>
+          <small>50-500 characters. Why do you want to create this organization on our platform?</small>
+        </div>
+
+        <h3>Optional Information (Helps with verification)</h3>
+
+        <div class="form-group">
+          <label for="website_url">Website URL</label>
+          <input type="url" id="website_url" name="website_url" value="{{ old('website_url') }}" placeholder="https://">
+        </div>
+
+        <div class="form-group">
+          <label for="instagram_url">Instagram URL</label>
+          <input type="url" id="instagram_url" name="instagram_url" value="{{ old('instagram_url') }}" placeholder="https://instagram.com/your_org">
+        </div>
+
+        <div class="form-group">
+          <label for="x_url">X (Twitter) URL</label>
+          <input type="url" id="x_url" name="x_url" value="{{ old('x_url') }}" placeholder="https://x.com/your_org">
+        </div>
+
+        <div class="form-group">
+          <label for="facebook_url">Facebook URL</label>
+          <input type="url" id="facebook_url" name="facebook_url" value="{{ old('facebook_url') }}" placeholder="https://facebook.com/your_org">
         </div>
 
         <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;">Submit Request</button>

@@ -17,8 +17,9 @@ class OrganizationRequestController extends Controller
             return redirect()->route('home')->with('error', 'Please login first');
         }
 
-        // Get the latest request
+        // Get the latest request with approver info
         $latestRequest = OrganizationRequest::where('user_id', $user->id)
+            ->with('approver:id,name,handle')
             ->latest()
             ->first();
 
@@ -32,6 +33,7 @@ class OrganizationRequestController extends Controller
         $user = Auth::user();
         
         $existingRequest = OrganizationRequest::where('user_id', $user->id)
+            ->with('approver:id,name,handle')
             ->latest()
             ->first();
 
@@ -45,9 +47,15 @@ class OrganizationRequestController extends Controller
                 'status' => $existingRequest->status,
                 'organization_name' => $existingRequest->organization_name,
                 'organization_description' => $existingRequest->organization_description,
-                'phone_number' => $existingRequest->phone_number,
-                'email' => $existingRequest->email,
+                'organization_type' => $existingRequest->organization_type,
+                'website_url' => $existingRequest->website_url,
+                'instagram_url' => $existingRequest->instagram_url,
+                'x_url' => $existingRequest->x_url,
+                'facebook_url' => $existingRequest->facebook_url,
                 'reason' => $existingRequest->reason,
+                'planned_activities' => $existingRequest->planned_activities,
+                'admin_notes' => $existingRequest->admin_notes,
+                'approver' => $existingRequest->approver,
                 'created_at' => $existingRequest->created_at,
                 'responded_at' => $existingRequest->responded_at,
             ] : null,
@@ -78,9 +86,13 @@ class OrganizationRequestController extends Controller
             'user_id' => $user->id,
             'organization_name' => $request->organization_name,
             'organization_description' => $request->organization_description,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
+            'organization_type' => $request->organization_type,
+            'website_url' => $request->website_url,
+            'instagram_url' => $request->instagram_url,
+            'x_url' => $request->x_url,
+            'facebook_url' => $request->facebook_url,
             'reason' => $request->reason,
+            'planned_activities' => $request->planned_activities,
         ]);
 
         return redirect()->route('join-us')
@@ -109,9 +121,14 @@ class OrganizationRequestController extends Controller
                 'status' => $request->status,
                 'organization_name' => $request->organization_name,
                 'organization_description' => $request->organization_description,
-                'phone_number' => $request->phone_number,
-                'email' => $request->email,
+                'organization_type' => $request->organization_type,
+                'website_url' => $request->website_url,
+                'instagram_url' => $request->instagram_url,
+                'x_url' => $request->x_url,
+                'facebook_url' => $request->facebook_url,
                 'reason' => $request->reason,
+                'planned_activities' => $request->planned_activities,
+                'admin_notes' => $request->admin_notes,
                 'created_at' => $request->created_at,
                 'responded_at' => $request->responded_at,
             ]

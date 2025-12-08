@@ -8,6 +8,7 @@ use App\Http\Requests\Quest\UpdateQuestRequest;
 use App\Models\Organization;
 use App\Models\Prize;
 use App\Models\Quest;
+use App\Models\QuestParticipant;
 use App\Models\QuestWinner;
 use App\Services\BlockchainService;
 use App\Services\FilebaseService;
@@ -25,9 +26,8 @@ class QuestController extends Controller
         // Filter by status
         if (request('status')) {
             $query->where('status', request('status'));
-        } else {
-            $query->where('status', 'ACTIVE');
         }
+        // No else - show all statuses by default
         
         // Search by title or description
         if (request('search')) {
@@ -51,11 +51,28 @@ class QuestController extends Controller
 
     }
 
-    public function readOne($id)
+    public function getOne($id)
     {
         $quest = Quest::find($id);
 
         return response()->json(['quests' => $quest], 200);
+    }
+
+    public function getDetail($slug)
+    {
+        $quest = Quest::where('slug', $slug)
+            ->with(['organization:id,name,handle,logo_img'])
+            ->withCount('questParticipants')
+            ->firstOrFail();
+
+        $userParticipation = null;
+        if (Auth::check()) {
+            $userParticipation = QuestParticipant::where('quest_id', $quest->id)
+                ->where('user_id', Auth::id())
+                ->first();
+        }
+
+        return view('pages.tests.quest-detail', compact('quest', 'userParticipation'));
     }
 
     // Create quest

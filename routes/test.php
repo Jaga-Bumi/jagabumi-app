@@ -7,6 +7,7 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationRequestController;
 use App\Http\Controllers\QuestController;
+use App\Http\Controllers\QuestParticipantController;
 use Illuminate\Support\Facades\Route;
 
 // Test routes
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'ewfjewfjb'])->name('home');
 
 Route::get('/quests', [QuestController::class, 'getAll'])->name('quests.all');
+Route::get('/quests/{slug}', [QuestController::class, 'getDetail'])->name('quests.detail');
 
 Route::get('/organizations', [OrganizationController::class, 'getAll'])->name('organizations.all');
 
@@ -28,4 +30,7 @@ Route::post('auth/web3', [AuthController::class, 'web3Login'])->name('auth.web3'
 Route::middleware('auth')->group(function () {
   Route::post('logout', [AuthController::class, 'logout'])->name('logout');
   Route::post('/join-us/submit', [OrganizationRequestController::class, 'store'])->name('join-us.store');
+  
+  Route::post('/quests/{questId}/join', [QuestParticipantController::class, 'join'])->name('quests.join');
+  Route::delete('/quests/{questId}/cancel', [QuestParticipantController::class, 'cancelParticipation'])->name('quests.cancel');
 });

@@ -56,7 +56,7 @@
       <div class="filter-group">
         <label>Status:</label>
         <select name="status" onchange="this.form.submit()">
-          <option value="">All Active</option>
+          <option value="">All</option>
           <option value="ACTIVE" {{ request('status') === 'ACTIVE' ? 'selected' : '' }}>Active</option>
           <option value="ENDED" {{ request('status') === 'ENDED' ? 'selected' : '' }}>Ended</option>
           <option value="APPROVED" {{ request('status') === 'APPROVED' ? 'selected' : '' }}>Approved</option>
@@ -91,6 +91,7 @@
           <p><strong>Quest Period:</strong> {{ $quest->quest_start_at->format('M d, Y') }} - {{ $quest->quest_end_at->format('M d, Y') }}</p>
           <p><strong>Participants:</strong> {{ $quest->participant_limit }} max | <strong>Winners:</strong> {{ $quest->winner_limit }}</p>
           <p>{{ Str::limit($quest->desc, 150) }}</p>
+          <a href="{{ route('quests.detail', $quest->slug) }}" style="display: inline-block; padding: 8px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px;">View Details</a>
         </div>
       @endforeach
       

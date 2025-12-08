@@ -89,6 +89,33 @@ class OrganizationMemberController extends Controller
         ], 200);
     }
 
+    // Decline invitattion
+    public function declineInvitation($membershipId)
+    {
+        $membership = OrganizationMember::findOrFail($membershipId);
+
+        if ($membership->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized.'
+            ], 403);
+        }
+
+        if ($membership->status !== 'PENDING') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invitation is no longer valid.'
+            ], 400);
+        }
+
+        $membership->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'You have declined the invitation to join the organization.'
+        ], 200);
+    }
+
     // Remove member
     public function removeMember($membershipId)
     {
