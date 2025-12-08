@@ -34,7 +34,7 @@ class QuestParticipantController extends Controller
     // View my quest participations
     public function myParticipations($id)
     {
-        $questsList = QuestParticipant::query()->where('user_id', $id)->get();
+        $questsList = QuestParticipant::with('quest')->where('user_id', $id)->get();
 
         return response()->json([
             'quest_list' => $questsList,
