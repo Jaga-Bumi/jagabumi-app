@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeaderboardController;
@@ -34,6 +35,11 @@ Route::middleware('auth')->group(function () {
   
   Route::post('/quests/{questId}/join', [QuestParticipantController::class, 'join'])->name('quests.join');
   Route::delete('/quests/{questId}/cancel', [QuestParticipantController::class, 'cancelParticipation'])->name('quests.cancel');
+  Route::post('/quests/{questId}/submit-proof', [QuestParticipantController::class, 'submitProof'])->name('quests.submit-proof');
+  
+  // Attendance routes
+  Route::post('/quests/{questId}/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('quests.attendance.check-in');
+  Route::post('/quests/{questId}/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('quests.attendance.check-out');
   
   // Admin routes
   Route::prefix('admin')->group(function () {

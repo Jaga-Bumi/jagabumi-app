@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quest_participant_id')->constrained('quest_participant')->cascadeOnDelete();
             $table->enum('type', ['CHECK_IN', 'CHECK_OUT']);
-            $table->decimal('proof_latitude', 10, 8);
-            $table->decimal('proof_longitude', 11, 8);
+            $table->decimal('proof_latitude', 18, 15); 
+            
+            $table->decimal('proof_longitude', 18, 15);
+            
             $table->text('proof_photo_url');
-            $table->text('notes');
-            $table->decimal('distance_from_quest_location', 10, 2)->nullable();
+            $table->text('notes')->nullable();
+            $table->decimal('distance_from_quest_location', 18, 15)->nullable();
             $table->boolean('is_valid_location')->default(false);
             $table->timestamps();
         });

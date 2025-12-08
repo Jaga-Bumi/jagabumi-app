@@ -22,10 +22,8 @@ class SubmitProofRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'proof_latitude' => ['required', 'numeric', 'between:-90,90'],
-            'proof_longitude' => ['required', 'numeric', 'between:-180,180'],
-            'proof_video' => ['nullable', 'file', 'mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-msvideo', 'max:102400'], // 100MB max
-            'proof_description' => ['required', 'string', 'min:20', 'max:1000'],
+            'video' => ['required', 'file', 'mimes:mp4,mov,avi,wmv,flv,mkv', 'max:102400'], // 100MB = 102400 KB
+            'description' => ['required', 'string', 'min:50', 'max:10000'],
         ];
     }
 
@@ -35,17 +33,13 @@ class SubmitProofRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'proof_latitude.required' => 'Latitude lokasi wajib diisi.',
-            'proof_latitude.numeric' => 'Latitude harus berupa angka.',
-            'proof_latitude.between' => 'Latitude tidak valid (harus antara -90 hingga 90).',
-            'proof_longitude.required' => 'Longitude lokasi wajib diisi.',
-            'proof_longitude.numeric' => 'Longitude harus berupa angka.',
-            'proof_longitude.between' => 'Longitude tidak valid (harus antara -180 hingga 180).',
-            'proof_video.mimetypes' => 'Video harus berformat MP4, MPEG, MOV, atau AVI.',
-            'proof_video.max' => 'Ukuran video maksimal 100MB.',
-            'proof_description.required' => 'Deskripsi bukti wajib diisi.',
-            'proof_description.min' => 'Deskripsi minimal 20 karakter.',
-            'proof_description.max' => 'Deskripsi maksimal 1000 karakter.',
+            'video.required' => 'Video proof wajib diupload',
+            'video.file' => 'File harus berupa video',
+            'video.mimes' => 'Video harus format: mp4, mov, avi, wmv, flv, atau mkv',
+            'video.max' => 'Ukuran video maksimal 100MB',
+            'description.required' => 'Deskripsi wajib diisi',
+            'description.min' => 'Deskripsi minimal 50 karakter',
+            'description.max' => 'Deskripsi maksimal 10000 karakter',
         ];
     }
 }

@@ -24,7 +24,7 @@ class AttendanceController extends Controller
         // Cek quest dalam periode quest
         $now = now();
         if (!($now->between($quest->quest_start_at, $quest->quest_end_at))) {
-            return back()->with('error', 'Periode quest sudah berakhir atau belum dimulai.');
+            return redirect()->back()->withErrors(['error' => 'Quest period has ended or not started yet.']);
         }
 
         // Cek user sudah terdaftar di quest
@@ -33,7 +33,7 @@ class AttendanceController extends Controller
             ->first();
 
         if (!$participation) {
-            return back()->with('error', 'Anda belum terdaftar di quest ini.');
+            return redirect()->back()->withErrors(['error' => 'You are not registered for this quest.']);
         }
 
         // Get last attendance record
@@ -43,7 +43,7 @@ class AttendanceController extends Controller
 
         // Validasi: hanya bisa check-in jika belum ada record atau last record adalah check-out
         if ($lastAttendance && $lastAttendance->type === 'CHECK_IN') {
-            return back()->with('error', 'Anda sudah check-in. Silakan check-out terlebih dahulu.');
+            return redirect()->back()->withErrors(['error' => 'You already checked-in. Please check-out first.']);
         }
 
         DB::beginTransaction();
@@ -53,8 +53,8 @@ class AttendanceController extends Controller
             if ($request->hasFile('proof_photo')) {
                 $proofPhoto = $request->file('proof_photo');
                 $photoName = time() . '_' . $proofPhoto->getClientOriginalName();
-                $proofPhoto->storeAs('public/AttendanceStorage/' . $photoName);
-                $photoUrl = '/storage/AttendanceStorage/' . $photoName;
+                $proofPhoto->move(public_path('AttendanceStorage'), $photoName);
+                $photoUrl = '/AttendanceStorage/' . $photoName;
             }
 
             // Calculate distance using Haversine formula
@@ -84,8 +84,8 @@ class AttendanceController extends Controller
             QuestAttendance::create([
                 'quest_participant_id' => $participation->id,
                 'type' => 'CHECK_IN',
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
+                'proof_latitude' => $request->latitude,
+                'proof_longitude' => $request->longitude,
                 'proof_photo_url' => $photoUrl,
                 'notes' => $request->notes,
                 'distance_from_quest_location' => $distance,
@@ -94,18 +94,20 @@ class AttendanceController extends Controller
 
             DB::commit();
 
-            $message = 'Berhasil check-in!';
+            $message = 'Successfully checked-in!';
             
             if (!$isValidLocation && $distance !== null) {
                 $allowedRadius = $quest->radius_meter ?? 100;
-                $message .= " PERINGATAN: Lokasi Anda berjarak " . round($distance) . " meter dari lokasi quest (batas: " . $allowedRadius . " meter). Attendance tetap tercatat.";
+                $message .= " WARNING: Your location is " . number_format($distance, 2) . " meters from quest location (limit: " . $allowedRadius . " meters). Attendance recorded anyway.";
+            } elseif ($isValidLocation && $distance !== null) {
+                $message .= " You are " . number_format($distance, 2) . " meters from the quest location.";
             }
 
-            return back()->with('success', $message);
+            return redirect()->back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error check-in attendance: ' . $e->getMessage());
-            return back()->with('error', 'Gagal check-in: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Failed to check-in: ' . $e->getMessage()]);
         }
     }
 
@@ -120,7 +122,7 @@ class AttendanceController extends Controller
         // Cek quest dalam periode quest
         $now = now();
         if (!($now->between($quest->quest_start_at, $quest->quest_end_at))) {
-            return back()->with('error', 'Periode quest sudah berakhir atau belum dimulai.');
+            return redirect()->back()->withErrors(['error' => 'Quest period has ended or not started yet.']);
         }
 
         // Cek user sudah terdaftar di quest
@@ -129,7 +131,7 @@ class AttendanceController extends Controller
             ->first();
 
         if (!$participation) {
-            return back()->with('error', 'Anda belum terdaftar di quest ini.');
+            return redirect()->back()->withErrors(['error' => 'You are not registered for this quest.']);
         }
 
         // Get last attendance record
@@ -139,7 +141,7 @@ class AttendanceController extends Controller
 
         // Validasi: hanya bisa check-out jika last record adalah check-in
         if (!$lastAttendance || $lastAttendance->type === 'CHECK_OUT') {
-            return back()->with('error', 'Anda belum check-in. Silakan check-in terlebih dahulu.');
+            return redirect()->back()->withErrors(['error' => 'You must check-in first before checking-out.']);
         }
 
         DB::beginTransaction();
@@ -149,8 +151,8 @@ class AttendanceController extends Controller
             if ($request->hasFile('proof_photo')) {
                 $proofPhoto = $request->file('proof_photo');
                 $photoName = time() . '_' . $proofPhoto->getClientOriginalName();
-                $proofPhoto->storeAs('public/AttendanceStorage/' . $photoName);
-                $photoUrl = '/storage/AttendanceStorage/' . $photoName;
+                $proofPhoto->move(public_path('AttendanceStorage'), $photoName);
+                $photoUrl = '/AttendanceStorage/' . $photoName;
             }
 
             // Calculate distance using Haversine formula
@@ -180,8 +182,8 @@ class AttendanceController extends Controller
             QuestAttendance::create([
                 'quest_participant_id' => $participation->id,
                 'type' => 'CHECK_OUT',
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
+                'proof_latitude' => $request->latitude,
+                'proof_longitude' => $request->longitude,
                 'proof_photo_url' => $photoUrl,
                 'notes' => $request->notes,
                 'distance_from_quest_location' => $distance,
@@ -190,18 +192,20 @@ class AttendanceController extends Controller
 
             DB::commit();
 
-            $message = 'Berhasil check-out!';
+            $message = 'Successfully checked-out!';
             
             if (!$isValidLocation && $distance !== null) {
                 $allowedRadius = $quest->radius_meter ?? 100;
-                $message .= " PERINGATAN: Lokasi Anda berjarak " . round($distance) . " meter dari lokasi quest (batas: " . $allowedRadius . " meter). Attendance tetap tercatat.";
+                $message .= " WARNING: Your location is " . number_format($distance, 2) . " meters from quest location (limit: " . $allowedRadius . " meters). Attendance recorded anyway.";
+            } elseif ($isValidLocation && $distance !== null) {
+                $message .= " You are " . number_format($distance, 2) . " meters from the quest location.";
             }
 
-            return back()->with('success', $message);
+            return redirect()->back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error check-out attendance: ' . $e->getMessage());
-            return back()->with('error', 'Gagal check-out: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Failed to check-out: ' . $e->getMessage()]);
         }
     }
 

@@ -61,7 +61,11 @@ class QuestController extends Controller
     public function getDetail($slug)
     {
         $quest = Quest::where('slug', $slug)
-            ->with(['organization:id,name,handle,logo_img'])
+            ->with([
+                'organization:id,name,handle,logo_img,org_email,website_url,instagram_url,x_url,facebook_url',
+                'organization.members.user:id,name,email,avatar_url',
+                'prizes',
+            ])
             ->withCount('questParticipants')
             ->firstOrFail();
 
@@ -72,7 +76,14 @@ class QuestController extends Controller
                 ->first();
         }
 
-        return view('pages.tests.quest-detail', compact('quest', 'userParticipation'));
+        // Get submissions (COMPLETED, APPROVED, REJECTED)
+        $submissions = QuestParticipant::where('quest_id', $quest->id)
+            ->whereIn('status', ['COMPLETED', 'APPROVED', 'REJECTED'])
+            ->with('user:id,name,avatar_url,wallet_address')
+            ->orderBy('submission_date', 'desc')
+            ->get();
+
+        return view('pages.tests.quests.detail', compact('quest', 'userParticipation', 'submissions'));
     }
 
     // Create quest

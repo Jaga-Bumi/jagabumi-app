@@ -20,8 +20,8 @@ class CheckOutAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'latitude' => ['required', 'numeric', 'between:-90,90'],
-            'longitude' => ['required', 'numeric', 'between:-180,180'],
+            'latitude' => ['required', 'numeric', 'between:-90,90', 'regex:/^-?\\d{1,2}\\.\\d{1,15}$/'],
+            'longitude' => ['required', 'numeric', 'between:-180,180', 'regex:/^-?\\d{1,3}\\.\\d{1,15}$/'],
             'proof_photo' => ['required', 'image', 'mimes:jpeg,jpg,png', 'max:5120'], // 5MB max
             'notes' => ['nullable', 'string', 'max:500'],
         ];

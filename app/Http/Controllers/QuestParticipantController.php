@@ -149,33 +149,188 @@ class QuestParticipantController extends Controller
     
 
     // Submit proof for quest participation
-
     // update status ke COMPLETED
     public function submitProof(SubmitProofRequest $request, $questId)
     {
+        $user = Auth::user();
+
+        $quest = Quest::find($questId);
+
+        if (!$quest) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quest not found.',
+            ], 404);
+        }
+
+        // Check if user is a participant
+        $participant = QuestParticipant::where('quest_id', $questId)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$participant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not a participant of this quest.',
+            ], 403);
+        }
+
+        // Check if already submitted
+        if ($participant->status === 'COMPLETED' || $participant->status === 'APPROVED' || $participant->status === 'REJECTED') {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already submitted proof for this quest.',
+            ], 400);
+        }
+
+        // Check if quest period is active or ended (can submit during quest or after it ends, before judging ends)
+        if (now()->lt($quest->quest_start_at)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quest has not started yet. Starts at: ' . $quest->quest_start_at->format('M d, Y H:i'),
+            ], 400);
+        }
+
+        if (now()->gt($quest->judging_end_at)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Submission period has ended. Deadline was: ' . $quest->judging_end_at->format('M d, Y H:i'),
+            ], 400);
+        }
+
+        try {
+            // Upload video to storage
+            $video = $request->file('video');
+            $videoName = time() . '_' . $video->getClientOriginalName();
+            $video->storeAs('public/QuestSubmissionStorage', $videoName);
+            $videoUrl = '/storage/QuestSubmissionStorage/' . $videoName;
+
+            // Update participant record
+            $participant->update([
+                'video_url' => $videoUrl,
+                'description' => $request->description,
+                'submission_date' => now(),
+                'status' => 'COMPLETED',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Proof submitted successfully! Your submission is now under review.',
+                'data' => [
+                    'video_url' => $videoUrl,
+                    'submission_date' => $participant->submission_date->format('M d, Y H:i'),
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to submit proof: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to submit proof. Please try again. Error: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     
     // View my quest participations
     public function myParticipations()
     {
+        $user = Auth::user();
+
+        $participations = QuestParticipant::where('user_id', $user->id)
+            ->with('quest:id,title,slug,status,banner_url,quest_start_at,quest_end_at')
+            ->orderBy('joined_at', 'desc')
+            ->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'data' => $participations,
+        ], 200);
     }
 
     
     // View all submissions untuk quest
     public function submissions($questId)
     {
+        $quest = Quest::find($questId);
+
+        if (!$quest) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quest not found.',
+            ], 404);
+        }
+
+        $submissions = QuestParticipant::where('quest_id', $questId)
+            ->whereIn('status', ['COMPLETED', 'APPROVED', 'REJECTED'])
+            ->with('user:id,name,avatar_url,wallet_address')
+            ->orderBy('submission_date', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $submissions,
+        ], 200);
     }
 
     // View detail submission
     public function viewSubmission($participantId)
     {
+        $participant = QuestParticipant::with([
+            'user:id,name,avatar_url,wallet_address,email',
+            'quest:id,title,slug,status'
+        ])->find($participantId);
+
+        if (!$participant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Submission not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $participant,
+        ], 200);
     }
 
     // Review submission
     public function reviewSubmission(ReviewSubmissionRequest $request, $participantId)
     {
+        $participant = QuestParticipant::find($participantId);
 
+        if (!$participant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Submission not found.',
+            ], 404);
+        }
+
+        if ($participant->status !== 'COMPLETED') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only COMPLETED submissions can be reviewed.',
+            ], 400);
+        }
+
+        try {
+            $participant->update([
+                'status' => $request->status, // APPROVED or REJECTED
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Submission reviewed successfully.',
+                'data' => $participant,
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to review submission: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to review submission. Please try again.',
+            ], 500);
+        }
     }
 
 }

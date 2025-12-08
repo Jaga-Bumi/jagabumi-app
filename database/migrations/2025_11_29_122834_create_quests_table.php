@@ -18,10 +18,10 @@ return new class extends Migration
             $table->text('desc');
             $table->text('banner_url');
             $table->text('location_name');
-            $table->decimal('latitude', 10, 8);
-            $table->decimal('longitude', 11, 8);
+            $table->decimal('latitude', 18, 15);
+            $table->decimal('longitude', 18, 15);
             $table->integer('radius_meter')->default(100);
-            $table->text('liveness_code')->nullable(); // Secret code di onsite
+            $table->text('liveness_code')->nullable(); 
             $table->dateTime('registration_start_at');
             $table->dateTime('registration_end_at');
             $table->dateTime('quest_start_at');
