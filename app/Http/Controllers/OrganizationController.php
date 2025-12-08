@@ -61,4 +61,18 @@ class OrganizationController extends Controller
             'data' => $organization,
         ]);
     }
+
+    public function readAll(){
+
+        $organizations = Organization::all();
+
+        return response()->json(['organizations' => $organizations], 200);
+    }
+
+    public function readOne($id){
+
+        $organization = Organization::find($id);
+
+        return response()->json(['organization' => $organization], 200);
+    }
 }
