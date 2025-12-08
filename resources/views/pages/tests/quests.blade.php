@@ -11,7 +11,13 @@
   <title>All Quests</title>
   <style>
     .filters { margin: 20px 0; }
-    .filter-group { display: inline-block; margin-right: 15px; }
+    .filter-group { display: inline-block; margin-right: 15px; position: relative; }
+    .search-wrapper { position: relative; display: inline-block; }
+    .search-wrapper input { padding-right: 30px; }
+    .clear-search { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer; background: none; border: none; font-size: 18px; color: #999; padding: 0 5px; }
+    .clear-search:hover { color: #333; }
+    .clear-filters-btn { padding: 5px 15px; background: #6c757d; color: white; border: none; cursor: pointer; border-radius: 3px; }
+    .clear-filters-btn:hover { background: #5a6268; }
     .quest-item { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
     .pagination { margin: 20px 0; }
     .pagination a, .pagination span { padding: 5px 10px; margin: 0 2px; border: 1px solid #ddd; display: inline-block; }
@@ -50,7 +56,12 @@
     <form method="GET" action="{{ route('quests.all') }}" id="filter-form">
       <div class="filter-group">
         <label>Search:</label>
-        <input type="text" name="search" id="search-input" value="{{ request('search') }}" placeholder="Search quests...">
+        <div class="search-wrapper">
+          <input type="text" name="search" id="search-input" value="{{ request('search') }}" placeholder="Search quests...">
+          @if(request('search'))
+            <button type="button" class="clear-search" onclick="document.getElementById('search-input').value=''; document.getElementById('filter-form').submit();">&times;</button>
+          @endif
+        </div>
       </div>
       
       <div class="filter-group">
@@ -72,6 +83,12 @@
           <option value="ending_soon" {{ request('sort') === 'ending_soon' ? 'selected' : '' }}>Ending Soon</option>
         </select>
       </div>
+      
+      @if(request('search') || request('status') || (request('sort') && request('sort') !== 'newest'))
+        <div class="filter-group">
+          <a href="{{ route('quests.all') }}" class="clear-filters-btn">Clear All Filters</a>
+        </div>
+      @endif
     </form>
   </div>
 

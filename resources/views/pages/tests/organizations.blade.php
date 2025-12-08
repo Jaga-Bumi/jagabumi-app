@@ -11,6 +11,12 @@
   <title>Organizations</title>
   <style>
     .filters { margin: 20px 0; }
+    .search-wrapper { position: relative; display: inline-block; }
+    .search-wrapper input { padding-right: 30px; }
+    .clear-search { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer; background: none; border: none; font-size: 18px; color: #999; padding: 0 5px; }
+    .clear-search:hover { color: #333; }
+    .clear-filters-btn { padding: 5px 15px; background: #6c757d; color: white; border: none; cursor: pointer; border-radius: 3px; margin-left: 10px; }
+    .clear-filters-btn:hover { background: #5a6268; }
     .org-item { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
     .pagination { margin: 20px 0; }
     .pagination a, .pagination span { padding: 5px 10px; margin: 0 2px; border: 1px solid #ddd; display: inline-block; }
@@ -48,7 +54,15 @@
   <div class="filters">
     <form method="GET" action="{{ route('organizations.all') }}" id="search-form">
       <label>Search:</label>
-      <input type="text" name="search" id="search-input" value="{{ request('search') }}" placeholder="Search organizations...">
+      <div class="search-wrapper" style="display: inline-block;">
+        <input type="text" name="search" id="search-input" value="{{ request('search') }}" placeholder="Search organizations...">
+        @if(request('search'))
+          <button type="button" class="clear-search" onclick="document.getElementById('search-input').value=''; document.getElementById('search-form').submit();">&times;</button>
+        @endif
+      </div>
+      @if(request('search'))
+        <a href="{{ route('organizations.all') }}" class="clear-filters-btn">Clear Search</a>
+      @endif
     </form>
   </div>
 

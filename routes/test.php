@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 // Test routes
 
-Route::get('/', [HomeController::class, 'ewfjewfjb'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/quests', [QuestController::class, 'getAll'])->name('quests.all');
 Route::get('/quests/{slug}', [QuestController::class, 'getDetail'])->name('quests.detail');

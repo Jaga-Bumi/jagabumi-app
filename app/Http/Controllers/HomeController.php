@@ -7,7 +7,7 @@ use App\Models\Quest;
 
 class HomeController extends Controller
 {
-    public function ewfjewfjb() {
+    public function index() {
         $top3Quests = Quest::where('status', 'ACTIVE')
             ->with('organization')
             ->withCount('questParticipants')
