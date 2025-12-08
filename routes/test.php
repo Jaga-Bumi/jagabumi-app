@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationRequestController;
+use App\Http\Controllers\PrizeController;
 use App\Http\Controllers\QuestController;
 use App\Http\Controllers\QuestParticipantController;
 use Illuminate\Support\Facades\Route;
@@ -34,3 +35,4 @@ Route::middleware('auth')->group(function () {
 
 // aaron routes
 Route::get('/my-participations/{id}', [QuestParticipantController::class, 'myParticipations']);
+Route::get('/my-prizes/{id}', [PrizeController::class, 'myPrizes']);
