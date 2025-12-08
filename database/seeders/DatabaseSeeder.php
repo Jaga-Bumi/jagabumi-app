@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Article;
 use App\Models\Organization;
 use App\Models\Prize;
+use App\Models\PrizeUser;
 use App\Models\Quest;
 use App\Models\QuestParticipant;
 use App\Models\QuestWinner;
@@ -28,5 +29,6 @@ class DatabaseSeeder extends Seeder
         Prize::factory(6)->create();
         QuestParticipant::factory(10)->create();
         QuestWinner::factory(3)->create();
+        PrizeUser::factory(5)->create();
     }
 }
