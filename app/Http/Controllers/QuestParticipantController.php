@@ -46,6 +46,11 @@ class QuestParticipantController extends Controller
     // View all submissions untuk quest
     public function submissions($questId)
     {
+        $submissions = QuestParticipant::where('quest_id', $questId)->get();
+
+        return response()->json([
+            'submissions' => $submissions,
+        ]);
     }
 
     // View detail submission
