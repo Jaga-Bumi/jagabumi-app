@@ -38,3 +38,4 @@ Route::get('/my-participations/{id}', [QuestParticipantController::class, 'myPar
 Route::get('/my-prizes/{id}', [PrizeController::class, 'myPrizes']);
 Route::get('/quests/{id}', [QuestController::class, 'readOne']);
 Route::get('/quests/{id}/submissions', [QuestParticipantController::class, 'submissions']);
+Route::get('/quests/{questId}/submissions/{participantId}', [QuestParticipantController::class, 'viewSubmission']);

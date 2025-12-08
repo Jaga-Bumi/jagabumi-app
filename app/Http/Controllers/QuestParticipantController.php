@@ -54,8 +54,13 @@ class QuestParticipantController extends Controller
     }
 
     // View detail submission
-    public function viewSubmission($participantId)
+    public function viewSubmission($participantId, $questId)
     {
+        $submission = QuestParticipant::where('quest_id', $questId)->where('user_id', $participantId)->get();
+
+        return response()->json([
+            'submission' => $submission
+        ]);
     }
 
     // Review submission
