@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
@@ -33,4 +34,16 @@ Route::middleware('auth')->group(function () {
   
   Route::post('/quests/{questId}/join', [QuestParticipantController::class, 'join'])->name('quests.join');
   Route::delete('/quests/{questId}/cancel', [QuestParticipantController::class, 'cancelParticipation'])->name('quests.cancel');
+  
+  // Admin routes
+  Route::prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/organization-requests', [AdminController::class, 'organizationRequestsView'])->name('admin.organization-requests');
+    Route::post('/organization-requests/{id}/approve', [AdminController::class, 'approveOrganizationRequest'])->name('admin.organization-requests.approve');
+    Route::post('/organization-requests/{id}/reject', [AdminController::class, 'rejectOrganizationRequest'])->name('admin.organization-requests.reject');
+    
+    Route::get('/quests', [AdminController::class, 'questsView'])->name('admin.quests');
+    Route::post('/quests/{id}/approve', [AdminController::class, 'approveQuest'])->name('admin.quests.approve');
+    Route::post('/quests/{id}/reject', [AdminController::class, 'rejectQuest'])->name('admin.quests.reject');
+  });
 });

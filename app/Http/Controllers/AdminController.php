@@ -11,6 +11,68 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    // Dashboard view
+    public function dashboard()
+    {
+        $pendingOrgRequests = OrganizationRequest::where('status', 'PENDING')->count();
+        $questsInReview = Quest::where('status', 'IN REVIEW')->count();
+        $totalUsers = User::count();
+        $totalOrganizations = Organization::where('status', 'ACTIVE')->count();
+        
+        $recentOrgRequests = OrganizationRequest::with('user:id,name,handle')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        
+        $recentQuests = Quest::with('organization:id,name')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('pages.tests.admin.index', compact(
+            'pendingOrgRequests',
+            'questsInReview',
+            'totalUsers',
+            'totalOrganizations',
+            'recentOrgRequests',
+            'recentQuests'
+        ));
+    }
+
+    // Organization requests view
+    public function organizationRequestsView(Request $request)
+    {
+        $status = $request->query('status', 'all');
+        
+        $query = OrganizationRequest::with(['user:id,name,email,handle,wallet_address'])
+            ->orderBy('created_at', 'desc');
+
+        if ($status !== 'all' && in_array(strtoupper($status), ['PENDING', 'APPROVED', 'REJECTED'])) {
+            $query->where('status', strtoupper($status));
+        }
+
+        $requests = $query->paginate(10);
+
+        return view('pages.tests.admin.organization-requests', compact('requests'));
+    }
+
+    // Quests view
+    public function questsView(Request $request)
+    {
+        $status = $request->query('status', 'all');
+        
+        $query = Quest::with(['organization:id,name,slug,logo_img', 'prizes:id,quest_id,name,type'])
+            ->orderBy('created_at', 'desc');
+
+        if ($status !== 'all' && in_array(strtoupper(str_replace('_', ' ', $status)), ['IN REVIEW', 'APPROVED', 'REJECTED', 'ACTIVE', 'ENDED', 'CANCELLED'])) {
+            $query->where('status', strtoupper(str_replace('_', ' ', $status)));
+        }
+
+        $quests = $query->paginate(10);
+
+        return view('pages.tests.admin.quests', compact('quests'));
+    }
+
     // Organization request management functions
     public function getOrganizationRequests(Request $request)
     {
@@ -32,10 +94,15 @@ class AdminController extends Controller
                     'id' => $req->id,
                     'status' => $req->status,
                     'organization_name' => $req->organization_name,
+                    'organization_type' => $req->organization_type,
                     'organization_description' => $req->organization_description,
-                    'phone_number' => $req->phone_number,
-                    'email' => $req->email,
                     'reason' => $req->reason,
+                    'planned_activities' => $req->planned_activities,
+                    'website_url' => $req->website_url,
+                    'instagram_url' => $req->instagram_url,
+                    'x_url' => $req->x_url,
+                    'facebook_url' => $req->facebook_url,
+                    'admin_notes' => $req->admin_notes,
                     'created_at' => $req->created_at,
                     'responded_at' => $req->responded_at,
                     'user' => [
@@ -43,7 +110,6 @@ class AdminController extends Controller
                         'name' => $req->user->name,
                         'email' => $req->user->email,
                         'handle' => $req->user->handle,
-                        'phone' => $req->user->phone,
                         'wallet_address' => $req->user->wallet_address,
                     ],
                 ];
@@ -76,10 +142,15 @@ class AdminController extends Controller
                 'id' => $request->id,
                 'status' => $request->status,
                 'organization_name' => $request->organization_name,
+                'organization_type' => $request->organization_type,
                 'organization_description' => $request->organization_description,
-                'phone_number' => $request->phone_number,
-                'email' => $request->email,
                 'reason' => $request->reason,
+                'planned_activities' => $request->planned_activities,
+                'website_url' => $request->website_url,
+                'instagram_url' => $request->instagram_url,
+                'x_url' => $request->x_url,
+                'facebook_url' => $request->facebook_url,
+                'admin_notes' => $request->admin_notes,
                 'created_at' => $request->created_at,
                 'responded_at' => $request->responded_at,
                 'approved_by' => $request->approved_by,
@@ -99,8 +170,12 @@ class AdminController extends Controller
     }
 
     // Approve organization request
-    public function approveOrganizationRequest($id)
+    public function approveOrganizationRequest(Request $request, $id)
     {
+        $request->validate([
+            'admin_notes' => 'nullable|string|max:1000',
+        ]);
+
         $orgRequest = OrganizationRequest::find($id);
 
         if (!$orgRequest) {
@@ -122,24 +197,21 @@ class AdminController extends Controller
             'status' => 'APPROVED',
             'approved_by' => Auth::id(),
             'responded_at' => now(),
+            'admin_notes' => $request->input('admin_notes'),
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Organization request approved successfully.',
-            'data' => [
-                'id' => $orgRequest->id,
-                'status' => $orgRequest->status,
-                'organization_name' => $orgRequest->organization_name,
-                'responded_at' => $orgRequest->responded_at,
-            ]
-        ]);
+        return redirect()->route('admin.organization-requests')
+            ->with('success', 'Organization request approved successfully: ' . $orgRequest->organization_name);
         
     }
 
     // Reject organization request
-    public function rejectOrganizationRequest($id)
+    public function rejectOrganizationRequest(Request $request, $id)
     {
+        $request->validate([
+            'admin_notes' => 'nullable|string|max:1000',
+        ]);
+
         $orgRequest = OrganizationRequest::find($id);
 
         if (!$orgRequest) {
@@ -161,18 +233,11 @@ class AdminController extends Controller
             'status' => 'REJECTED',
             'approved_by' => Auth::id(),
             'responded_at' => now(),
+            'admin_notes' => $request->input('admin_notes'),
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Organization request rejected.',
-            'data' => [
-                'id' => $orgRequest->id,
-                'status' => $orgRequest->status,
-                'organization_name' => $orgRequest->organization_name,
-                'responded_at' => $orgRequest->responded_at,
-            ]
-        ]);
+        return redirect()->route('admin.organization-requests')
+            ->with('success', 'Organization request rejected: ' . $orgRequest->organization_name);
     }
 
     // Quest management functions
@@ -296,17 +361,13 @@ class AdminController extends Controller
         $quest = Quest::find($id);
 
         if (!$quest) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Quest not found.',
-            ], 404);
+            return redirect()->route('admin.quests')
+                ->with('error', 'Quest not found.');
         }
 
         if ($quest->status !== 'IN REVIEW') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only quests with IN REVIEW status can be approved. Current status: ' . $quest->status,
-            ], 400);
+            return redirect()->route('admin.quests')
+                ->with('error', 'Only quests with IN REVIEW status can be approved. Current status: ' . $quest->status);
         }
 
         $quest->update([
@@ -314,16 +375,8 @@ class AdminController extends Controller
             'approval_date' => now(),
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Quest approved successfully.',
-            'data' => [
-                'id' => $quest->id,
-                'title' => $quest->title,
-                'status' => $quest->status,
-                'approval_date' => $quest->approval_date,
-            ]
-        ]);
+        return redirect()->route('admin.quests')
+            ->with('success', 'Quest approved successfully: ' . $quest->title);
     }
 
     // Reject quest
@@ -332,32 +385,21 @@ class AdminController extends Controller
         $quest = Quest::find($id);
 
         if (!$quest) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Quest not found.',
-            ], 404);
+            return redirect()->route('admin.quests')
+                ->with('error', 'Quest not found.');
         }
 
         if ($quest->status !== 'IN REVIEW') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only quests with IN REVIEW status can be rejected. Current status: ' . $quest->status,
-            ], 400);
+            return redirect()->route('admin.quests')
+                ->with('error', 'Only quests with IN REVIEW status can be rejected. Current status: ' . $quest->status);
         }
 
         $quest->update([
             'status' => 'REJECTED',
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Quest rejected.',
-            'data' => [
-                'id' => $quest->id,
-                'title' => $quest->title,
-                'status' => $quest->status,
-            ]
-        ]);
+        return redirect()->route('admin.quests')
+            ->with('success', 'Quest rejected: ' . $quest->title);
     }
 
     public function removeUser($userId) // logic remove image avatar belum
