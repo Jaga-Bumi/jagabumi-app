@@ -8,6 +8,7 @@ use App\Http\Requests\Quest\UpdateQuestRequest;
 use App\Models\Organization;
 use App\Models\Prize;
 use App\Models\Quest;
+use App\Models\QuestParticipant;
 use App\Models\QuestWinner;
 use App\Services\BlockchainService;
 use App\Services\FilebaseService;
@@ -51,11 +52,16 @@ class QuestController extends Controller
 
     }
 
+    // Get One quest
     public function readOne($id)
     {
         $quest = Quest::find($id);
+        $participants = QuestParticipant::where('quest_id', $id)->get();
 
-        return response()->json(['quests' => $quest], 200);
+        return response()->json([
+            'quest' => $quest,
+            'participants' => $participants
+        ]);
     }
 
     // Create quest

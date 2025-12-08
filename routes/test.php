@@ -36,3 +36,4 @@ Route::middleware('auth')->group(function () {
 // aaron routes
 Route::get('/my-participations/{id}', [QuestParticipantController::class, 'myParticipations']);
 Route::get('/my-prizes/{id}', [PrizeController::class, 'myPrizes']);
+Route::get('/quests/{id}', [QuestController::class, 'readOne']);
