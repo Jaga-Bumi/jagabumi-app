@@ -18,11 +18,37 @@ use Illuminate\Support\Str;
 class QuestController extends Controller
 {
     // Read all quests
-    public function readAll()
+    public function getAll()
     {
-        $quests = Quest::all();
+        $query = Quest::query();
+  
+        // Filter by status
+        if (request('status')) {
+            $query->where('status', request('status'));
+        } else {
+            $query->where('status', 'ACTIVE');
+        }
+        
+        // Search by title or description
+        if (request('search')) {
+            $query->where(function($q) {
+            $q->where('title', 'like', '%' . request('search') . '%')
+                ->orWhere('desc', 'like', '%' . request('search') . '%');
+            });
+        }
+        
+        // Sort
+        $sort = request('sort', 'newest');
+        if ($sort === 'newest') {
+            $query->latest();
+        } elseif ($sort === 'ending_soon') {
+            $query->orderBy('quest_end_at', 'asc');
+        }
+        
+        $quests = $query->paginate(6);
+        
+        return view('pages.tests.quests', compact('quests'));
 
-        return response()->json(['quests' => $quests], 200);
     }
 
     public function readOne($id)

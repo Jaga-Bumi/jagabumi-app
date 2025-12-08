@@ -78,7 +78,7 @@ class AuthManager {
     }
 
     async #authenticateWithBackend({ userInfo, walletAddress }) {
-        const data = await fetchJSON(this.config.apiRoute, {
+        await fetchJSON(this.config.apiRoute, {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": this.config.csrfToken,
@@ -90,11 +90,8 @@ class AuthManager {
             }),
         });
 
-        this.#redirectToDestination(data.redirect);
-    }
-
-    #redirectToDestination(url) {
-        window.location.href = url;
+        // Refresh
+        window.location.reload();
     }
 
     #handleInitializationError(error) {

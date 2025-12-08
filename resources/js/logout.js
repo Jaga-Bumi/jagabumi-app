@@ -31,11 +31,25 @@ class LogoutManager {
                 console.log("Web3Auth cleanup skipped:", e.message);
             }
 
-            // Submit Laravel logout form
-            this.submitLogoutForm();
+            // Call Laravel logout endpoint
+            const response = await fetch(this.logoutRoute, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": this.csrfToken,
+                },
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                throw new Error("Logout failed");
+            }
         } catch (error) {
             console.error("Logout error:", error);
-            window.location.href = "/login";
+            logoutBtn.disabled = false;
+            logoutBtn.textContent = "Logout";
+            alert("Logout gagal. Silakan coba lagi.");
         }
     }
 

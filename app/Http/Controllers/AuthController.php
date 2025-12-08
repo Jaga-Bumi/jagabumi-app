@@ -12,13 +12,13 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showLogin(): View
+    public function showLogin()
     {
         return view('pages.auth.login');
     }
     
     // Process Web3Auth login/registration
-    public function web3Login(Web3LoginRequest $request): ApiResponse
+    public function web3Login(Web3LoginRequest $request)
     {
         $user = $this->findOrCreateUser(
             $request->user_info,
@@ -31,21 +31,11 @@ class AuthController extends Controller
             ? "Welcome, {$user->name}!"
             : "Welcome back!";
 
-        return ApiResponse::success(
-            [
-                'redirect' => route('dashboard'),
-                'user' => [
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'wallet_address' => $user->wallet_address,
-                ]
-            ],
-            $message
-        );
+        return ApiResponse::success();
     }
 
     // Find existing user or create new one
-    private function findOrCreateUser(array $userInfo, string $walletAddress): User
+    private function findOrCreateUser(array $userInfo, string $walletAddress)
     {
         return User::updateOrCreate(
             ['email' => $userInfo['email']],
@@ -60,14 +50,14 @@ class AuthController extends Controller
     }
 
     // Log out the user and invalidate session
-    public function logout(Request $request): RedirectResponse
+    public function logout(Request $request)
     {
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return ApiResponse::success();
     }
 
 }

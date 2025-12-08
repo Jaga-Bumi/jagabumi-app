@@ -9,6 +9,23 @@ use Illuminate\Support\Facades\Auth;
 
 class OrganizationRequestController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('home')->with('error', 'Please login first');
+        }
+
+        // Get the latest request
+        $latestRequest = OrganizationRequest::where('user_id', $user->id)
+            ->latest()
+            ->first();
+
+        $canSubmit = !$latestRequest || $latestRequest->status === 'REJECTED';
+
+        return view('pages.tests.join-us', compact('latestRequest', 'canSubmit'));
+    }
 
     public function status()
     {
@@ -43,21 +60,17 @@ class OrganizationRequestController extends Controller
     {
         $user = Auth::user();
 
+        if (!$user) {
+            return redirect()->route('home')->with('error', 'Please login first');
+        }
+
         $existingRequest = OrganizationRequest::where('user_id', $user->id)
             ->whereIn('status', ['PENDING', 'APPROVED'])
             ->first();
 
         if ($existingRequest) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You already have a ' . strtolower($existingRequest->status) . ' request.',
-                'request' => [
-                    'id' => $existingRequest->id,
-                    'status' => $existingRequest->status,
-                    'organization_name' => $existingRequest->organization_name,
-                    'created_at' => $existingRequest->created_at,
-                ]
-            ], 400);
+            return redirect()->route('join-us')
+                ->with('error', 'You already have a ' . strtolower($existingRequest->status) . ' request.');
         }
             
         // Create new organization request
@@ -70,16 +83,8 @@ class OrganizationRequestController extends Controller
             'reason' => $request->reason,
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Request successfully submitted. Admin will review your request.',
-            'request' => [
-                'id' => $orgRequest->id,
-                'status' => $orgRequest->status,
-                'organization_name' => $orgRequest->organization_name,
-                'created_at' => $orgRequest->created_at,
-            ]
-        ], 201);
+        return redirect()->route('join-us')
+            ->with('success', 'Request successfully submitted. Admin will review your request.');
     }
 
     public function show()

@@ -240,6 +240,44 @@ class ArticleController extends Controller
 
     }
 
+    public function getAll()
+    {
+        $query = Article::query()
+            ->where('is_deleted', false)
+            ->with(['user:id,name,handle,avatar_url', 'organization:id,name,handle,logo_img']);
+
+        // Live search by title or body content
+        if (request('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('body', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Sorting
+        $sort = request('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'title_asc':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'title_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $articles = $query->paginate(6);
+
+        return view('pages.tests.articles', compact('articles'));
+    }
+
     public function readOne($id){
         
         $article = Article::find($id);

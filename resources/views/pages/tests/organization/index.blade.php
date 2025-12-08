@@ -1,0 +1,1 @@
+{{-- active quests, total participants, prize distributed --}}

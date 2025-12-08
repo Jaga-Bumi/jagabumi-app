@@ -69,6 +69,31 @@ class OrganizationController extends Controller
         return response()->json(['organizations' => $organizations], 200);
     }
 
+    public function getAll()
+    {
+        $query = Organization::query()->where('status', 'ACTIVE');
+
+        // Live search by name, handle, or motto
+        if (request('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('handle', 'like', '%' . $search . '%')
+                  ->orWhere('motto', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Eager load relationships and counts
+        $organizations = $query->withCount('quests')
+            ->withCount(['organizationMembers as members_count' => function($q) {
+                $q->whereIn('role', ['CREATOR', 'MANAGER']);
+            }])
+            ->latest()
+            ->paginate(6);
+
+        return view('pages.tests.organizations', compact('organizations'));
+    }
+
     public function readOne($id){
 
         $organization = Organization::find($id);
