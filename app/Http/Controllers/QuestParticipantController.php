@@ -183,7 +183,7 @@ class QuestParticipantController extends Controller
             ], 400);
         }
 
-        // Check if quest period is active or ended (can submit during quest or after it ends, before judging ends)
+        // Check if quest period is active or ended
         if (now()->lt($quest->quest_start_at)) {
             return response()->json([
                 'success' => false,
@@ -199,11 +199,19 @@ class QuestParticipantController extends Controller
         }
 
         try {
-            // Upload video to storage
+            // Upload video to public storage
             $video = $request->file('video');
             $videoName = time() . '_' . $video->getClientOriginalName();
-            $video->storeAs('public/QuestSubmissionStorage', $videoName);
-            $videoUrl = '/storage/QuestSubmissionStorage/' . $videoName;
+            
+            // Create directory if not exists
+            $uploadPath = public_path('QuestSubmissionStorage');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            
+            // Move file to public directory
+            $video->move($uploadPath, $videoName);
+            $videoUrl = '/QuestSubmissionStorage/' . $videoName;
 
             // Update participant record
             $participant->update([

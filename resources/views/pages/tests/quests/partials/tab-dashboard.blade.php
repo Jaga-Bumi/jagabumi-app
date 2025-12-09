@@ -500,8 +500,8 @@ function getLocation() {
           statusDiv.className = 'mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-xl';
           statusDiv.innerHTML = '<div class="flex items-center gap-3"><svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><p class="text-sm text-green-800 font-bold">✓ Location Valid!</p><p class="text-xs text-green-700">You are ' + distance.toFixed(2) + 'm from quest location (within ' + questRadius + 'm radius)</p></div></div>';
         } else {
-          statusDiv.className = 'mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl';
-          statusDiv.innerHTML = '<div class="flex items-center gap-3"><svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><p class="text-sm text-red-800 font-bold">⚠ Location Too Far!</p><p class="text-xs text-red-700">You are ' + distance.toFixed(2) + 'm away (limit: ' + questRadius + 'm). Attendance will be recorded but marked as invalid.</p></div></div>';
+          statusDiv.className = 'mb-6 p-4 bg-yellow-50 border-2 border-yellow-200 rounded-xl';
+          statusDiv.innerHTML = '<div class="flex items-center gap-3"><svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><p class="text-sm text-yellow-800 font-bold">⚠ Location Outside Radius</p><p class="text-xs text-yellow-700">You are ' + distance.toFixed(2) + 'm away (limit: ' + questRadius + 'm). <strong>You can still submit</strong>, but it will be marked as outside radius.</p></div></div>';
         }
       },
       (error) => {
@@ -627,10 +627,8 @@ if (attendanceForm) {
       
       // Handle redirect (302, 301, etc) - might be auth redirect
       if (response.type === 'opaqueredirect' || response.status === 302 || response.status === 301) {
-        // Check if it's redirecting to login (unauthenticated)
         messageDiv.classList.remove('hidden');
         messageDiv.className = 'mb-4 p-4 bg-yellow-50 border-2 border-yellow-200 rounded-xl text-yellow-800 font-medium';
-        messageDiv.textContent = 'Please login first to submit attendance. Reloading...';
         setTimeout(() => location.reload(), 1500);
         return;
       }

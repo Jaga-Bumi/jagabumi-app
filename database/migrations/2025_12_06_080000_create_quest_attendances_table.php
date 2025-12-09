@@ -21,7 +21,7 @@ return new class extends Migration
             
             $table->text('proof_photo_url');
             $table->text('notes')->nullable();
-            $table->decimal('distance_from_quest_location', 18, 15)->nullable();
+            $table->decimal('distance_from_quest_location', 10, 2)->nullable(); // Max 99,999,999.99 meters (99,999 km)
             $table->boolean('is_valid_location')->default(false);
             $table->timestamps();
         });
