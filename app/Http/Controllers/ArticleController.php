@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Article\CreateUpdateArticleRequest;
 use App\Models\Article;
+use App\Models\Organization;
 use App\Models\OrganizationMember;
+use App\Models\User;
 use DOMDocument;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -229,5 +231,18 @@ class ArticleController extends Controller
         $articles = $query->paginate(6);
 
         return view('pages.articles.index', compact('articles'));
+    }
+
+    public function getOne($id){
+
+        $article = Article::findOrFail($id);
+
+        $writer = User::findOrFail($article->user_id);
+
+        return view('pages.articles.single')->with([
+            'article' => $article,
+            'writer' => $writer
+        ]);
+
     }
 }

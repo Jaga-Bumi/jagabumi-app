@@ -79,7 +79,7 @@
       @if($articles->count() > 0)
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           @foreach($articles as $article)
-            <a href="#" class="block h-full">
+            <a href="{{ route('articles.single', $article->id) }}" class="block h-full">
               <div class="card-interactive overflow-hidden group h-full">
                 <div class="relative overflow-hidden h-48">
                   @if($article->thumbnail)

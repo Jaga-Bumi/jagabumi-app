@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
   // Article routes
   Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
   Route::post('/articles/submit-form', [ArticleController::class, 'store'])->name('articles.store');
+  Route::get('/articles/{id}', [ArticleController::class, 'getOne'])->name('articles.single');
 
   // Organization dashboard routes
   Route::prefix('organization')->group(function () {
