@@ -1,8 +1,9 @@
 <div id="tab-dashboard" class="tab-content hidden">
   @php
-    $hasSubmission = $submissions && $submissions->count() > 0;
-    $latestSubmission = $hasSubmission ? $submissions->first() : null;
-    $canSubmit = $userParticipation->status === 'REGISTERED' && !$hasSubmission;
+    // Use userParticipation for the CURRENT USER's submission (not all submissions)
+    $hasSubmission = $userParticipation && in_array($userParticipation->status, ['COMPLETED', 'APPROVED', 'REJECTED']);
+    $latestSubmission = $hasSubmission ? $userParticipation : null;
+    $canSubmit = $userParticipation && $userParticipation->status === 'REGISTERED';
   @endphp
 
   <!-- Success/Error Messages -->

@@ -217,7 +217,7 @@ $subtitle = "Manage your organization's team members";
               {{-- Actions (Only for non-creator roles and if current user is creator) --}}
               @if($currentUserRole === 'CREATOR')
                 <template x-if="member.role !== 'CREATOR'">
-                  <div class="relative" x-data="{ open: false }">
+                  <div class="relative flex-shrink-0" x-data="{ open: false }">
                     <button 
                       @click="open = !open"
                       @click.away="open = false"
@@ -236,7 +236,7 @@ $subtitle = "Manage your organization's team members";
                       x-transition:leave="transition ease-in duration-75"
                       x-transition:leave-start="transform opacity-100 scale-100"
                       x-transition:leave-end="transform opacity-0 scale-95"
-                      class="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-card border border-border z-10"
+                      class="absolute right-0 bottom-full mb-2 w-48 rounded-lg shadow-lg bg-card border border-border z-50"
                       style="display: none;"
                     >
                       <div class="py-1">

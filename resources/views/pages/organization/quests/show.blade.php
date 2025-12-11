@@ -730,6 +730,123 @@ $isInReview = $quest->status === 'IN REVIEW';
         </div>
       </template>
 
+      {{-- Quest Status Management (only for ACTIVE, ENDED, CANCELLED) --}}
+      @if(!in_array($quest->status, ['IN REVIEW', 'REJECTED']))
+      <div class="glass-card rounded-xl p-6" x-data="{ 
+          currentStatus: '{{ $quest->status }}',
+          isUpdating: false,
+          open: false,
+          async updateStatus(newStatus) {
+              if (newStatus === this.currentStatus) return;
+              
+              this.isUpdating = true;
+              try {
+                  const response = await fetch('{{ route('organization.quests.updateStatus', $quest->id) }}', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                          'Accept': 'application/json'
+                      },
+                      body: JSON.stringify({ status: newStatus })
+                  });
+                  
+                  const data = await response.json();
+                  
+                  if (response.ok && data.success) {
+                      this.currentStatus = newStatus;
+                      this.open = false;
+                      window.location.reload();
+                  } else {
+                      alert(data.message || 'Failed to update status');
+                  }
+              } catch (error) {
+                  console.error('Error:', error);
+                  alert('An error occurred. Please try again.');
+              } finally {
+                  this.isUpdating = false;
+              }
+          }
+      }">
+        <h3 class="font-semibold mb-4">Quest Status</h3>
+        
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <span class="px-3 py-1.5 rounded-lg text-sm font-medium"
+                :class="{
+                  'bg-green-500/10 text-green-500 border border-green-500/20': currentStatus === 'ACTIVE',
+                  'bg-blue-500/10 text-blue-500 border border-blue-500/20': currentStatus === 'ENDED',
+                  'bg-red-500/10 text-red-500 border border-red-500/20': currentStatus === 'CANCELLED'
+                }"
+                x-text="currentStatus">
+          </span>
+          
+          <div class="relative">
+            <button @click="open = !open" 
+                    :disabled="isUpdating"
+                    class="px-3 py-2 rounded-lg border border-border hover:bg-muted transition-colors flex items-center gap-2 text-sm disabled:opacity-50">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span x-show="!isUpdating">Change</span>
+              <span x-show="isUpdating">...</span>
+            </button>
+            
+            <div x-show="open" 
+                 @click.away="open = false"
+                 x-transition
+                 class="absolute right-0 mt-2 w-44 rounded-lg shadow-lg bg-card border border-border z-50">
+              <div class="py-1">
+                <button @click="updateStatus('ACTIVE')"
+                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
+                        :class="currentStatus === 'ACTIVE' ? 'bg-green-500/5' : ''">
+                  <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                  <span class="flex-1">Active</span>
+                  <svg x-show="currentStatus === 'ACTIVE'" class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
+                <button @click="updateStatus('ENDED')"
+                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
+                        :class="currentStatus === 'ENDED' ? 'bg-blue-500/5' : ''">
+                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                  <span class="flex-1">Ended</span>
+                  <svg x-show="currentStatus === 'ENDED'" class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
+                <button @click="updateStatus('CANCELLED')"
+                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
+                        :class="currentStatus === 'CANCELLED' ? 'bg-red-500/5' : ''">
+                  <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                  <span class="flex-1">Cancelled</span>
+                  <svg x-show="currentStatus === 'CANCELLED'" class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {{-- Status Descriptions --}}
+        <div class="text-xs space-y-2 pt-3 border-t border-border">
+          <div class="flex items-center gap-2" :class="currentStatus === 'ACTIVE' ? 'text-green-500' : 'text-muted-foreground'">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            <span>Active - Open for participation</span>
+          </div>
+          <div class="flex items-center gap-2" :class="currentStatus === 'ENDED' ? 'text-blue-500' : 'text-muted-foreground'">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span>Ended - Quest completed</span>
+          </div>
+          <div class="flex items-center gap-2" :class="currentStatus === 'CANCELLED' ? 'text-red-500' : 'text-muted-foreground'">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+            <span>Cancelled - Quest discontinued</span>
+          </div>
+        </div>
+      </div>
+      @endif
+
       {{-- Status Info --}}
       @if($quest->status === 'IN REVIEW')
         <div class="glass-card rounded-xl p-6 bg-yellow-500/5 border border-yellow-500/20">

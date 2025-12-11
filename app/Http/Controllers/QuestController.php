@@ -8,11 +8,13 @@ use App\Http\Requests\Quest\UpdateQuestRequest;
 use App\Models\Organization;
 use App\Models\OrganizationMember;
 use App\Models\Prize;
+use App\Models\PrizeUser;
 use App\Models\Quest;
 use App\Models\QuestParticipant;
 use App\Models\QuestWinner;
 use App\Services\BlockchainService;
 use App\Services\FilebaseService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -452,102 +454,189 @@ class QuestController extends Controller
     }
 
     // Distribute Rewards to Winners
-    public function distributeRewards($questId, BlockchainService $blockchain, FilebaseService $filebase)
+    public function distributeRewards(Request $request, BlockchainService $blockchain, FilebaseService $filebase)
     {
+        $questId = $request->input('quest_id');
+        
+        if (!$questId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quest ID is required'
+            ], 400);
+        }
+
         DB::beginTransaction();
         try {
-            $quest = Quest::with(['prizes', 'winners.user'])->findOrFail($questId);
+            $quest = Quest::with(['prizes', 'questWinners.user', 'organization'])->findOrFail($questId);
 
+            // Check authorization via OrganizationMember
             $user = Auth::user();
-            if ($user->org_id !== $quest->org_id) {
-                abort(403, 'Anda tidak memiliki akses untuk mendistribusikan reward quest ini.');
+            $isOrgMember = OrganizationMember::where('user_id', $user->id)
+                ->where('organization_id', $quest->org_id)
+                ->where('status', 'ACTIVE')
+                ->exists();
+                
+            if (!$isOrgMember) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to distribute prizes for this quest.'
+                ], 403);
             }
 
-            if ($quest->status !== 'ACTIVE' && $quest->status !== 'ENDED') {
+            if (!in_array($quest->status, ['APPROVED', 'ACTIVE', 'ENDED'])) {
                 return response()->json([
-                    'error' => 'Quest harus berstatus ACTIVE atau ENDED untuk distribusi reward.'
+                    'success' => false,
+                    'message' => 'Quest must be APPROVED, ACTIVE, or ENDED to distribute rewards.'
                 ], 400);
             }
 
-            $winners = $quest->winners()->where('reward_distributed', false)->get();
+            $winners = $quest->questWinners()->where('reward_distributed', false)->with('user')->get();
             
             if ($winners->isEmpty()) {
                 return response()->json([
-                    'error' => 'Tidak ada pemenang yang belum menerima reward.'
+                    'success' => false,
+                    'message' => 'No pending winners to distribute rewards to.'
                 ], 400);
             }
 
-            $certificatePrize = $quest->prizes()->where('type', 'CERTIFICATE')->first();
+            // Get ALL prizes for this quest (both CERTIFICATE and COUPON)
+            $prizes = $quest->prizes;
             
-            if (!$certificatePrize) {
+            if ($prizes->isEmpty()) {
                 return response()->json([
-                    'error' => 'Prize certificate tidak ditemukan untuk quest ini.'
+                    'success' => false,
+                    'message' => 'No prizes configured for this quest.'
                 ], 400);
             }
 
             $recipients = [];
             $uris = [];
+            $prizeUserRecords = [];
 
+            // Process each winner × each prize combination
             foreach ($winners as $winner) {
-                if (!$winner->user->wallet_address) {
+                if (!$winner->user || !$winner->user->wallet_address) {
                     continue;
                 }
 
-                // Create metadata for NFT
-                $metadata = [
-                    'name' => $certificatePrize->name,
-                    'description' => $certificatePrize->description ?? "Sertifikat pemenang {$quest->title}",
-                    'image' => "ipfs://{$certificatePrize->image_url}",
-                    'attributes' => [
-                        [
-                            'trait_type' => 'Quest',
-                            'value' => $quest->title
-                        ],
-                        [
-                            'trait_type' => 'Winner',
-                            'value' => $winner->user->name
-                        ],
-                        [
-                            'trait_type' => 'Organization',
-                            'value' => $quest->organization->name ?? 'JagaBumi'
-                        ],
-                        [
-                            'trait_type' => 'Date',
-                            'value' => now()->toDateString()
+                foreach ($prizes as $prize) {
+                    // Get raw image_url from database (not the accessor-modified one)
+                    $rawImageUrl = $prize->getAttributes()['image_url'] ?? $prize->getRawOriginal('image_url');
+                    
+                    Log::info("Prize {$prize->id} raw image_url: " . $rawImageUrl);
+                    
+                    // Check if image needs to be uploaded to IPFS
+                    $imageCid = $rawImageUrl;
+                    if (!$rawImageUrl || (!str_starts_with($rawImageUrl, 'Qm') && !str_starts_with($rawImageUrl, 'bafy'))) {
+                        // Extract filename from URL if it's a full URL
+                        $imageFilename = $rawImageUrl;
+                        
+                        // If it's a URL, extract just the filename
+                        if (str_contains($rawImageUrl, '/')) {
+                            // Get everything after the last /
+                            $imageFilename = basename(parse_url($rawImageUrl, PHP_URL_PATH));
+                        }
+                        
+                        Log::info("Extracted filename: " . $imageFilename);
+                        
+                        // Image is a local file, need to upload to IPFS
+                        // Try to find the image file in PrizeStorage
+                        $imagePath = public_path('PrizeStorage/' . $imageFilename);
+                        
+                        if (file_exists($imagePath)) {
+                            Log::info("Uploading prize image from: " . $imagePath);
+                            
+                            $imageContent = file_get_contents($imagePath);
+                            $extension = pathinfo($imagePath, PATHINFO_EXTENSION) ?: 'png';
+                            $mimeType = $extension === 'jpg' || $extension === 'jpeg' ? 'image/jpeg' : 'image/' . $extension;
+                            $imageFileName = "prizes/quest_{$questId}_{$prize->type}_{$prize->id}_" . time() . "." . $extension;
+                            
+                            $imageCid = $filebase->uploadToIpfs($imageContent, $imageFileName, $mimeType);
+                            
+                            if (!$imageCid) {
+                                Log::warning("Failed to upload prize image to IPFS for {$prize->name}, using placeholder");
+                                $imageCid = "placeholder"; // Use placeholder if upload fails
+                            } else {
+                                // Update prize with IPFS CID for future use
+                                $prize->update(['image_url' => $imageCid]);
+                                Log::info("Prize image uploaded to IPFS: " . $imageCid);
+                            }
+                        } else {
+                            Log::warning("Prize image file not found at: " . $imagePath);
+                            $imageCid = "placeholder"; // Use placeholder if file not found
+                        }
+                    }
+
+                    // Create metadata for NFT
+                    $metadata = [
+                        'name' => $prize->name,
+                        'description' => $prize->description ?? "{$prize->type} for {$quest->title}",
+                        'image' => "ipfs://{$imageCid}",
+                        'attributes' => [
+                            [
+                                'trait_type' => 'Quest',
+                                'value' => $quest->title
+                            ],
+                            [
+                                'trait_type' => 'Type',
+                                'value' => $prize->type
+                            ],
+                            [
+                                'trait_type' => 'Winner',
+                                'value' => $winner->user->name
+                            ],
+                            [
+                                'trait_type' => 'Organization',
+                                'value' => $quest->organization->name ?? 'JagaBumi'
+                            ],
+                            [
+                                'trait_type' => 'Date',
+                                'value' => now()->toDateString()
+                            ]
                         ]
-                    ]
-                ];
+                    ];
 
-                // Upload metadata JSON to IPFS
-                $metadataFileName = "metadata/quest_{$questId}_winner_{$winner->user_id}_" . time() . ".json";
-                $metadataCid = $filebase->uploadToIpfs(
-                    json_encode($metadata), 
-                    $metadataFileName, 
-                    'application/json'
-                );
+                    // Upload metadata JSON to IPFS
+                    $metadataFileName = "metadata/quest_{$questId}_prize_{$prize->id}_winner_{$winner->user_id}_" . time() . ".json";
+                    $metadataCid = $filebase->uploadToIpfs(
+                        json_encode($metadata), 
+                        $metadataFileName, 
+                        'application/json'
+                    );
 
-                if (!$metadataCid) {
-                    throw new \Exception("Gagal upload metadata untuk winner {$winner->user->name}");
+                    if (!$metadataCid) {
+                        throw new \Exception("Failed to upload metadata for {$winner->user->name}");
+                    }
+
+                    $recipients[] = $winner->user->wallet_address;
+                    $uris[] = "ipfs://{$metadataCid}";
+                    
+                    // Prepare prize_users record
+                    $prizeUserRecords[] = [
+                        'prize_id' => $prize->id,
+                        'user_id' => $winner->user_id,
+                        'token_uri' => "ipfs://{$metadataCid}",
+                    ];
                 }
-
-                $recipients[] = $winner->user->wallet_address;
-                $uris[] = "ipfs://{$metadataCid}";
             }
 
             if (empty($recipients)) {
                 return response()->json([
-                    'error' => 'Tidak ada pemenang dengan wallet address yang valid.'
+                    'success' => false,
+                    'message' => 'No winners with valid wallet addresses found.'
                 ], 400);
             }
 
+            // Mint all NFTs in one batch transaction
             $txHash = $blockchain->mintBatch($recipients, $uris);
 
             if (!$txHash) {
-                throw new \Exception("Gagal melakukan minting NFT, tidak ada transaction hash.");
+                throw new \Exception("Failed to mint NFTs - no transaction hash returned.");
             }
 
+            // Update winners as distributed
             foreach ($winners as $winner) {
-                if ($winner->user->wallet_address) {
+                if ($winner->user && $winner->user->wallet_address) {
                     $winner->update([
                         'reward_distributed' => true,
                         'tx_hash' => $txHash,
@@ -556,20 +645,38 @@ class QuestController extends Controller
                 }
             }
 
+            // Create prize_users records
+            foreach ($prizeUserRecords as $record) {
+                PrizeUser::create([
+                    'prize_id' => $record['prize_id'],
+                    'user_id' => $record['user_id'],
+                    'token_uri' => $record['token_uri'],
+                    'tx_hash' => $txHash,
+                ]);
+            }
+
+            // Update quest status to ENDED if still ACTIVE
+            if ($quest->status === 'ACTIVE') {
+                $quest->update(['status' => 'ENDED']);
+            }
+
             DB::commit();
 
             return response()->json([
-                'message' => 'Rewards berhasil didistribusikan ke ' . count($recipients) . ' pemenang.',
+                'success' => true,
+                'message' => 'Prizes distributed to ' . count($winners) . ' winners (' . count($recipients) . ' NFTs minted)',
                 'transaction_hash' => $txHash,
                 'recipients_count' => count($recipients),
-                'recipients' => $recipients
+                'nfts_minted' => count($uris),
             ], 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Prize distribution failed: ' . $e->getMessage());
             
             return response()->json([
-                'error' => 'Gagal mendistribusikan rewards: ' . $e->getMessage()
+                'success' => false,
+                'message' => 'Failed to distribute prizes: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -636,23 +743,50 @@ class QuestController extends Controller
         ]);
     }
 
-    public function changeStatus($questId, $newStatus)
+    public function updateStatus($questId)
     {
         $quest = Quest::findOrFail($questId);
+        $user = Auth::user();
 
-        $validStatuses = ['ACTIVE', 'ENDED', 'CANCELLED'];
-        if (!in_array($newStatus, $validStatuses)) {
+        // Check if user has access (is member of the organization)
+        $isMember = OrganizationMember::where('user_id', $user->id)
+            ->where('organization_id', $quest->org_id)
+            ->where('status', 'ACTIVE')
+            ->whereIn('role', ['CREATOR', 'MANAGER'])
+            ->exists();
+
+        if (!$isMember) {
             return response()->json([
-                'error' => 'Invalid status value.'
+                'success' => false,
+                'message' => 'You do not have permission to update this quest.'
+            ], 403);
+        }
+
+        // Only allow status change if quest is not IN REVIEW or REJECTED
+        if (in_array($quest->status, ['IN REVIEW', 'REJECTED'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot change status of quests that are IN REVIEW or REJECTED.'
             ], 400);
         }
 
-        $quest->status = $newStatus;
+        $request = request();
+        $validStatuses = ['ACTIVE', 'ENDED', 'CANCELLED'];
+        
+        if (!$request->has('status') || !in_array($request->status, $validStatuses)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid status. Must be ACTIVE, ENDED, or CANCELLED.'
+            ], 400);
+        }
+
+        $quest->status = $request->status;
         $quest->save();
 
         return response()->json([
-            'message' => 'Quest status updated successfully.',
-            'quest' => $quest
+            'success' => true,
+            'message' => 'Quest status updated to ' . $request->status,
+            'status' => $request->status
         ]);
     }
 
@@ -751,13 +885,24 @@ class QuestController extends Controller
                 ->with('error', 'Please select or create an organization first.');
         }
 
+        // Include APPROVED, ACTIVE, and ENDED quests that have winners
         $quests = Quest::where('org_id', $orgId)
-            ->where('status', 'ACTIVE')
-            ->with(['prizes', 'winners.user'])
-            ->withCount(['winners' => function($q) {
+            ->whereIn('status', ['APPROVED', 'ACTIVE', 'ENDED'])
+            ->whereHas('questWinners')
+            ->with(['prizes', 'questWinners.user'])
+            ->withCount(['questWinners' => function($q) {
                 $q->where('reward_distributed', false);
             }])
-            ->get();
+            ->get()
+            ->map(function($quest) {
+                // Transform questWinners to include prize_status and rename to 'winners' for frontend
+                $quest->winners = $quest->questWinners->map(function($winner) {
+                    $winner->prize_status = $winner->reward_distributed ? 'DISTRIBUTED' : 'PENDING';
+                    return $winner;
+                });
+                $quest->winners_count = $quest->quest_winners_count;
+                return $quest;
+            });
 
         return view('pages.organization.prizes', compact('quests', 'userOrganizations', 'currentOrg'));
     }

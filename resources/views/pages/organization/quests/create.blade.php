@@ -126,7 +126,7 @@ $subtitle = 'Create a new environmental quest for your organization';
       } else if (field === 'winner_limit') {
         if (!this.formData.winner_limit || isNaN(this.formData.winner_limit) || this.formData.winner_limit < 1) {
           this.errors.winner_limit = 'Winner limit must be at least 1';
-        } else if (this.formData.winner_limit > this.formData.participant_limit) {
+        } else if (parseInt(this.formData.winner_limit) > parseInt(this.formData.participant_limit)) {
           this.errors.winner_limit = 'Winner limit cannot exceed participant limit';
         }
       }
@@ -247,7 +247,7 @@ $subtitle = 'Create a new environmental quest for your organization';
     </div>
 
     {{-- Form --}}
-    <form action="{{ route('organization.quests.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('organization.quests.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
       @csrf
       <input type="hidden" name="org_id" value="{{ $organization->id }}">
 
@@ -268,7 +268,6 @@ $subtitle = 'Create a new environmental quest for your organization';
             x-model="formData.title"
             @input="validateField('title')"
             value="{{ old('title') }}"
-            required
             maxlength="255"
             :class="errors.title ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
             class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
@@ -288,7 +287,6 @@ $subtitle = 'Create a new environmental quest for your organization';
             name="desc" 
             x-model="formData.desc"
             @input="validateField('desc')"
-            required
             rows="6"
             :class="errors.desc ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
             class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all resize-none"
@@ -309,7 +307,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               id="banner" 
               name="banner" 
               accept="image/*"
-              required
               @change="previewImage($event, 'banner'); validateField('banner')"
               class="hidden"
             >
@@ -355,7 +352,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               x-model="formData.location_name"
               @input="validateField('location_name')"
               value="{{ old('location_name') }}"
-              required
               :class="errors.location_name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
               class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               placeholder="e.g., Kuta Beach, Bali"
@@ -375,7 +371,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               x-model="formData.latitude"
               @input="validateField('latitude')"
               value="{{ old('latitude') }}"
-              required
               step="0.00000001"
               min="-90"
               max="90"
@@ -398,7 +393,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               x-model="formData.longitude"
               @input="validateField('longitude')"
               value="{{ old('longitude') }}"
-              required
               step="0.00000001"
               min="-180"
               max="180"
@@ -448,7 +442,6 @@ $subtitle = 'Create a new environmental quest for your organization';
                 x-model="formData.registration_start_at"
                 @input="validateField('registration_start_at')"
                 value="{{ old('registration_start_at') }}"
-                required
                 :class="errors.registration_start_at ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                 class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               >
@@ -467,7 +460,6 @@ $subtitle = 'Create a new environmental quest for your organization';
                 x-model="formData.registration_end_at"
                 @input="validateField('registration_end_at')"
                 value="{{ old('registration_end_at') }}"
-                required
                 :class="errors.registration_end_at ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                 class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               >
@@ -486,7 +478,6 @@ $subtitle = 'Create a new environmental quest for your organization';
                 x-model="formData.quest_start_at"
                 @input="validateField('quest_start_at')"
                 value="{{ old('quest_start_at') }}"
-                required
                 :class="errors.quest_start_at ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                 class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               >
@@ -505,7 +496,6 @@ $subtitle = 'Create a new environmental quest for your organization';
                 x-model="formData.quest_end_at"
                 @input="validateField('quest_end_at')"
                 value="{{ old('quest_end_at') }}"
-                required
                 :class="errors.quest_end_at ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                 class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               >
@@ -524,7 +514,6 @@ $subtitle = 'Create a new environmental quest for your organization';
                 x-model="formData.judging_start_at"
                 @input="validateField('judging_start_at')"
                 value="{{ old('judging_start_at') }}"
-                required
                 :class="errors.judging_start_at ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                 class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               >
@@ -543,7 +532,6 @@ $subtitle = 'Create a new environmental quest for your organization';
                 x-model="formData.judging_end_at"
                 @input="validateField('judging_end_at')"
                 value="{{ old('judging_end_at') }}"
-                required
                 :class="errors.judging_end_at ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                 class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               >
@@ -562,7 +550,6 @@ $subtitle = 'Create a new environmental quest for your organization';
                 x-model="formData.prize_distribution_date"
                 @input="validateField('prize_distribution_date')"
                 value="{{ old('prize_distribution_date') }}"
-                required
                 :class="errors.prize_distribution_date ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                 class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
               >
@@ -592,7 +579,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               x-model="formData.participant_limit"
               @input="validateField('participant_limit')"
               value="{{ old('participant_limit') }}"
-              required
               min="1"
               :class="errors.participant_limit ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
               class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
@@ -614,7 +600,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               x-model="formData.winner_limit"
               @input="validateField('winner_limit')"
               value="{{ old('winner_limit') }}"
-              required
               min="1"
               :class="errors.winner_limit ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
               class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
@@ -672,7 +657,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               x-model="formData.cert_name"
               @input="validateField('cert_name')"
               value="{{ old('cert_name') }}"
-              required
               maxlength="255"
               :class="errors.cert_name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
               class="w-full px-4 py-3 rounded-lg bg-background border focus:ring-2 focus:border-primary transition-all"
@@ -691,7 +675,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               name="cert_description" 
               x-model="formData.cert_description"
               @input="validateField('cert_description')"
-              required
               rows="3"
               maxlength="5000"
               :class="errors.cert_description ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
@@ -711,7 +694,6 @@ $subtitle = 'Create a new environmental quest for your organization';
               id="cert_image" 
               name="cert_image" 
               accept="image/jpeg,image/jpg,image/png"
-              required
               @change="previewImage($event, 'cert'); validateField('cert_image')"
               class="hidden"
             >

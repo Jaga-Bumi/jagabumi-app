@@ -156,6 +156,155 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
       </div>
     </div>
 
+    {{-- Organization Status (Creator Only) --}}
+    @if($isCreator)
+    <div class="glass-card rounded-xl p-6" x-data="{ 
+        currentStatus: '{{ $organization->status }}',
+        isUpdating: false,
+        async updateStatus(newStatus) {
+            if (newStatus === this.currentStatus) return;
+            
+            this.isUpdating = true;
+            try {
+                const response = await fetch('{{ route('organization.updateStatus', ['id' => $organization->id]) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    this.currentStatus = newStatus;
+                } else {
+                    alert(data.message || 'Failed to update status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                this.isUpdating = false;
+            }
+        }
+    }">
+      <div class="flex items-center justify-between gap-4 flex-wrap">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+               :class="{
+                 'bg-green-500/10': currentStatus === 'ACTIVE',
+                 'bg-yellow-500/10': currentStatus === 'HIATUS',
+                 'bg-red-500/10': currentStatus === 'INACTIVE'
+               }">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 :class="{
+                   'text-green-500': currentStatus === 'ACTIVE',
+                   'text-yellow-500': currentStatus === 'HIATUS',
+                   'text-red-500': currentStatus === 'INACTIVE'
+                 }">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold">Organization Status</h3>
+            <p class="text-sm text-muted-foreground">Control your organization's visibility</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          {{-- Status Badge --}}
+          <span class="px-3 py-1.5 rounded-lg text-sm font-medium"
+                :class="{
+                  'bg-green-500/10 text-green-500 border border-green-500/20': currentStatus === 'ACTIVE',
+                  'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20': currentStatus === 'HIATUS',
+                  'bg-red-500/10 text-red-500 border border-red-500/20': currentStatus === 'INACTIVE'
+                }"
+                x-text="currentStatus">
+          </span>
+          
+          {{-- Status Dropdown --}}
+          <div class="relative" x-data="{ open: false }">
+            <button @click="open = !open" 
+                    :disabled="isUpdating"
+                    class="px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors flex items-center gap-2 disabled:opacity-50">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span x-show="!isUpdating">Change Status</span>
+              <span x-show="isUpdating">Updating...</span>
+            </button>
+            
+            <div x-show="open" 
+                 @click.away="open = false"
+                 x-transition
+                 class="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-card border border-border z-50">
+              <div class="py-1">
+                <button @click="updateStatus('ACTIVE'); open = false"
+                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
+                        :class="currentStatus === 'ACTIVE' ? 'bg-green-500/5' : ''">
+                  <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                  <span class="flex-1">Active</span>
+                  <svg x-show="currentStatus === 'ACTIVE'" class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
+                <button @click="updateStatus('HIATUS'); open = false"
+                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
+                        :class="currentStatus === 'HIATUS' ? 'bg-yellow-500/5' : ''">
+                  <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                  <span class="flex-1">Hiatus</span>
+                  <svg x-show="currentStatus === 'HIATUS'" class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
+                <button @click="updateStatus('INACTIVE'); open = false"
+                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
+                        :class="currentStatus === 'INACTIVE' ? 'bg-red-500/5' : ''">
+                  <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                  <span class="flex-1">Inactive</span>
+                  <svg x-show="currentStatus === 'INACTIVE'" class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {{-- Status Descriptions --}}
+      <div class="mt-4 pt-4 border-t border-border">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'ACTIVE' ? 'bg-green-500/5' : ''">
+            <span class="w-2 h-2 rounded-full bg-green-500 mt-1 flex-shrink-0"></span>
+            <div>
+              <span class="font-medium text-green-600 dark:text-green-400">Active</span>
+              <p class="text-muted-foreground">Visible to public, can create quests</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'HIATUS' ? 'bg-yellow-500/5' : ''">
+            <span class="w-2 h-2 rounded-full bg-yellow-500 mt-1 flex-shrink-0"></span>
+            <div>
+              <span class="font-medium text-yellow-600 dark:text-yellow-400">Hiatus</span>
+              <p class="text-muted-foreground">Temporarily paused, limited visibility</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'INACTIVE' ? 'bg-red-500/5' : ''">
+            <span class="w-2 h-2 rounded-full bg-red-500 mt-1 flex-shrink-0"></span>
+            <div>
+              <span class="font-medium text-red-600 dark:text-red-400">Inactive</span>
+              <p class="text-muted-foreground">Hidden from public, no new quests</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    @endif
+
     {{-- Description --}}
     <div class="glass-card rounded-xl p-6">
       <div class="flex items-center gap-2 mb-4">

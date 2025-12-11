@@ -1,77 +1,100 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationMemberController;
+use App\Http\Controllers\OrganizationRequestController;
 use App\Http\Controllers\QuestController;
+use App\Http\Controllers\QuestParticipantController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('pages.home.index');
-// })->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Route::get('login', [AuthController::class, 'showLogin'])->name('login');
-// Route::post('auth/web3', [AuthController::class, 'web3Login'])->name('auth.web3');
+Route::get('/quests', [QuestController::class, 'getAll'])->name('quests.all');
+Route::get('/quests/{slug}', [QuestController::class, 'getDetail'])->name('quests.detail');
 
-// Route::middleware('auth')->group(function () {
-//     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-//     Route::get('/profile', function () {
-//         return view('pages.profile.index');
-//     })->name('profile');
-// });
+Route::get('/organizations', [OrganizationController::class, 'getAll'])->name('organizations.all');
+Route::get('/organizations/{slug}', [OrganizationController::class, 'show'])->name('organizations.show');
 
-// Route::prefix('quests')->name('quests.')->group(function(){
-//     Route::get('', [QuestController::class, 'readAll'])->name('all');
-//     Route::get('{id}', [QuestController::class, 'readOne'])->name('one');
-//     Route::post('create', [QuestController::class, 'create'])->name('create');
-//     Route::put('update/{id}', [QuestController::class, 'update'])->name('update');
-//     Route::delete('destroy/{id}', [QuestController::class, 'destroy'])->name('destroy');
-// });
+Route::get('/articles', [ArticleController::class, 'getAll'])->name('articles.all');
 
-// // Route::get('/articles', function () {
-// //     return view('pages.articles.index');
-// // })->name('articles.all');
-// Route::prefix('articles')->name('articles.')->group(function(){
-//     Route::get('', [ArticleController::class, 'readAll'])->name('all');
-//     Route::get('{id}', [ArticleController::class, 'readOne'])->name('one');
-// //     Route::post('create', [ArticleController::class, 'create'])->name('create');
-// //     Route::put('update/{id}', [ArticleController::class, 'update'])->name('update');
-// //     Route::delete('destroy/{id}', [ArticleController::class, 'destroy'])->name('destroy');
-// });
+Route::get('/join-us', [OrganizationRequestController::class, 'index'])->name('join-us');
 
-// // Route::get('/articles/{id}', function ($id) {
-// //     return view('pages.articles.show', compact('id'));
-// // })->name('articles.one');
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
 
-// Route::get('/leaderboard', function () {
-//     return view('pages.leaderboard.index');
-// })->name('leaderboard');
+Route::post('auth/web3', [AuthController::class, 'web3Login'])->name('auth.web3');
 
-// Route::get('dashboard', function () {
-//     return redirect()->route('home');
-// })->name('dashboard');
+Route::middleware('auth')->group(function () {
+  Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+  
+  Route::get('/profile', [HomeController::class, 'profile'])->name('profile.index');
+  Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard.index');
+  
+  // Invitation routes
+  Route::post('/invitations/{membershipId}/accept', [OrganizationMemberController::class, 'acceptInvitation'])->name('invitations.accept');
+  Route::post('/invitations/{membershipId}/decline', [OrganizationMemberController::class, 'declineInvitation'])->name('invitations.decline');
+  
+  Route::post('/join-us/submit', [OrganizationRequestController::class, 'store'])->name('join-us.store');
+  
+  Route::post('/quests/{questId}/join', [QuestParticipantController::class, 'join'])->name('quests.join');
+  Route::delete('/quests/{questId}/cancel', [QuestParticipantController::class, 'cancelParticipation'])->name('quests.cancel');
+  Route::post('/quests/{questId}/submit-proof', [QuestParticipantController::class, 'submitProof'])->name('quests.submit-proof');
+  
+  // Attendance routes
+  Route::post('/quests/{questId}/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('quests.attendance.check-in');
+  Route::post('/quests/{questId}/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('quests.attendance.check-out');
+  
+  // Organization dashboard routes
+  Route::prefix('organization')->group(function () {
+    Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('organization.dashboard');
+    Route::get('/profile', [OrganizationController::class, 'profile'])->name('organization.profile');
+    Route::post('/switch/{orgId}', [OrganizationController::class, 'switchOrganization'])->name('organization.switch');
+    Route::get('/create', [OrganizationController::class, 'createView'])->name('organization.create');
+    Route::post('/store', [OrganizationController::class, 'create'])->name('organization.store');
+    Route::post('/{id}/update', [OrganizationController::class, 'update'])->name('organization.update');
+    Route::post('/{id}/update-status', [OrganizationController::class, 'updateStatus'])->name('organization.updateStatus');
+    
+    // Quest management
+    Route::get('/quests', [QuestController::class, 'organizationQuests'])->name('organization.quests.index');
+    Route::get('/quests/create', [QuestController::class, 'createView'])->name('organization.quests.create');
+    Route::get('/quests/{id}', [QuestController::class, 'showQuest'])->name('organization.quests.show');
+    Route::post('/quests/store', [QuestController::class, 'create'])->name('organization.quests.store');
+    Route::put('/quests/{id}', [QuestController::class, 'update'])->name('organization.quests.update');
+    Route::delete('/quests/{id}', [QuestController::class, 'destroy'])->name('organization.quests.destroy');
+    Route::post('/quests/{id}/update-status', [QuestController::class, 'updateStatus'])->name('organization.quests.updateStatus');
+    
+    // Member management
+    Route::get('/members', [OrganizationMemberController::class, 'index'])->name('organization.members.index');
+    Route::post('/members/{orgId}/invite', [OrganizationMemberController::class, 'invite'])->name('organization.members.invite');
+    Route::delete('/members/{memberId}', [OrganizationMemberController::class, 'removeMember'])->name('organization.members.remove');
+    Route::post('/members/{memberId}/resend', [OrganizationMemberController::class, 'resendInvitation'])->name('organization.members.resend');
+    
+    // Submission management
+    Route::get('/submissions', [QuestParticipantController::class, 'organizationSubmissions'])->name('organization.submissions');
+    Route::post('/submissions/{submissionId}/approve', [QuestParticipantController::class, 'approveSubmission'])->name('organization.submissions.approve');
+    Route::post('/submissions/{submissionId}/reject', [QuestParticipantController::class, 'rejectSubmission'])->name('organization.submissions.reject');
+    
+    // Prize distribution
+    Route::get('/prizes', [QuestController::class, 'organizationPrizes'])->name('organization.prizes');
+    Route::post('/prizes/distribute', [QuestController::class, 'distributeRewards'])->name('organization.prizes.distribute');
+    
+  });
+  
+});
 
-// Route::prefix('organizations')->name('org.')->group(function(){
-//     Route::get('', [OrganizationController::class, 'readAll'])->name('all');
-//     Route::get('{id}', [OrganizationController::class, 'readOne'])->name('one');
-// //     Route::put('update/{id}', [OrganizationController::class, 'update'])->name('update');
-// //     Route::delete('destroy/{id}', [OrganizationController::class, 'destroy'])->name('destroy');
-// });
-
-// // Route::prefix('prizes')->name('prizes.')->group(function(){
-// //     Route::get('', [PrizeController::class, 'readAll'])->name('all');
-// //     Route::get('{id}', [PrizeController::class, 'readOne'])->name('one');
-// //     Route::post('create', [PrizeController::class, 'create'])->name('create');
-// //     Route::put('update/{id}', [PrizeController::class, 'update'])->name('update');
-// //     Route::delete('destroy/{id}', [PrizeController::class, 'destroy'])->name('destroy');
-// // });
-
-// // Route::prefix('users')->name('users.')->group(function(){
-// //     Route::get('', [UserController::class, 'readAll'])->name('all');
-// //     Route::get('{id}', [UserController::class, 'readOne'])->name('one');
-// //     Route::put('update/{id}', [UserController::class, 'update'])->name('update');
-// //     Route::delete('destroy/{id}', [UserController::class, 'destroy'])->name('destroy');
-// // });
-
-
-include __DIR__ . '/test.php';
+// Admin routes (TODO: add auth middleware later)
+Route::prefix('admin')->group(function () {
+  Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+  Route::get('/organization-requests', [AdminController::class, 'organizationRequestsView'])->name('admin.organization-requests');
+  Route::post('/organization-requests/{id}/approve', [AdminController::class, 'approveOrganizationRequest'])->name('admin.organization-requests.approve');
+  Route::post('/organization-requests/{id}/reject', [AdminController::class, 'rejectOrganizationRequest'])->name('admin.organization-requests.reject');
+  
+  Route::get('/quests', [AdminController::class, 'questsView'])->name('admin.quests');
+  Route::post('/quests/{id}/approve', [AdminController::class, 'approveQuest'])->name('admin.quests.approve');
+  Route::post('/quests/{id}/reject', [AdminController::class, 'rejectQuest'])->name('admin.quests.reject');
+});

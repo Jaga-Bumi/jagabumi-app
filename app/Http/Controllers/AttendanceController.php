@@ -46,6 +46,13 @@ class AttendanceController extends Controller
             return redirect()->back()->withErrors(['error' => 'You already checked-in. Please check-out first.']);
         }
 
+        // Validate liveness code if quest has one
+        if ($quest->liveness_code) {
+            if (!$request->has('liveness_code') || $request->liveness_code !== $quest->liveness_code) {
+                return redirect()->back()->withErrors(['error' => 'Invalid liveness code. Please check the code displayed at the location.']);
+            }
+        }
+
         DB::beginTransaction();
         try {
             // Upload foto bukti
@@ -142,6 +149,13 @@ class AttendanceController extends Controller
         // Validasi: hanya bisa check-out jika last record adalah check-in
         if (!$lastAttendance || $lastAttendance->type === 'CHECK_OUT') {
             return redirect()->back()->withErrors(['error' => 'You must check-in first before checking-out.']);
+        }
+
+        // Validate liveness code if quest has one
+        if ($quest->liveness_code) {
+            if (!$request->has('liveness_code') || $request->liveness_code !== $quest->liveness_code) {
+                return redirect()->back()->withErrors(['error' => 'Invalid liveness code. Please check the code displayed at the location.']);
+            }
         }
 
         DB::beginTransaction();

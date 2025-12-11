@@ -3,6 +3,8 @@
 namespace App\Http\Requests\QuestParticipant;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SubmitProofRequest extends FormRequest
 {
@@ -12,6 +14,18 @@ class SubmitProofRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    /**
+     * Handle a failed validation attempt - return JSON instead of redirect
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => $validator->errors()->first(),
+            'errors' => $validator->errors()
+        ], 422));
     }
 
     /**

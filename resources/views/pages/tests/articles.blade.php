@@ -95,7 +95,7 @@
         <div class="article-item">
           <div class="author-info">
             @if($article->organization)
-              <img src="{{ $article->organization->logo_img ? '/storage/OrganizationStorage/Logo/' . $article->organization->logo_img : 'https://via.placeholder.com/40' }}" alt="Org Logo" class="author-avatar">
+              <img src="{{ $article->organization->logo_img ? asset('OrganizationStorage/Logo/' . $article->organization->logo_img) : 'https://via.placeholder.com/40' }}" alt="Org Logo" class="author-avatar">
               <div>
                 <strong>{{ $article->organization->name }}</strong><br>
                 <small>@({{ $article->organization->handle }})</small>

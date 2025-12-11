@@ -153,8 +153,7 @@ class OrganizationController extends Controller
             ->exists();
 
         if ($hasOrganization) {
-            return redirect()->route('organization.dashboard')
-                ->with('error', 'You have already created an organization');
+            return redirect()->route('organization.dashboard');
         }
 
         // Get approved organization request
@@ -196,15 +195,23 @@ class OrganizationController extends Controller
 
         DB::beginTransaction();
         try {
-            // Handle banner upload
-            $bannerPath = $request->file('banner_img');
-            $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerPath->getClientOriginalName());
-            $bannerPath->storeAs('public/OrganizationStorage/Banner', $bannerName);
+            // Handle banner upload - store in public folder like update method
+            $bannerFile = $request->file('banner_img');
+            $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerFile->getClientOriginalName());
+            $bannerUploadPath = public_path('OrganizationStorage/Banner');
+            if (!file_exists($bannerUploadPath)) {
+                mkdir($bannerUploadPath, 0777, true);
+            }
+            $bannerFile->move($bannerUploadPath, $bannerName);
 
-            // Handle logo upload
-            $logoPath = $request->file('logo_img');
-            $logoName = Str::uuid() . '_' . str_replace(' ', '_', $logoPath->getClientOriginalName());
-            $logoPath->storeAs('public/OrganizationStorage/Logo', $logoName);
+            // Handle logo upload - store in public folder like update method
+            $logoFile = $request->file('logo_img');
+            $logoName = Str::uuid() . '_' . str_replace(' ', '_', $logoFile->getClientOriginalName());
+            $logoUploadPath = public_path('OrganizationStorage/Logo');
+            if (!file_exists($logoUploadPath)) {
+                mkdir($logoUploadPath, 0777, true);
+            }
+            $logoFile->move($logoUploadPath, $logoName);
 
             $organization = Organization::create([
                 'name' => $request->name,
@@ -430,5 +437,37 @@ class OrganizationController extends Controller
         ];
 
         return view('pages.organization.show', compact('organization', 'quests', 'stats'));
+    }
+
+    // Update organization status (ACTIVE/HIATUS/INACTIVE)
+    public function updateStatus($id)
+    {
+        $organization = Organization::findOrFail($id);
+        
+        // Only creator can update status
+        if ($organization->created_by !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only organization creator can update status.'
+            ], 403);
+        }
+
+        $request = request();
+        $validStatuses = ['ACTIVE', 'HIATUS', 'INACTIVE'];
+        
+        if (!$request->has('status') || !in_array($request->status, $validStatuses)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid status. Must be ACTIVE, HIATUS, or INACTIVE.'
+            ], 400);
+        }
+
+        $organization->update(['status' => $request->status]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Organization status updated to ' . $request->status,
+            'status' => $request->status
+        ]);
     }
 }

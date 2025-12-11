@@ -37,6 +37,99 @@
             </div>
         @endif
 
+        {{-- Pending Organization Invitations --}}
+        @if(isset($pendingInvitations) && $pendingInvitations->count() > 0)
+            <div class="mb-6 space-y-4" x-data="{
+                async handleInvitation(membershipId, action) {
+                    const url = action === 'accept' 
+                        ? '{{ url('/invitations') }}/' + membershipId + '/accept'
+                        : '{{ url('/invitations') }}/' + membershipId + '/decline';
+                    
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Failed to process invitation');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    }
+                }
+            }">
+                @foreach($pendingInvitations as $invitation)
+                    <div class="glass-card p-6 rounded-2xl border-2 border-secondary/50 hover-lift">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                            {{-- Organization Logo --}}
+                            <div class="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-secondary/10 flex items-center justify-center">
+                                @if($invitation->organization->logo_img)
+                                    <img src="{{ asset('OrganizationStorage/Logo/' . $invitation->organization->logo_img) }}" 
+                                         alt="{{ $invitation->organization->name }}" 
+                                         class="w-full h-full object-cover">
+                                @else
+                                    <svg class="w-7 h-7 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                @endif
+                            </div>
+                            
+                            {{-- Invitation Info --}}
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                        Manager Invitation
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-foreground mb-1">
+                                    {{ $invitation->organization->name }}
+                                </h3>
+                                <p class="text-sm text-muted-foreground">
+                                    You've been invited to join as a <strong class="text-secondary">Manager</strong>. 
+                                    You'll be able to create quests, review submissions, and distribute prizes.
+                                </p>
+                            </div>
+                            
+                            {{-- Action Buttons --}}
+                            <div class="flex gap-2 sm:flex-col">
+                                <button 
+                                    @click="handleInvitation({{ $invitation->id }}, 'accept')"
+                                    class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Accept
+                                </button>
+                                <button 
+                                    @click="handleInvitation({{ $invitation->id }}, 'decline')"
+                                    class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors font-medium text-muted-foreground hover:text-foreground"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    Decline
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
         {{-- Quick Stats --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="glass-card p-6 rounded-2xl hover-lift">

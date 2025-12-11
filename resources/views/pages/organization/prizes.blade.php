@@ -103,18 +103,23 @@ $subtitle = 'Manage prize distribution to quest winners';
         
         const data = await response.json();
         
-        if (response.ok) {
-          // Update winners status
+        if (data.success) {
+          // Update winners status and store tx_hash
           const questIndex = this.quests.findIndex(q => q.id === this.selectedQuest.id);
           if (questIndex > -1) {
             this.quests[questIndex].winners = this.quests[questIndex].winners.map(w => ({
               ...w,
               prize_status: 'DISTRIBUTED',
+              tx_hash: data.transaction_hash,
               distributed_at: new Date().toISOString()
             }));
           }
           
-          this.showToast('Success', data.message || 'Prizes distributed successfully!', 'success');
+          // Show success with transaction hash
+          const txMessage = data.transaction_hash 
+            ? `${data.message} Transaction: ${data.transaction_hash.substring(0, 10)}...`
+            : data.message;
+          this.showToast('Success', txMessage, 'success');
           this.distributeModalOpen = false;
         } else {
           this.showToast('Error', data.message || 'Failed to distribute prizes', 'error');
@@ -500,11 +505,12 @@ $subtitle = 'Manage prize distribution to quest winners';
         {{-- Content --}}
         <div class="p-6 space-y-4">
           <template x-if="selectedQuest">
-            <div>
-              <p class="text-sm text-muted-foreground mb-4">
-                Confirm prize distribution for all pending winners of this quest.
+            <div class="space-y-4">
+              <p class="text-sm text-muted-foreground">
+                Distribute NFT prizes to all pending winners of this quest.
               </p>
               
+              {{-- Quest Info --}}
               <div class="p-4 rounded-lg bg-muted/50 space-y-2">
                 <div class="flex justify-between text-sm">
                   <span class="text-muted-foreground">Quest:</span>
@@ -514,18 +520,50 @@ $subtitle = 'Manage prize distribution to quest winners';
                   <span class="text-muted-foreground">Pending Winners:</span>
                   <span class="font-medium" x-text="getPendingCount(selectedQuest)"></span>
                 </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-muted-foreground">NFTs to Mint:</span>
+                  <span class="font-medium text-primary" x-text="getPendingCount(selectedQuest) * (selectedQuest.prizes?.length || 1)"></span>
+                </div>
               </div>
               
-              <div class="mt-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+              {{-- Prizes Preview --}}
+              <template x-if="selectedQuest.prizes && selectedQuest.prizes.length > 0">
+                <div>
+                  <h4 class="text-sm font-medium mb-3">Prizes to Distribute:</h4>
+                  <div class="grid grid-cols-2 gap-3">
+                    <template x-for="prize in selectedQuest.prizes" :key="prize.id">
+                      <div class="flex items-center gap-3 p-3 rounded-lg border border-border bg-card">
+                        <template x-if="prize.image_url">
+                          <img 
+                            :src="prize.image_url.startsWith('http') || prize.image_url.startsWith('/') ? prize.image_url : '/PrizeStorage/' + prize.image_url" 
+                            :alt="prize.name"
+                            class="w-12 h-12 rounded-lg object-cover border border-border"
+                          >
+                        </template>
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm font-medium truncate" x-text="prize.name"></p>
+                          <span 
+                            class="text-xs px-2 py-0.5 rounded-full"
+                            :class="prize.type === 'CERTIFICATE' ? 'bg-primary/20 text-primary' : 'bg-highlight/20 text-highlight-foreground'"
+                            x-text="prize.type"
+                          ></span>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </template>
+              
+              {{-- Blockchain Info --}}
+              <div class="p-4 rounded-lg bg-primary/5 border border-primary/10">
                 <div class="flex items-start gap-2 text-sm">
                   <svg class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                   <div>
-                    <p class="font-medium">Blockchain Transaction</p>
+                    <p class="font-medium">Blockchain Minting</p>
                     <p class="text-muted-foreground mt-1">
-                      This will initiate a blockchain transaction to distribute prizes to all pending winners. 
-                      Please confirm the transaction in your wallet.
+                      This will mint NFTs on zkSync Era network. Each winner will receive all configured prizes as NFTs.
                     </p>
                   </div>
                 </div>

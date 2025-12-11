@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Organization;
+use App\Models\OrganizationMember;
 use App\Models\OrganizationRequest;
 use App\Models\Quest;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,12 @@ class HomeController extends Controller
                 ->first();
         }
 
-        return view('pages.dashboard.index', compact('approvedRequest'));
+        // Get pending organization invitations
+        $pendingInvitations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'PENDING')
+            ->with('organization')
+            ->get();
+
+        return view('pages.dashboard.index', compact('approvedRequest', 'pendingInvitations'));
     }
 }

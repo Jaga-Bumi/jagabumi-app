@@ -81,7 +81,7 @@
         </div>
 
         <!-- Tabs Section -->
-        <div class="glass-card rounded-2xl shadow-xl overflow-hidden border border-border/50">
+        <div class="glass-card rounded-2xl shadow-xl border border-border/50">
           <div class="border-b border-border bg-muted/30">
             <nav class="flex overflow-x-auto scrollbar-hide" id="tab-nav">
               <button class="tab-button active flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 transition-all hover:bg-muted/50" data-tab="overview">

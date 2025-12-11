@@ -37,6 +37,10 @@ Route::middleware('auth')->group(function () {
   Route::get('/profile', [HomeController::class, 'profile'])->name('profile.index');
   Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard.index');
   
+  // Invitation routes
+  Route::post('/invitations/{membershipId}/accept', [OrganizationMemberController::class, 'acceptInvitation'])->name('invitations.accept');
+  Route::post('/invitations/{membershipId}/decline', [OrganizationMemberController::class, 'declineInvitation'])->name('invitations.decline');
+  
   Route::post('/join-us/submit', [OrganizationRequestController::class, 'store'])->name('join-us.store');
   
   Route::post('/quests/{questId}/join', [QuestParticipantController::class, 'join'])->name('quests.join');
@@ -55,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/create', [OrganizationController::class, 'createView'])->name('organization.create');
     Route::post('/store', [OrganizationController::class, 'create'])->name('organization.store');
     Route::post('/{id}/update', [OrganizationController::class, 'update'])->name('organization.update');
+    Route::post('/{id}/update-status', [OrganizationController::class, 'updateStatus'])->name('organization.updateStatus');
     
     // Quest management
     Route::get('/quests', [QuestController::class, 'organizationQuests'])->name('organization.quests.index');
@@ -63,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/quests/store', [QuestController::class, 'create'])->name('organization.quests.store');
     Route::put('/quests/{id}', [QuestController::class, 'update'])->name('organization.quests.update');
     Route::delete('/quests/{id}', [QuestController::class, 'destroy'])->name('organization.quests.destroy');
+    Route::post('/quests/{id}/update-status', [QuestController::class, 'updateStatus'])->name('organization.quests.updateStatus');
     
     // Member management
     Route::get('/members', [OrganizationMemberController::class, 'index'])->name('organization.members.index');
@@ -81,15 +87,16 @@ Route::middleware('auth')->group(function () {
     
   });
   
-  // Admin routes
-  Route::prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/organization-requests', [AdminController::class, 'organizationRequestsView'])->name('admin.organization-requests');
-    Route::post('/organization-requests/{id}/approve', [AdminController::class, 'approveOrganizationRequest'])->name('admin.organization-requests.approve');
-    Route::post('/organization-requests/{id}/reject', [AdminController::class, 'rejectOrganizationRequest'])->name('admin.organization-requests.reject');
-    
-    Route::get('/quests', [AdminController::class, 'questsView'])->name('admin.quests');
-    Route::post('/quests/{id}/approve', [AdminController::class, 'approveQuest'])->name('admin.quests.approve');
-    Route::post('/quests/{id}/reject', [AdminController::class, 'rejectQuest'])->name('admin.quests.reject');
-  });
+});
+
+// Admin routes (TODO: add auth middleware later)
+Route::prefix('admin')->group(function () {
+  Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+  Route::get('/organization-requests', [AdminController::class, 'organizationRequestsView'])->name('admin.organization-requests');
+  Route::post('/organization-requests/{id}/approve', [AdminController::class, 'approveOrganizationRequest'])->name('admin.organization-requests.approve');
+  Route::post('/organization-requests/{id}/reject', [AdminController::class, 'rejectOrganizationRequest'])->name('admin.organization-requests.reject');
+  
+  Route::get('/quests', [AdminController::class, 'questsView'])->name('admin.quests');
+  Route::post('/quests/{id}/approve', [AdminController::class, 'approveQuest'])->name('admin.quests.approve');
+  Route::post('/quests/{id}/reject', [AdminController::class, 'rejectQuest'])->name('admin.quests.reject');
 });

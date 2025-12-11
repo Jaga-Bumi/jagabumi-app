@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'org.manager' => \App\Http\Middleware\IsOrgManager::class,
             'has.profile' => \App\Http\Middleware\HasProfile::class,
         ]);
+        
+        $middleware->redirectGuestsTo('/');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

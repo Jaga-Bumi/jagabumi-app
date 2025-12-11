@@ -7,7 +7,9 @@ use App\Http\Requests\QuestParticipant\ReviewSubmissionRequest;
 use App\Models\OrganizationMember;
 use App\Models\Quest;
 use App\Models\QuestParticipant;
+use App\Models\QuestWinner;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class QuestParticipantController extends Controller
@@ -291,33 +293,93 @@ class QuestParticipantController extends Controller
             ], 400);
         }
 
-        $submission->update([
-            'status' => 'APPROVED',
-            'admin_notes' => request('admin_notes'),
-        ]);
+        $quest = $submission->quest;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Submission approved successfully',
-        ]);
+        DB::beginTransaction();
+        try {
+            // Update submission status
+            $submission->update([
+                'status' => 'APPROVED',
+            ]);
+
+            // Add to QuestWinner table
+            QuestWinner::create([
+                'quest_id' => $quest->id,
+                'user_id' => $submission->user_id,
+                'reward_distributed' => false,
+            ]);
+
+            DB::commit();
+
+            $currentWinnersCount = QuestWinner::where('quest_id', $quest->id)->count();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Approved! (' . $currentWinnersCount . '/' . $quest->winner_limit . ' winners)',
+                'winners_count' => $currentWinnersCount,
+                'winner_limit' => $quest->winner_limit,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to approve submission: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to approve submission. Please try again.',
+            ], 500);
+        }
     }
 
-    // Reject submission (for organization)
+    // Reject/Unapprove submission (for organization)
     public function rejectSubmission($submissionId)
     {
         $submission = QuestParticipant::with('quest')->findOrFail($submissionId);
         $this->authorizeOrganizationMember($submission->quest->org_id);
 
+        $quest = $submission->quest;
+        
+        // Handle unapproving a winner - return to pending (COMPLETED)
+        if ($submission->status === 'APPROVED') {
+            DB::beginTransaction();
+            try {
+                // Remove from QuestWinner table
+                QuestWinner::where('quest_id', $quest->id)
+                    ->where('user_id', $submission->user_id)
+                    ->delete();
+                
+                // Return to pending status
+                $submission->update([
+                    'status' => 'COMPLETED',
+                ]);
+                
+                DB::commit();
+                
+                $currentWinnersCount = QuestWinner::where('quest_id', $quest->id)->count();
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Removed from winners. Returned to pending.',
+                    'winners_count' => $currentWinnersCount,
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to unapprove submission: ' . $e->getMessage());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to remove from winners. Please try again.',
+                ], 500);
+            }
+        }
+
+        // Standard reject for COMPLETED submissions
         if ($submission->status !== 'COMPLETED') {
             return response()->json([
                 'success' => false,
-                'message' => 'Only completed submissions can be rejected',
+                'message' => 'Invalid submission status',
             ], 400);
         }
 
         $submission->update([
             'status' => 'REJECTED',
-            'admin_notes' => request('admin_notes', 'Rejected by organization'),
         ]);
 
         return response()->json([
@@ -365,14 +427,22 @@ class QuestParticipantController extends Controller
                 ->with('error', 'Please select or create an organization first.');
         }
 
+        // Get submissions with quest details including winner_limit
         $submissions = QuestParticipant::whereHas('quest', function($q) use ($orgId) {
                 $q->where('org_id', $orgId);
             })
             ->whereIn('status', ['COMPLETED', 'APPROVED', 'REJECTED'])
-            ->with(['user:id,name,avatar_url,wallet_address,email', 'quest:id,title,slug,banner_url'])
+            ->with(['user:id,name,avatar_url,wallet_address,email', 'quest:id,title,slug,banner_url,winner_limit'])
             ->orderBy('submission_date', 'desc')
             ->get();
 
-        return view('pages.organization.submissions', compact('submissions', 'userOrganizations', 'currentOrg'));
+        // Get quests with winner stats for the filter and progress display
+        $quests = Quest::where('org_id', $orgId)
+            ->whereIn('status', ['ACTIVE', 'ENDED'])
+            ->withCount(['winners'])
+            ->select('id', 'title', 'slug', 'winner_limit', 'status')
+            ->get();
+
+        return view('pages.organization.submissions', compact('submissions', 'userOrganizations', 'currentOrg', 'quests'));
     }
 }
