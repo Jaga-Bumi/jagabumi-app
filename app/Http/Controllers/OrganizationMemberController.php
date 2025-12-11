@@ -7,9 +7,65 @@ use App\Models\Organization;
 use App\Models\OrganizationMember;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class OrganizationMemberController extends Controller
 {
+    // Helper method to get user organizations and current org
+    protected function getOrganizationContext()
+    {
+        $user = Auth::user();
+        
+        // Get user's organizations with role
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(function($member) {
+                return [
+                    'id' => $member->organization->id,
+                    'name' => $member->organization->name,
+                    'slug' => $member->organization->slug,
+                    'role' => $member->role,
+                ];
+            });
+
+        // Get current organization (first one or from session)
+        $firstOrg = $userOrganizations->first();
+        $currentOrgId = session('current_org_id', $firstOrg['id'] ?? null);
+        $currentOrg = $userOrganizations->firstWhere('id', $currentOrgId);
+
+        return compact('userOrganizations', 'currentOrg');
+    }
+
+    // Show members page
+    public function index()
+    {
+        extract($this->getOrganizationContext());
+        
+        if (!$currentOrg) {
+            return redirect()->route('organization.dashboard');
+        }
+
+        $organization = Organization::findOrFail($currentOrg['id']);
+
+        // Check if user is CREATOR
+        if ($currentOrg['role'] !== 'CREATOR') {
+            return redirect()->route('organization.dashboard')
+                ->with('error', 'Only organization creator can manage members');
+        }
+
+        // Get all members
+        $members = OrganizationMember::where('organization_id', $organization->id)
+            ->with('user')
+            ->orderBy('role', 'asc')
+            ->orderBy('status', 'asc')
+            ->get();
+
+        $currentUserRole = $currentOrg['role'];
+
+        return view('pages.organization.members', compact('organization', 'members', 'userOrganizations', 'currentOrg', 'currentUserRole'));
+    }
     
     // Invite member
     public function invite(InviteMemberRequest $request, $organizationId)
@@ -169,6 +225,35 @@ class OrganizationMemberController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'You have left the organization.'
+        ], 200);
+    }
+
+    // Resend invitation
+    public function resendInvitation($membershipId)
+    {
+        $membership = OrganizationMember::findOrFail($membershipId);
+
+        // Only creator can resend
+        if ($membership->organization->created_by !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only organization creator can resend invitations.'
+            ], 403);
+        }
+
+        if ($membership->status !== 'PENDING') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Can only resend pending invitations.'
+            ], 400);
+        }
+
+        // Update invitation timestamp
+        $membership->touch();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Invitation resent to ' . $membership->user->name
         ], 200);
     }
 }

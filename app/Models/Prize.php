@@ -36,4 +36,18 @@ class Prize extends Model
             ->withPivot('nft_token_id', 'tx_hash', 'token_uri')
             ->withTimestamps();
     }
+
+    // Accessors
+    public function getImageUrlAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+        // If already a full URL, return as is
+        if (str_starts_with($value, 'http') || str_starts_with($value, '/')) {
+            return $value;
+        }
+        // Otherwise, prepend the storage path
+        return asset('PrizeStorage/' . $value);
+    }
 }

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('handle', 30)->unique();
             $table->string('org_email')->unique();
             $table->text('desc');
-            $table->string('motto');
-            $table->text('banner_img');
-            $table->text('logo_img');
+            $table->string('motto')->nullable();
+            $table->text('banner_img')->nullable();
+            $table->text('logo_img')->nullable();
             $table->text('website_url')->nullable();
             $table->text('instagram_url')->nullable();
             $table->text('x_url')->nullable();

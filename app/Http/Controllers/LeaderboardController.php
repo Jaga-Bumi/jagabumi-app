@@ -37,6 +37,6 @@ class LeaderboardController extends Controller
             ->take(10)
             ->get();
 
-        return view('pages.tests.leaderboard', compact('topUsers', 'topOrganizations', 'topQuests'));
+        return view('pages.leaderboard.index', compact('topUsers', 'topOrganizations', 'topQuests'));
     }
 }

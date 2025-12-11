@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Quest;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateQuestRequest extends FormRequest
 {
@@ -52,5 +54,23 @@ class CreateQuestRequest extends FormRequest
             'coupon_description' => ['nullable', 'string', 'max:5000'],
         ];
 
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->expectsJson()) {
+            throw new HttpResponseException(
+                response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed. Please check your input.',
+                    'errors' => $validator->errors()
+                ], 422)
+            );
+        }
+
+        parent::failedValidation($validator);
     }
 }

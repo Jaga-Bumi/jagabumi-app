@@ -6,6 +6,7 @@ use App\Http\Requests\Quest\CreateQuestRequest;
 use App\Http\Requests\Quest\AddWinnersRequest;
 use App\Http\Requests\Quest\UpdateQuestRequest;
 use App\Models\Organization;
+use App\Models\OrganizationMember;
 use App\Models\Prize;
 use App\Models\Quest;
 use App\Models\QuestParticipant;
@@ -14,6 +15,7 @@ use App\Services\BlockchainService;
 use App\Services\FilebaseService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class QuestController extends Controller
@@ -47,15 +49,8 @@ class QuestController extends Controller
         
         $quests = $query->paginate(6);
         
-        return view('pages.tests.quests', compact('quests'));
+        return view('pages.quests.index', compact('quests'));
 
-    }
-
-    public function getOne($id)
-    {
-        $quest = Quest::find($id);
-
-        return response()->json(['quests' => $quest], 200);
     }
 
     public function getDetail($slug)
@@ -63,7 +58,10 @@ class QuestController extends Controller
         $quest = Quest::where('slug', $slug)
             ->with([
                 'organization:id,name,handle,logo_img,org_email,website_url,instagram_url,x_url,facebook_url',
-                'organization.members.user:id,name,email,avatar_url',
+                'organization.organizationMembers' => function($query) {
+                    $query->where('status', 'ACTIVE');
+                },
+                'organization.organizationMembers.user:id,name,email,avatar_url',
                 'prizes',
             ])
             ->withCount('questParticipants')
@@ -83,7 +81,7 @@ class QuestController extends Controller
             ->orderBy('submission_date', 'desc')
             ->get();
 
-        return view('pages.tests.quests.detail', compact('quest', 'userParticipation', 'submissions'));
+        return view('pages.quests.show', compact('quest', 'userParticipation', 'submissions'));
     }
 
     // Create quest
@@ -95,22 +93,20 @@ class QuestController extends Controller
 
             DB::beginTransaction();
 
-            $slug = Str::slug($request->title);
-            $originalSlug = $slug;
-            $counter = 1;
-            
-            while (Quest::where('slug', $slug)->exists()) {
-                $slug = $originalSlug . '-' . $counter;
-                $counter++;
-            }
+            // Generate unique slug with random string
+            $slug = Str::slug($request->title) . '-' . Str::random(6);
 
             // Handle banner upload
-            $bannerUrl = null;
+            $bannerName = null;
             if ($request->hasFile('banner')) {
                 $bannerFile = $request->file('banner');
-                $bannerName = time() . '_' . $bannerFile->getClientOriginalName();
-                $bannerFile->storeAs('public/QuestStorage/Banner/' . $bannerName);
-                $bannerUrl = '/storage/QuestStorage/Banner/' . $bannerName;
+                $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerFile->getClientOriginalName());
+                $uploadPath = public_path('QuestStorage/Banner');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                $bannerFile->move($uploadPath, $bannerName);
+                Log::info("Quest banner uploaded: " . $bannerName);
             }
 
             // Create quest
@@ -118,7 +114,7 @@ class QuestController extends Controller
                 'title' => $request->title,
                 'slug' => $slug,
                 'desc' => $request->desc,
-                'banner_url' => $bannerUrl,
+                'banner_url' => $bannerName,
                 'location_name' => $request->location_name,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
@@ -138,12 +134,16 @@ class QuestController extends Controller
             ]);
 
             // Handle certificate prize image upload
-            $certImageUrl = null;
+            $certImageName = null;
             if ($request->hasFile('cert_image')) {
                 $certFile = $request->file('cert_image');
-                $certName = time() . '_cert_' . $certFile->getClientOriginalName();
-                $certFile->storeAs('public/PrizeStorage/' . $certName);
-                $certImageUrl = '/storage/PrizeStorage/' . $certName;
+                $certImageName = Str::uuid() . '_cert_' . str_replace(' ', '_', $certFile->getClientOriginalName());
+                $uploadPath = public_path('PrizeStorage');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                $certFile->move($uploadPath, $certImageName);
+                Log::info("Certificate image uploaded: " . $certImageName);
             }
 
             // Create certificate prize
@@ -151,83 +151,86 @@ class QuestController extends Controller
                 'name' => $request->cert_name,
                 'type' => 'CERTIFICATE',
                 'description' => $request->cert_description,
-                'image_url' => $certImageUrl,
+                'image_url' => $certImageName,
                 'quest_id' => $quest->id,
             ]);
 
             // Create coupon prize if provided
             $couponPrize = null;
             if ($request->coupon_name) {
-                $couponImageUrl = null;
+                $couponImageName = null;
                 if ($request->hasFile('coupon_image')) {
                     $couponFile = $request->file('coupon_image');
-                    $couponName = time() . '_coupon_' . $couponFile->getClientOriginalName();
-                    $couponFile->storeAs('public/PrizeStorage/' . $couponName);
-                    $couponImageUrl = '/storage/PrizeStorage/' . $couponName;
+                    $couponImageName = Str::uuid() . '_coupon_' . str_replace(' ', '_', $couponFile->getClientOriginalName());
+                    $uploadPath = public_path('PrizeStorage');
+                    if (!file_exists($uploadPath)) {
+                        mkdir($uploadPath, 0777, true);
+                    }
+                    $couponFile->move($uploadPath, $couponImageName);
+                    Log::info("Coupon image uploaded: " . $couponImageName);
                 }
 
                 $couponPrize = Prize::create([
                     'name' => $request->coupon_name,
                     'type' => 'COUPON',
                     'description' => $request->coupon_description,
-                    'image_url' => $couponImageUrl,
+                    'image_url' => $couponImageName,
                     'quest_id' => $quest->id,
                 ]);
             }
 
             DB::commit();
 
-            $prizes = [$certificatePrize];
-            if ($couponPrize) {
-                $prizes[] = $couponPrize;
-            }
+            $prizes = $couponPrize ? [$certificatePrize, $couponPrize] : [$certificatePrize];
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Quest created successfully. Waiting for admin approval.',
-                'data' => [
-                    'quest' => [
-                        'id' => $quest->id,
-                        'title' => $quest->title,
-                        'slug' => $quest->slug,
-                        'status' => $quest->status,
-                        'organization' => [
-                            'id' => $organization->id,
-                            'name' => $organization->name,
-                        ],
-                        'prizes' => collect($prizes)->map(function ($prize) {
-                            return [
+            // Check if request expects JSON (API) or redirect (web form)
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Quest created successfully. Waiting for admin approval.',
+                    'redirect' => route('organization.quests.index'),
+                    'data' => [
+                        'quest' => [
+                            'id' => $quest->id,
+                            'title' => $quest->title,
+                            'slug' => $quest->slug,
+                            'status' => $quest->status,
+                            'organization' => [
+                                'id' => $organization->id,
+                                'name' => $organization->name,
+                            ],
+                            'prizes' => collect($prizes)->map(fn($prize) => [
                                 'id' => $prize->id,
                                 'name' => $prize->name,
                                 'type' => $prize->type,
-                            ];
-                        }),
-                        'created_at' => $quest->created_at,
+                            ]),
+                            'created_at' => $quest->created_at,
+                        ],
                     ],
-                ],
-            ], 201);
+                ], 201);
+            }
 
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Organization not found.',
-            ], 404);
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed.',
-                'errors' => $e->errors(),
-            ], 422);
+            return redirect()->route('organization.quests.index')
+                ->with('success', 'Quest created successfully! It is now IN REVIEW and waiting for admin approval.');
 
         } catch (\Exception $e) {
             DB::rollBack();
+            
+            Log::error('Quest creation failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to create quest. Please try again.',
+                    'error' => config('app.debug') ? $e->getMessage() : null
+                ], 500);
+            }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create quest. Please try again.',
-            ], 500);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to create quest: ' . $e->getMessage());
         }
     }
 
@@ -246,32 +249,30 @@ class QuestController extends Controller
 
             DB::beginTransaction();
 
-            // Delete banner image if exists
-            if ($quest->banner_url && file_exists(public_path($quest->banner_url))) {
-                unlink(public_path($quest->banner_url));
+            // Delete images
+            if ($quest->banner_url) {
+                $bannerPath = public_path('QuestStorage/Banner/' . $quest->banner_url);
+                if (file_exists($bannerPath)) {
+                    unlink($bannerPath);
+                }
             }
 
-            // Delete all prize images
             foreach ($quest->prizes as $prize) {
-                if ($prize->image_url && file_exists(public_path($prize->image_url))) {
-                    unlink(public_path($prize->image_url));
+                if ($prize->image_url) {
+                    $prizePath = public_path('PrizeStorage/' . $prize->image_url);
+                    if (file_exists($prizePath)) {
+                        unlink($prizePath);
+                    }
                 }
             }
 
             $quest->delete();
-
             DB::commit();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Quest and all associated images deleted successfully.'
-            ], 200);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Quest not found.',
-            ], 404);
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -295,118 +296,128 @@ class QuestController extends Controller
                 ], 403);
             }
 
-            // Authorization is handled by IsOrgManager middleware
             $organization = $request->_organization ?? Organization::findOrFail($quest->org_id);
-
             DB::beginTransaction();
 
             // Update slug if title changed
             if ($request->title !== $quest->title) {
-                $slug = Str::slug($request->title);
-                $originalSlug = $slug;
-                $counter = 1;
-                
-                while (Quest::where('slug', $slug)->where('id', '!=', $id)->exists()) {
-                    $slug = $originalSlug . '-' . $counter;
-                    $counter++;
-                }
-                $quest->slug = $slug;
+                $quest->slug = Str::slug($request->title) . '-' . Str::random(6);
             }
 
-            // Handle banner upload if provided
+            // Handle banner upload
             if ($request->hasFile('banner')) {
                 // Delete old banner if exists
-                if ($quest->banner_url && file_exists(public_path($quest->banner_url))) {
-                    unlink(public_path($quest->banner_url));
+                if ($quest->banner_url) {
+                    $oldBannerPath = public_path('QuestStorage/Banner/' . $quest->banner_url);
+                    if (file_exists($oldBannerPath)) {
+                        unlink($oldBannerPath);
+                    }
                 }
-
+                
                 $bannerFile = $request->file('banner');
-                $bannerName = time() . '_' . $bannerFile->getClientOriginalName();
-                $bannerFile->storeAs('public/QuestStorage/Banner/' . $bannerName);
-                $quest->banner_url = '/storage/QuestStorage/Banner/' . $bannerName;
+                $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerFile->getClientOriginalName());
+                $uploadPath = public_path('QuestStorage/Banner');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                $bannerFile->move($uploadPath, $bannerName);
+                Log::info("Quest banner updated: " . $bannerName);
+                $quest->banner_url = $bannerName;
             }
 
             // Update quest fields
-            $quest->title = $request->title;
-            $quest->desc = $request->desc;
-            $quest->location_name = $request->location_name;
-            $quest->latitude = $request->latitude;
-            $quest->longitude = $request->longitude;
-            $quest->radius_meter = $request->radius_meter;
-            $quest->liveness_code = $request->liveness_code;
-            $quest->registration_start_at = $request->registration_start_at;
-            $quest->registration_end_at = $request->registration_end_at;
-            $quest->quest_start_at = $request->quest_start_at;
-            $quest->quest_end_at = $request->quest_end_at;
-            $quest->judging_start_at = $request->judging_start_at;
-            $quest->judging_end_at = $request->judging_end_at;
-            $quest->prize_distribution_date = $request->prize_distribution_date;
-            $quest->participant_limit = $request->participant_limit;
-            $quest->winner_limit = $request->winner_limit;
-            $quest->save();
+            $quest->update([
+                'title' => $request->title,
+                'desc' => $request->desc,
+                'location_name' => $request->location_name,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'radius_meter' => $request->radius_meter,
+                'liveness_code' => $request->liveness_code,
+                'registration_start_at' => $request->registration_start_at,
+                'registration_end_at' => $request->registration_end_at,
+                'quest_start_at' => $request->quest_start_at,
+                'quest_end_at' => $request->quest_end_at,
+                'judging_start_at' => $request->judging_start_at,
+                'judging_end_at' => $request->judging_end_at,
+                'prize_distribution_date' => $request->prize_distribution_date,
+                'participant_limit' => $request->participant_limit,
+                'winner_limit' => $request->winner_limit,
+            ]);
 
             // Update certificate prize
             $certificatePrize = $quest->prizes()->where('type', 'CERTIFICATE')->first();
-
-            $certImageUrl = $certificatePrize ? $certificatePrize->image_url : null;
+            $certImageName = $certificatePrize->image_url;
+            
             if ($request->hasFile('cert_image')) {
                 // Delete old certificate image if exists
-                if ($certImageUrl && file_exists(public_path($certImageUrl))) {
-                    unlink(public_path($certImageUrl));
+                if ($certImageName) {
+                    $oldCertPath = public_path('PrizeStorage/' . $certImageName);
+                    if (file_exists($oldCertPath)) {
+                        unlink($oldCertPath);
+                    }
                 }
-
+                
                 $certFile = $request->file('cert_image');
-                $certName = time() . '_cert_' . $certFile->getClientOriginalName();
-                $certFile->storeAs('public/PrizeStorage/' . $certName);
-                $certImageUrl = '/storage/PrizeStorage/' . $certName;
+                $certImageName = Str::uuid() . '_cert_' . str_replace(' ', '_', $certFile->getClientOriginalName());
+                $uploadPath = public_path('PrizeStorage');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                $certFile->move($uploadPath, $certImageName);
+                Log::info("Certificate image updated: " . $certImageName);
             }
 
             $certificatePrize->update([
                 'name' => $request->cert_name,
                 'description' => $request->cert_description,
-                'image_url' => $certImageUrl,
+                'image_url' => $certImageName,
             ]);
 
-            // Update or create coupon prize if provided
+            // Update or create coupon prize
             if ($request->coupon_name) {
                 $couponPrize = $quest->prizes()->where('type', 'COUPON')->first();
-
-                $couponImageUrl = $couponPrize ? $couponPrize->image_url : null;
+                $couponImageName = $couponPrize->image_url ?? null;
+                
                 if ($request->hasFile('coupon_image')) {
                     // Delete old coupon image if exists
-                    if ($couponImageUrl && file_exists(public_path($couponImageUrl))) {
-                        unlink(public_path($couponImageUrl));
+                    if ($couponImageName) {
+                        $oldCouponPath = public_path('PrizeStorage/' . $couponImageName);
+                        if (file_exists($oldCouponPath)) {
+                            unlink($oldCouponPath);
+                        }
                     }
-
+                    
                     $couponFile = $request->file('coupon_image');
-                    $couponName = time() . '_coupon_' . $couponFile->getClientOriginalName();
-                    $couponFile->storeAs('public/PrizeStorage/' . $couponName);
-                    $couponImageUrl = '/storage/PrizeStorage/' . $couponName;
+                    $couponImageName = Str::uuid() . '_coupon_' . str_replace(' ', '_', $couponFile->getClientOriginalName());
+                    $uploadPath = public_path('PrizeStorage');
+                    if (!file_exists($uploadPath)) {
+                        mkdir($uploadPath, 0777, true);
+                    }
+                    $couponFile->move($uploadPath, $couponImageName);
+                    Log::info("Coupon image updated: " . $couponImageName);
                 }
 
                 if ($couponPrize) {
                     $couponPrize->update([
                         'name' => $request->coupon_name,
                         'description' => $request->coupon_description,
-                        'image_url' => $couponImageUrl,
+                        'image_url' => $couponImageName,
                     ]);
                 } else {
-                    $couponPrize = Prize::create([
+                    Prize::create([
                         'name' => $request->coupon_name,
                         'type' => 'COUPON',
                         'description' => $request->coupon_description,
-                        'image_url' => $couponImageUrl,
+                        'image_url' => $couponImageName,
                         'quest_id' => $quest->id,
                     ]);
                 }
             } else {
-                // Delete coupon prize if it exists but no longer provided
                 $quest->prizes()->where('type', 'COUPON')->delete();
             }
 
             DB::commit();
-
-            $prizes = $quest->prizes()->get();
 
             return response()->json([
                 'success' => true,
@@ -421,27 +432,18 @@ class QuestController extends Controller
                             'id' => $organization->id,
                             'name' => $organization->name,
                         ],
-                        'prizes' => $prizes->map(function ($prize) {
-                            return [
-                                'id' => $prize->id,
-                                'name' => $prize->name,
-                                'type' => $prize->type,
-                            ];
-                        }),
+                        'prizes' => $quest->prizes()->get()->map(fn($prize) => [
+                            'id' => $prize->id,
+                            'name' => $prize->name,
+                            'type' => $prize->type,
+                        ]),
                         'updated_at' => $quest->updated_at,
                     ],
                 ],
-            ], 200);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Quest not found.',
-            ], 404);
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update quest. Please try again.',
@@ -652,6 +654,156 @@ class QuestController extends Controller
             'message' => 'Quest status updated successfully.',
             'quest' => $quest
         ]);
+    }
+
+    // Get organization quests
+    public function organizationQuests()
+    {
+        $user = Auth::user();
+        
+        // Get user's organizations for the sidebar
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(fn($member) => [
+                'id' => $member->organization->id,
+                'name' => $member->organization->name,
+                'handle' => $member->organization->handle,
+                'logo_img' => $member->organization->logo_img,
+                'role' => $member->role,
+            ]);
+
+        $firstOrg = $userOrganizations->first();
+        $orgId = session('current_org_id', $firstOrg['id'] ?? null);
+        $currentOrg = $userOrganizations->firstWhere('id', $orgId);
+        
+        if (!$currentOrg) {
+            return redirect()->route('organization.dashboard')
+                ->with('error', 'Please select or create an organization first.');
+        }
+
+        $quests = Quest::where('org_id', $orgId)
+            ->with(['prizes', 'questParticipants'])
+            ->withCount('questParticipants')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pages.organization.quests.index', compact('quests', 'userOrganizations', 'currentOrg'));
+    }
+
+    // Show quest creation form
+    public function createView()
+    {
+        $user = Auth::user();
+        
+        // Get user's organizations for the sidebar
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(fn($member) => [
+                'id' => $member->organization->id,
+                'name' => $member->organization->name,
+                'handle' => $member->organization->handle,
+                'logo_img' => $member->organization->logo_img,
+                'role' => $member->role,
+            ]);
+
+        $firstOrg = $userOrganizations->first();
+        $orgId = session('current_org_id', $firstOrg['id'] ?? null);
+        $currentOrg = $userOrganizations->firstWhere('id', $orgId);
+        
+        if (!$currentOrg) {
+            return redirect()->route('organization.dashboard')
+                ->with('error', 'Please select an organization first.');
+        }
+
+        $organization = Organization::findOrFail($orgId);
+
+        return view('pages.organization.quests.create', compact('organization', 'userOrganizations', 'currentOrg'));
+    }
+
+    // Get organization prizes
+    public function organizationPrizes()
+    {
+        $user = Auth::user();
+        
+        // Get user's organizations for the sidebar
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(fn($member) => [
+                'id' => $member->organization->id,
+                'name' => $member->organization->name,
+                'handle' => $member->organization->handle,
+                'logo_img' => $member->organization->logo_img,
+                'role' => $member->role,
+            ]);
+
+        $firstOrg = $userOrganizations->first();
+        $orgId = session('current_org_id', $firstOrg['id'] ?? null);
+        $currentOrg = $userOrganizations->firstWhere('id', $orgId);
+        
+        if (!$currentOrg) {
+            return redirect()->route('organization.dashboard')
+                ->with('error', 'Please select or create an organization first.');
+        }
+
+        $quests = Quest::where('org_id', $orgId)
+            ->where('status', 'ACTIVE')
+            ->with(['prizes', 'winners.user'])
+            ->withCount(['winners' => function($q) {
+                $q->where('reward_distributed', false);
+            }])
+            ->get();
+
+        return view('pages.organization.prizes', compact('quests', 'userOrganizations', 'currentOrg'));
+    }
+
+    // Show quest detail for organization admin
+    public function showQuest($id)
+    {
+        $user = Auth::user();
+        
+        // Get user's organizations for the sidebar
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(fn($member) => [
+                'id' => $member->organization->id,
+                'name' => $member->organization->name,
+                'handle' => $member->organization->handle,
+                'logo_img' => $member->organization->logo_img,
+                'role' => $member->role,
+            ]);
+
+        $firstOrg = $userOrganizations->first();
+        $orgId = session('current_org_id', $firstOrg['id'] ?? null);
+        $currentOrg = $userOrganizations->firstWhere('id', $orgId);
+        
+        if (!$currentOrg) {
+            return redirect()->route('organization.dashboard')
+                ->with('error', 'Please select an organization first.');
+        }
+
+        // Get quest with prizes and organization
+        $quest = Quest::with(['prizes', 'organization', 'questParticipants'])
+            ->withCount('questParticipants')
+            ->findOrFail($id);
+
+        // Verify quest belongs to current organization
+        if ($quest->org_id !== $orgId) {
+            abort(403, 'You do not have permission to view this quest.');
+        }
+
+        // Separate certificate and coupon prizes
+        $certificatePrize = $quest->prizes()->where('type', 'CERTIFICATE')->first();
+        $couponPrize = $quest->prizes()->where('type', 'COUPON')->first();
+
+        return view('pages.organization.quests.show', compact('quest', 'certificatePrize', 'couponPrize', 'userOrganizations', 'currentOrg'));
     }
 
     

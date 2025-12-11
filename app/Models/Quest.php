@@ -85,4 +85,18 @@ class Quest extends Model
             ->withPivot('reward_distributed', 'tx_hash', 'distributed_at')
             ->withTimestamps();
     }
+
+    // Accessors
+    public function getBannerUrlAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+        // If already a full URL, return as is
+        if (str_starts_with($value, 'http') || str_starts_with($value, '/')) {
+            return $value;
+        }
+        // Otherwise, prepend the storage path
+        return asset('QuestStorage/Banner/' . $value);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Organization;
 use App\Models\OrganizationRequest;
 use App\Models\Quest;
@@ -428,6 +429,20 @@ class AdminController extends Controller
         $organization->save();
 
         return response()->json(['message' => 'Organization removed successfully'], 200);
+    }
+
+    public function removeArticle($articleId)
+    {
+        $article = Article::find($articleId);
+        if (!$article) {
+            return response()->json(['error' => 'Article not found'], 404);
+        }
+
+        // Soft delete
+        $article->is_deleted = true;
+        $article->save();
+
+        return response()->json(['message' => 'Article removed successfully'], 200);
     }
 
 }

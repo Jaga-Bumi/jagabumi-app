@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Organization;
+use App\Models\OrganizationRequest;
 use App\Models\Quest;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -15,6 +17,27 @@ class HomeController extends Controller
             ->take(3)
             ->get();
         $top3Orgs = Organization::where('status', 'ACTIVE')->latest()->take(3)->get();
-        return view('pages.tests.home', compact('top3Quests', 'top3Orgs'));
+        return view('pages.home.index', compact('top3Quests', 'top3Orgs'));
+    }
+
+    public function profile()
+    {
+        return view('pages.profile.index');
+    }
+
+    public function dashboard()
+    {
+        $user = Auth::user();
+        
+        // Check if user has approved organization request
+        $approvedRequest = null;
+        if (!$user->createdOrganization) {
+            $approvedRequest = OrganizationRequest::where('user_id', $user->id)
+                ->where('status', 'APPROVED')
+                ->latest()
+                ->first();
+        }
+
+        return view('pages.dashboard.index', compact('approvedRequest'));
     }
 }

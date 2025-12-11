@@ -22,7 +22,7 @@ class SubmitProofRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'video' => ['required', 'file', 'mimes:mp4,mov,avi,wmv,flv,mkv', 'max:102400'], // 100MB = 102400 KB
+            'video' => ['required', 'file', 'mimes:mp4,mov,avi,wmv,flv,mkv', 'max:3145728'], // 3GB = 3145728 KB
             'description' => ['required', 'string', 'min:50', 'max:10000'],
         ];
     }
@@ -36,7 +36,7 @@ class SubmitProofRequest extends FormRequest
             'video.required' => 'Video proof wajib diupload',
             'video.file' => 'File harus berupa video',
             'video.mimes' => 'Video harus format: mp4, mov, avi, wmv, flv, atau mkv',
-            'video.max' => 'Ukuran video maksimal 100MB',
+            'video.max' => 'Ukuran video maksimal 3GB',
             'description.required' => 'Deskripsi wajib diisi',
             'description.min' => 'Deskripsi minimal 50 karakter',
             'description.max' => 'Deskripsi maksimal 10000 karakter',

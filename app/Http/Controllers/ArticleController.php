@@ -12,17 +12,33 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    private function deleteImageFile($src)
+    {
+        $relativePath = str_replace('/storage/', 'public/', $src);
+        if (Storage::exists($relativePath)) {
+            Storage::delete($relativePath);
+        }
+    }
+
+    private function deleteArticleImages($htmlContent)
+    {
+        $dom = new DOMDocument();
+        $dom->loadHTML($htmlContent, 9);
+        $images = $dom->getElementsByTagName('img');
+
+        foreach ($images as $img) {
+            $this->deleteImageFile($img->getAttribute('src'));
+        }
+    }
+
     public function create(){
         return view('pages.articles.create');
     }
 
     public function store(CreateUpdateArticleRequest $request){
-
         if ($request->org_id) {
-            $userId = Auth::id();
-            
             $isMember = OrganizationMember::where('organization_id', $request->org_id)
-                ->where('user_id', $userId)
+                ->where('user_id', Auth::id())
                 ->exists();
             
             if (!$isMember) {
@@ -31,10 +47,8 @@ class ArticleController extends Controller
         }
 
         $text = $request->body;
-
         $dom = new DOMDocument();
         $dom->loadHTML($text, 9);
-
         $images = $dom->getElementsByTagName('img');
 
         foreach ($images as $key => $img) {
@@ -49,11 +63,8 @@ class ArticleController extends Controller
         }
 
         $text = $dom->saveHTML();
-
         $thumbnailPath = $request->file('thumbnail');
-
         $thumbnailName = Str::uuid() . '_' . str_replace(' ', '_', $thumbnailPath->getClientOriginalName());
-
         $thumbnailPath->storeAs('public/ArticleStorage/Thumbnail/' . $thumbnailName);
 
         $slug = Str::slug($request->title);
@@ -61,8 +72,7 @@ class ArticleController extends Controller
         $counter = 1;
         
         while (Article::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
+            $slug = $originalSlug . '-' . $counter++;
         }
 
         $article = Article::create([
@@ -71,41 +81,23 @@ class ArticleController extends Controller
             'body' => $text,
             'thumbnail' => $thumbnailName,
             'user_id' => Auth::id(),
+            'org_id' => $request->org_id,
         ]);
 
-        if ($request->org_id) {
-            $article->org_id = $request->org_id;
-        }
-        
-        $article->save();
-
         return response()->json(['message' => 'Article created successfully'], 201);
-
     }
-
-    // $table->string('slug')->unique();
-    // $table->string('title');
-    // $table->longText('body');
-    // $table->text('thumbnail');
-    // $table->boolean('is_deleted')->default(false);
-    // $table->foreignId('org_id')->nullable()->references('id')->on('organizations')->cascadeOnDelete();
-    // $table->foreignId('user_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
 
     public function update(CreateUpdateArticleRequest $request, $id)
     {
         $article = Article::findOrFail($id);
 
-        // Check authorization - user must be the article owner
         if ($article->user_id !== Auth::id()) {
             return response()->json(['error' => 'You do not have permission to update this article'], 403);
         }
 
-        // If org_id is being updated, verify user is member of that organization
         if ($request->org_id && $request->org_id !== $article->org_id) {
-            $userId = Auth::id();
-            
             $isMember = OrganizationMember::where('organization_id', $request->org_id)
-                ->where('user_id', $userId)
+                ->where('user_id', Auth::id())
                 ->exists();
             
             if (!$isMember) {
@@ -113,12 +105,9 @@ class ArticleController extends Controller
             }
         }
 
-        $text = $request->body;
-
-        // Get old images to compare later
-        $oldText = $article->body;
+        // Get old images
         $oldDom = new DOMDocument();
-        $oldDom->loadHTML($oldText, 9);
+        $oldDom->loadHTML($article->body, 9);
         $oldImages = $oldDom->getElementsByTagName('img');
         $oldSrcs = [];
         foreach ($oldImages as $img) {
@@ -126,6 +115,7 @@ class ArticleController extends Controller
         }
 
         // Process new content
+        $text = $request->body;
         $dom = new DOMDocument();
         $dom->loadHTML($text, 9);
         $images = $dom->getElementsByTagName('img');
@@ -134,7 +124,6 @@ class ArticleController extends Controller
         foreach ($images as $key => $img) {
             $src = $img->getAttribute('src');
             if (strpos($src, 'data:image/') === 0) {
-                // New base64 image - upload it
                 $data = base64_decode(explode(',', explode(';', $src)[1])[1]);
                 $imageName = "TextImage/" . Str::uuid() . $key . '.png';
                 Storage::put('/public/ArticleStorage/' . $imageName, $data);
@@ -143,30 +132,24 @@ class ArticleController extends Controller
                 $img->setAttribute('src', $srcPath);
                 $newSrcs[] = $srcPath;
             } else {
-                // Existing image - keep track of it
                 $newSrcs[] = $src;
             }
         }
 
         $text = $dom->saveHTML();
 
-        // Delete old images that are no longer used
+        // Delete unused images
         foreach ($oldSrcs as $oldSrc) {
             if (!in_array($oldSrc, $newSrcs)) {
-                $relativePath = str_replace('/storage/', 'public/', $oldSrc);
-                if (Storage::exists($relativePath)) {
-                    Storage::delete($relativePath);
-                }
+                $this->deleteImageFile($oldSrc);
             }
         }
 
         // Handle thumbnail update
         if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail
             if ($article->thumbnail && Storage::exists('public/ArticleStorage/Thumbnail/' . $article->thumbnail)) {
                 Storage::delete('public/ArticleStorage/Thumbnail/' . $article->thumbnail);
             }
-
             $thumbnailPath = $request->file('thumbnail');
             $thumbnailName = Str::uuid() . '_' . str_replace(' ', '_', $thumbnailPath->getClientOriginalName());
             $thumbnailPath->storeAs('public/ArticleStorage/Thumbnail/' . $thumbnailName);
@@ -180,64 +163,37 @@ class ArticleController extends Controller
             $counter = 1;
             
             while (Article::where('slug', $slug)->where('id', '!=', $id)->exists()) {
-                $slug = $originalSlug . '-' . $counter;
-                $counter++;
+                $slug = $originalSlug . '-' . $counter++;
             }
             $article->slug = $slug;
         }
 
-        // Update article fields
-        $article->title = $request->title;
-        $article->body = $text;
+        $article->update([
+            'title' => $request->title,
+            'body' => $text,
+            'org_id' => $request->org_id,
+        ]);
 
-        // Update org_id if provided
-        if ($request->has('org_id')) {
-            $article->org_id = $request->org_id;
-        }
-
-        $article->save();
-
-        return response()->json(['message' => 'Article updated successfully'], 200);
+        return response()->json(['message' => 'Article updated successfully']);
     }
 
     public function destroy($id)
     {
         $article = Article::findOrFail($id);
 
-        // Check authorization - user must be the article owner
         if ($article->user_id !== Auth::id()) {
             return response()->json(['error' => 'You do not have permission to delete this article'], 403);
         }
 
-        // Delete all images in article body
-        $dom = new DOMDocument();
-        $dom->loadHTML($article->body, 9);
-        $images = $dom->getElementsByTagName('img');
+        $this->deleteArticleImages($article->body);
 
-        foreach ($images as $img) {
-            $src = $img->getAttribute('src');
-            $relativePath = str_replace('/storage/', 'public/', $src);
-            if (Storage::exists($relativePath)) {
-                Storage::delete($relativePath);
-            }
-        }
-
-        // Delete thumbnail
         if ($article->thumbnail && Storage::exists('public/ArticleStorage/Thumbnail/' . $article->thumbnail)) {
             Storage::delete('public/ArticleStorage/Thumbnail/' . $article->thumbnail);
         }
 
         $article->delete();
 
-        return response()->json(['message' => 'Article deleted successfully'], 200);
-    }
-
-    public function readAll(){
-
-        $articles = Article::all();
-
-        return response()->json(['article' => $articles], 200);
-
+        return response()->json(['message' => 'Article deleted successfully']);
     }
 
     public function getAll()
@@ -246,7 +202,6 @@ class ArticleController extends Controller
             ->where('is_deleted', false)
             ->with(['user:id,name,handle,avatar_url', 'organization:id,name,handle,logo_img']);
 
-        // Live search by title or body content
         if (request('search')) {
             $search = request('search');
             $query->where(function($q) use ($search) {
@@ -255,7 +210,6 @@ class ArticleController extends Controller
             });
         }
 
-        // Sorting
         $sort = request('sort', 'newest');
         switch ($sort) {
             case 'oldest':
@@ -267,7 +221,6 @@ class ArticleController extends Controller
             case 'title_desc':
                 $query->orderBy('title', 'desc');
                 break;
-            case 'newest':
             default:
                 $query->latest();
                 break;
@@ -275,13 +228,6 @@ class ArticleController extends Controller
 
         $articles = $query->paginate(6);
 
-        return view('pages.tests.articles', compact('articles'));
-    }
-
-    public function readOne($id){
-        
-        $article = Article::find($id);
-
-        return response()->json(['article' => $article], 200);
+        return view('pages.articles.index', compact('articles'));
     }
 }

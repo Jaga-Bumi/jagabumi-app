@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\QuestParticipant\SubmitProofRequest;
 use App\Http\Requests\QuestParticipant\ReviewSubmissionRequest;
+use App\Models\OrganizationMember;
 use App\Models\Quest;
 use App\Models\QuestParticipant;
 use Illuminate\Support\Facades\Auth;
@@ -15,14 +16,19 @@ class QuestParticipantController extends Controller
     public function join($questId)
     {
         $user = Auth::user();
+        $quest = Quest::findOrFail($questId);
 
-        $quest = Quest::find($questId);
+        // Check if user is a member of the quest's organization
+        $isMember = OrganizationMember::where('organization_id', $quest->org_id)
+            ->where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->exists();
 
-        if (!$quest) {
+        if ($isMember) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quest not found.',
-            ], 404);
+                'message' => 'Organization members cannot join their own quest.',
+            ], 403);
         }
 
         // Check if registration is open
@@ -41,21 +47,15 @@ class QuestParticipantController extends Controller
         }
 
         // Check if user already joined
-        $existingParticipation = QuestParticipant::where('quest_id', $questId)
-            ->where('user_id', $user->id)
-            ->first();
-
-        if ($existingParticipation) {
+        if (QuestParticipant::where('quest_id', $questId)->where('user_id', $user->id)->exists()) {
             return response()->json([
                 'success' => false,
-                'message' => 'You have already joined this quest. Status: ' . $existingParticipation->status,
+                'message' => 'You have already joined this quest.',
             ], 400);
         }
 
         // Check participant limit
-        $currentParticipants = QuestParticipant::where('quest_id', $questId)->count();
-
-        if ($currentParticipants >= $quest->participant_limit) {
+        if (QuestParticipant::where('quest_id', $questId)->count() >= $quest->participant_limit) {
             return response()->json([
                 'success' => false,
                 'message' => 'This quest has reached its participant limit (' . $quest->participant_limit . ').',
@@ -63,58 +63,34 @@ class QuestParticipantController extends Controller
         }
 
         // Create participation
-        try {
-            $participation = QuestParticipant::create([
-                'quest_id' => $questId,
-                'user_id' => $user->id,
-                'joined_at' => now(),
-                'status' => 'REGISTERED',
-            ]);
+        $participation = QuestParticipant::create([
+            'quest_id' => $questId,
+            'user_id' => $user->id,
+            'joined_at' => now(),
+            'status' => 'REGISTERED',
+        ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Successfully joined the quest!',
-                'data' => [
-                    'participation_id' => $participation->id,
-                    'quest_title' => $quest->title,
-                    'status' => $participation->status,
-                    'joined_at' => $participation->joined_at,
-                ],
-            ], 201);
-        } catch (\Exception $e) {
-            Log::error('Failed to join quest: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to join quest. Please try again.',
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully joined the quest!',
+            'data' => [
+                'participation_id' => $participation->id,
+                'quest_title' => $quest->title,
+                'status' => $participation->status,
+                'joined_at' => $participation->joined_at,
+            ],
+        ], 201);
     }
 
     // Cancel participation
     public function cancelParticipation($questId)
     {
         $user = Auth::user();
+        $quest = Quest::findOrFail($questId);
 
-        $quest = Quest::find($questId);
-
-        if (!$quest) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Quest not found.',
-            ], 404);
-        }
-
-        // Find participation
         $participation = QuestParticipant::where('quest_id', $questId)
             ->where('user_id', $user->id)
-            ->first();
-
-        if (!$participation) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You are not registered for this quest.',
-            ], 404);
-        }
+            ->firstOrFail();
 
         if ($participation->status !== 'REGISTERED') {
             return response()->json([
@@ -123,7 +99,6 @@ class QuestParticipantController extends Controller
             ], 400);
         }
 
-        // Check if cancellation is still allowed (during registration period)
         if (now()->gt($quest->registration_end_at)) {
             return response()->json([
                 'success' => false,
@@ -131,59 +106,32 @@ class QuestParticipantController extends Controller
             ], 400);
         }
 
-        try {
-            $participation->delete();
+        $participation->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Successfully cancelled your participation.',
-            ], 200);
-        } catch (\Exception $e) {
-            Log::error('Failed to cancel participation: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to cancel participation. Please try again.',
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully cancelled your participation.',
+        ]);
     }
     
 
     // Submit proof for quest participation
-    // update status ke COMPLETED
     public function submitProof(SubmitProofRequest $request, $questId)
     {
         $user = Auth::user();
+        $quest = Quest::findOrFail($questId);
 
-        $quest = Quest::find($questId);
-
-        if (!$quest) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Quest not found.',
-            ], 404);
-        }
-
-        // Check if user is a participant
         $participant = QuestParticipant::where('quest_id', $questId)
             ->where('user_id', $user->id)
-            ->first();
+            ->firstOrFail();
 
-        if (!$participant) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You are not a participant of this quest.',
-            ], 403);
-        }
-
-        // Check if already submitted
-        if ($participant->status === 'COMPLETED' || $participant->status === 'APPROVED' || $participant->status === 'REJECTED') {
+        if (in_array($participant->status, ['COMPLETED', 'APPROVED', 'REJECTED'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'You have already submitted proof for this quest.',
             ], 400);
         }
 
-        // Check if quest period is active or ended
         if (now()->lt($quest->quest_start_at)) {
             return response()->json([
                 'success' => false,
@@ -198,45 +146,33 @@ class QuestParticipantController extends Controller
             ], 400);
         }
 
-        try {
-            // Upload video to public storage
-            $video = $request->file('video');
-            $videoName = time() . '_' . $video->getClientOriginalName();
-            
-            // Create directory if not exists
-            $uploadPath = public_path('QuestSubmissionStorage');
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
-            
-            // Move file to public directory
-            $video->move($uploadPath, $videoName);
-            $videoUrl = '/QuestSubmissionStorage/' . $videoName;
-
-            // Update participant record
-            $participant->update([
-                'video_url' => $videoUrl,
-                'description' => $request->description,
-                'submission_date' => now(),
-                'status' => 'COMPLETED',
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Proof submitted successfully! Your submission is now under review.',
-                'data' => [
-                    'video_url' => $videoUrl,
-                    'submission_date' => $participant->submission_date->format('M d, Y H:i'),
-                ],
-            ], 200);
-
-        } catch (\Exception $e) {
-            Log::error('Failed to submit proof: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to submit proof. Please try again. Error: ' . $e->getMessage(),
-            ], 500);
+        // Upload video
+        $video = $request->file('video');
+        $videoName = time() . '_' . $video->getClientOriginalName();
+        $uploadPath = public_path('QuestSubmissionStorage');
+        
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
         }
+        
+        $video->move($uploadPath, $videoName);
+        $videoUrl = '/QuestSubmissionStorage/' . $videoName;
+
+        $participant->update([
+            'video_url' => $videoUrl,
+            'description' => $request->description,
+            'submission_date' => now(),
+            'status' => 'COMPLETED',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Proof submitted successfully! Your submission is now under review.',
+            'data' => [
+                'video_url' => $videoUrl,
+                'submission_date' => $participant->submission_date->format('M d, Y H:i'),
+            ],
+        ]);
     }
 
     
@@ -324,6 +260,7 @@ class QuestParticipantController extends Controller
         try {
             $participant->update([
                 'status' => $request->status, // APPROVED or REJECTED
+                'admin_notes' => $request->admin_notes,
             ]);
 
             return response()->json([
@@ -341,4 +278,101 @@ class QuestParticipantController extends Controller
         }
     }
 
+    // Approve submission (for organization)
+    public function approveSubmission($submissionId)
+    {
+        $submission = QuestParticipant::with('quest')->findOrFail($submissionId);
+        $this->authorizeOrganizationMember($submission->quest->org_id);
+
+        if ($submission->status !== 'COMPLETED') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only completed submissions can be approved',
+            ], 400);
+        }
+
+        $submission->update([
+            'status' => 'APPROVED',
+            'admin_notes' => request('admin_notes'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Submission approved successfully',
+        ]);
+    }
+
+    // Reject submission (for organization)
+    public function rejectSubmission($submissionId)
+    {
+        $submission = QuestParticipant::with('quest')->findOrFail($submissionId);
+        $this->authorizeOrganizationMember($submission->quest->org_id);
+
+        if ($submission->status !== 'COMPLETED') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only completed submissions can be rejected',
+            ], 400);
+        }
+
+        $submission->update([
+            'status' => 'REJECTED',
+            'admin_notes' => request('admin_notes', 'Rejected by organization'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Submission rejected',
+        ]);
+    }
+
+    private function authorizeOrganizationMember($orgId)
+    {
+        $membership = \App\Models\OrganizationMember::where('user_id', Auth::id())
+            ->where('organization_id', $orgId)
+            ->where('status', 'ACTIVE')
+            ->first();
+
+        if (!$membership) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
+    // Get all submissions for organization's quests
+    public function organizationSubmissions()
+    {
+        $user = Auth::user();
+        
+        // Get user's organizations for the sidebar
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(fn($member) => [
+                'id' => $member->organization->id,
+                'name' => $member->organization->name,
+                'handle' => $member->organization->handle,
+                'logo_img' => $member->organization->logo_img,
+                'role' => $member->role,
+            ]);
+
+        $firstOrg = $userOrganizations->first();
+        $orgId = session('current_org_id', $firstOrg['id'] ?? null);
+        $currentOrg = $userOrganizations->firstWhere('id', $orgId);
+        
+        if (!$currentOrg) {
+            return redirect()->route('organization.dashboard')
+                ->with('error', 'Please select or create an organization first.');
+        }
+
+        $submissions = QuestParticipant::whereHas('quest', function($q) use ($orgId) {
+                $q->where('org_id', $orgId);
+            })
+            ->whereIn('status', ['COMPLETED', 'APPROVED', 'REJECTED'])
+            ->with(['user:id,name,avatar_url,wallet_address,email', 'quest:id,title,slug,banner_url'])
+            ->orderBy('submission_date', 'desc')
+            ->get();
+
+        return view('pages.organization.submissions', compact('submissions', 'userOrganizations', 'currentOrg'));
+    }
 }

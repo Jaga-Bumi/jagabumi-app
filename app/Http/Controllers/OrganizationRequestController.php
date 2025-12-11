@@ -25,7 +25,7 @@ class OrganizationRequestController extends Controller
 
         $canSubmit = !$latestRequest || $latestRequest->status === 'REJECTED';
 
-        return view('pages.tests.join-us', compact('latestRequest', 'canSubmit'));
+        return view('pages.join-us', compact('latestRequest', 'canSubmit'));
     }
 
     public function status()

@@ -84,7 +84,15 @@ class User extends Authenticatable
     public function organizations()
     {
         return $this->belongsToMany(Organization::class, 'organization_members')
-            ->withPivot('role', 'joined_at')
+            ->withPivot('role', 'status', 'joined_at')
             ->withTimestamps();
+    }
+
+    // Get the organization where user is CREATOR
+    public function createdOrganization()
+    {
+        return $this->hasOne(OrganizationMember::class)
+            ->where('role', 'CREATOR')
+            ->with('organization');
     }
 }

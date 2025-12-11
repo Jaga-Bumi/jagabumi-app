@@ -56,7 +56,15 @@ class Organization extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'organization_members')
-            ->withPivot('role', 'joined_at')
+            ->withPivot('role', 'status', 'joined_at')
             ->withTimestamps();
+    }
+
+    // Get active members only
+    public function activeMembers()
+    {
+        return $this->hasMany(OrganizationMember::class)
+            ->where('status', 'ACTIVE')
+            ->with('user');
     }
 }
