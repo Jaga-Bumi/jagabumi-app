@@ -6,14 +6,23 @@
 <div class="min-h-screen py-8">
     <div class="container">
       {{-- Header --}}
-      <div class="mb-8">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium mb-3">
-          Articles
-        </span>
-        <h1 class="text-3xl font-bold mb-2">Learn & Get Inspired</h1>
-        <p class="text-muted-foreground">
-          Discover tips, stories, and insights for sustainable living
-        </p>
+      <div class="mb-8 flex items-center justify-between">
+          <!-- Left side (existing content) -->
+          <div>
+              <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium mb-3">
+                  Articles
+              </span>
+              <h1 class="text-3xl font-bold mb-2">Learn & Get Inspired</h1>
+              <p class="text-muted-foreground">
+                  Discover tips, stories, and insights for sustainable living
+              </p>
+          </div>
+
+          <!-- Right side button -->
+          <a href="{{ route('articles.create') }}"
+            class="px-4 py-2 rounded-lg bg-primary text-white font-medium shadow hover:bg-primary/90">
+              + Create Article
+          </a>
       </div>
       {{-- Filters --}}
       <div class="mb-8">

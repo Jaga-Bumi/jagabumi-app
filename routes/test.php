@@ -47,6 +47,10 @@ Route::middleware('auth')->group(function () {
   Route::post('/quests/{questId}/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('quests.attendance.check-in');
   Route::post('/quests/{questId}/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('quests.attendance.check-out');
   
+  // Article routes
+  Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+  Route::post('/articles/submit-form', [ArticleController::class, 'store'])->name('articles.store');
+
   // Organization dashboard routes
   Route::prefix('organization')->group(function () {
     Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('organization.dashboard');

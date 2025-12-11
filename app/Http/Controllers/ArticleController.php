@@ -84,7 +84,7 @@ class ArticleController extends Controller
             'org_id' => $request->org_id,
         ]);
 
-        return response()->json(['message' => 'Article created successfully'], 201);
+        return redirect('/articles');
     }
 
     public function update(CreateUpdateArticleRequest $request, $id)
