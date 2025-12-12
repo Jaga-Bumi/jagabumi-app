@@ -15,14 +15,14 @@ $isInReview = $quest->status === 'IN REVIEW';
   certImagePreview: null,
   couponImagePreview: null,
   formData: {
-    title: '{{ $quest->title }}',
-    desc: `{{ $quest->desc }}`,
+    title: {{ Js::from($quest->title) }},
+    desc: {{ Js::from($quest->desc) }},
     banner: null,
-    location_name: '{{ $quest->location_name }}',
+    location_name: {{ Js::from($quest->location_name) }},
     latitude: '{{ $quest->latitude }}',
     longitude: '{{ $quest->longitude }}',
     radius_meter: {{ $quest->radius_meter }},
-    liveness_code: '{{ $quest->liveness_code }}',
+    liveness_code: {{ Js::from($quest->liveness_code) }},
     registration_start_at: '{{ $quest->registration_start_at->format('Y-m-d\TH:i') }}',
     registration_end_at: '{{ $quest->registration_end_at->format('Y-m-d\TH:i') }}',
     quest_start_at: '{{ $quest->quest_start_at->format('Y-m-d\TH:i') }}',
@@ -33,12 +33,12 @@ $isInReview = $quest->status === 'IN REVIEW';
     participant_limit: {{ $quest->participant_limit }},
     winner_limit: {{ $quest->winner_limit }},
     org_id: {{ $quest->org_id }},
-    cert_name: '{{ $certificatePrize->name ?? 'Participation Certificate' }}',
+    cert_name: {{ Js::from($certificatePrize->name ?? 'Participation Certificate') }},
     cert_image: null,
-    cert_description: `{{ $certificatePrize->description ?? '' }}`,
-    coupon_name: '{{ $couponPrize->name ?? '' }}',
+    cert_description: {{ Js::from($certificatePrize->description ?? '') }},
+    coupon_name: {{ Js::from($couponPrize->name ?? '') }},
     coupon_image: null,
-    coupon_description: `{{ $couponPrize->description ?? '' }}`
+    coupon_description: {{ Js::from($couponPrize->description ?? '') }}
   },
   
   handleBannerUpload(event) {
@@ -141,14 +141,14 @@ $isInReview = $quest->status === 'IN REVIEW';
     this.couponImagePreview = null;
     // Reset form data to original values
     this.formData = {
-      title: '{{ $quest->title }}',
-      desc: `{{ $quest->desc }}`,
+      title: {{ Js::from($quest->title) }},
+      desc: {{ Js::from($quest->desc) }},
       banner: null,
-      location_name: '{{ $quest->location_name }}',
+      location_name: {{ Js::from($quest->location_name) }},
       latitude: '{{ $quest->latitude }}',
       longitude: '{{ $quest->longitude }}',
       radius_meter: {{ $quest->radius_meter }},
-      liveness_code: '{{ $quest->liveness_code }}',
+      liveness_code: {{ Js::from($quest->liveness_code) }},
       registration_start_at: '{{ $quest->registration_start_at->format('Y-m-d\TH:i') }}',
       registration_end_at: '{{ $quest->registration_end_at->format('Y-m-d\TH:i') }}',
       quest_start_at: '{{ $quest->quest_start_at->format('Y-m-d\TH:i') }}',
@@ -159,12 +159,12 @@ $isInReview = $quest->status === 'IN REVIEW';
       participant_limit: {{ $quest->participant_limit }},
       winner_limit: {{ $quest->winner_limit }},
       org_id: {{ $quest->org_id }},
-      cert_name: '{{ $certificatePrize->name ?? 'Participation Certificate' }}',
+      cert_name: {{ Js::from($certificatePrize->name ?? 'Participation Certificate') }},
       cert_image: null,
-      cert_description: `{{ $certificatePrize->description ?? '' }}`,
-      coupon_name: '{{ $couponPrize->name ?? '' }}',
+      cert_description: {{ Js::from($certificatePrize->description ?? '') }},
+      coupon_name: {{ Js::from($couponPrize->name ?? '') }},
       coupon_image: null,
-      coupon_description: `{{ $couponPrize->description ?? '' }}`
+      coupon_description: {{ Js::from($couponPrize->description ?? '') }}
     };
     document.getElementById('banner-upload').value = '';
     document.getElementById('cert-image-upload').value = '';
@@ -188,12 +188,15 @@ $isInReview = $quest->status === 'IN REVIEW';
   </div>
 
   {{-- Hero Banner --}}
+  @php
+    $hasBanner = !empty($quest->banner_url);
+  @endphp
   <div class="relative h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden">
     <img :src="bannerPreview || '{{ $quest->banner_url }}'"
          alt="{{ $quest->title }}" 
          class="w-full h-full object-cover"
-         x-show="bannerPreview || {{ $quest->banner_url ? 'true' : 'false' }}">
-    <div x-show="!bannerPreview && !{{ $quest->banner_url ? 'true' : 'false' }}" 
+         x-show="bannerPreview || {{ $hasBanner ? 'true' : 'false' }}">
+    <div x-show="!bannerPreview && !{{ $hasBanner ? 'true' : 'false' }}" 
          class="w-full h-full bg-gradient-to-r from-primary/20 to-secondary/20"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
     

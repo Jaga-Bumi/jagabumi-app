@@ -118,18 +118,29 @@
         @forelse($top3Quests as $index => $quest)
           <div class="card-quest overflow-hidden animate-slide-up stagger-{{ $index + 1 }}" style="opacity: 0;">
             <div class="relative h-48 overflow-hidden">
-              <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20"></div>
-              <div class="absolute top-3 right-3">
-                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-card/80 backdrop-blur-sm text-xs font-semibold shadow-soft">
-                  500 Points
-                </span>
-              </div>
+              @if($quest->banner_url)
+                <img src="{{ asset($quest->banner_url) }}" alt="{{ $quest->title }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+              @else
+                <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 transition-transform duration-500 hover:scale-110"></div>
+              @endif
             </div>
             <div class="p-5 space-y-4">
               <div>
                 <h3 class="font-semibold text-lg mb-1">{{ $quest->title }}</h3>
-                <p class="text-sm text-muted-foreground">{{ $quest->organization->name ?? 'Organization' }}</p>
+                <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                  @if($quest->organization->logo_img)
+                    <img src="{{ asset('OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-5 h-5 rounded-full object-cover">
+                  @else
+                    <div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
+                      {{ substr($quest->organization->name ?? 'O', 0, 1) }}
+                    </div>
+                  @endif
+                  <span>{{ $quest->organization->name ?? 'Organization' }}</span>
+                </div>
               </div>
+              <p class="text-sm text-muted-foreground line-clamp-2">
+                {{ Str::limit(strip_tags($quest->desc), 100) }}
+              </p>
               <div class="flex flex-wrap gap-3 text-sm text-muted-foreground">
                 <span class="flex items-center gap-1">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -440,8 +440,18 @@ class QuestParticipantController extends Controller
         $quests = Quest::where('org_id', $orgId)
             ->whereIn('status', ['ACTIVE', 'ENDED'])
             ->withCount(['winners'])
-            ->select('id', 'title', 'slug', 'winner_limit', 'status')
-            ->get();
+            ->get()
+            ->map(function($quest) {
+                // Keep only needed fields and ensure winners_count is available
+                return [
+                    'id' => $quest->id,
+                    'title' => $quest->title,
+                    'slug' => $quest->slug,
+                    'winner_limit' => $quest->winner_limit,
+                    'status' => $quest->status,
+                    'winners_count' => $quest->winners_count ?? 0,
+                ];
+            });
 
         return view('pages.organization.submissions', compact('submissions', 'userOrganizations', 'currentOrg', 'quests'));
     }
