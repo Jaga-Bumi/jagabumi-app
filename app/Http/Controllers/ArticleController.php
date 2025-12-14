@@ -195,7 +195,7 @@ class ArticleController extends Controller
 
         $article->delete();
 
-        return response()->json(['message' => 'Article deleted successfully']);
+        return redirect('/dashboard');
     }
 
     public function getAll()

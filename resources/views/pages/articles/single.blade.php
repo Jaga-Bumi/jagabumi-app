@@ -28,6 +28,13 @@
                         {{ $writer->name  }}
                     </span>
                     
+                    {{-- Organization Tag --}}
+                    @if (!empty($article->organization))
+                        <span class="text-sm text-gray-500 italic mr-4">
+                            from {{ $article->organization->name }}
+                        </span>
+                    @endif
+
                     {{-- Date --}}
                     <div class="flex items-center mt-1 md:mt-0">
                         <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
