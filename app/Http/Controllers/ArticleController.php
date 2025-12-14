@@ -9,6 +9,7 @@ use App\Models\OrganizationMember;
 use App\Models\User;
 use DOMDocument;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -38,8 +39,25 @@ class ArticleController extends Controller
     }
 
     public function store(CreateUpdateArticleRequest $request){
-        if ($request->org_id) {
-            $isMember = OrganizationMember::where('organization_id', $request->org_id)
+
+        $user = Auth::user();
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+        ->where('status', 'ACTIVE')
+        ->with('organization')
+        ->get()
+        ->map(fn($member) => [
+            'id' => $member->organization->id,
+            'name' => $member->organization->name,
+            'handle' => $member->organization->handle,
+            'logo_img' => $member->organization->logo_img,
+            'role' => $member->role,
+        ]);
+        
+        $firstOrg = $userOrganizations->first();
+        $orgId = Session::get('current_org_id', $firstOrg['id'] ?? null);
+
+        if ($orgId != null) {
+            $isMember = OrganizationMember::where('organization_id', $orgId)
                 ->where('user_id', Auth::id())
                 ->exists();
             
@@ -83,7 +101,7 @@ class ArticleController extends Controller
             'body' => $text,
             'thumbnail' => $thumbnailName,
             'user_id' => Auth::id(),
-            'org_id' => $request->org_id,
+            'org_id' => $orgId,
         ]);
 
         return redirect('/articles');
@@ -93,11 +111,27 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
 
+        $user = Auth::user();
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(fn($member) => [
+                'id' => $member->organization->id,
+                'name' => $member->organization->name,
+                'handle' => $member->organization->handle,
+                'logo_img' => $member->organization->logo_img,
+                'role' => $member->role,
+            ]);
+        
+        $firstOrg = $userOrganizations->first();
+        $orgId = Session::get('current_org_id', $firstOrg['id'] ?? null);
+
         if ($article->user_id !== Auth::id()) {
             return response()->json(['error' => 'You do not have permission to update this article'], 403);
         }
 
-        if ($request->org_id && $request->org_id !== $article->org_id) {
+        if ($orgId && $orgId !== $article->org_id) {
             $isMember = OrganizationMember::where('organization_id', $request->org_id)
                 ->where('user_id', Auth::id())
                 ->exists();
@@ -173,10 +207,10 @@ class ArticleController extends Controller
         $article->update([
             'title' => $request->title,
             'body' => $text,
-            'org_id' => $request->org_id,
+            'org_id' => $orgId,
         ]);
 
-        return redirect('/dashboard');
+        return redirect('/articles');
     }
 
     public function destroy($id)
@@ -195,7 +229,7 @@ class ArticleController extends Controller
 
         $article->delete();
 
-        return redirect('/dashboard');
+        return redirect()->back();
     }
 
     public function getAll()
@@ -251,4 +285,39 @@ class ArticleController extends Controller
         return view('pages.articles.edit', compact('article'));
 
     }
+
+    public function organizationArticles(){
+        $user = Auth::user();
+
+        $userOrganizations = OrganizationMember::where('user_id', $user->id)
+            ->where('status', 'ACTIVE')
+            ->with('organization')
+            ->get()
+            ->map(fn($member) => [
+                'id' => $member->organization->id,
+                'name' => $member->organization->name,
+                'handle' => $member->organization->handle,
+                'logo_img' => $member->organization->logo_img,
+                'role' => $member->role,
+            ]);
+
+        $firstOrg = $userOrganizations->first();
+        $orgId = session('current_org_id', $firstOrg['id'] ?? null);
+        $currentOrg = $userOrganizations->firstWhere('id', $orgId);
+
+        if (!$currentOrg) {
+            return redirect()->route('organization.dashboard')
+                ->with('error', 'Please select or create an organization first.');
+        }
+
+        $articles = Article::where('org_id', $orgId)
+            ->with('user')
+            ->where('is_deleted', false) 
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pages.organization.articles.index', compact('articles', 'userOrganizations', 'currentOrg'));
+    }
+
+
 }

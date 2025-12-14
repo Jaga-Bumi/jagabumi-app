@@ -72,6 +72,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/quests/{id}', [QuestController::class, 'update'])->name('organization.quests.update');
     Route::delete('/quests/{id}', [QuestController::class, 'destroy'])->name('organization.quests.destroy');
     
+    // Article management
+    Route::get('/articles', [ArticleController::class, 'organizationArticles'])->name('organization.articles.index');
+    Route::get('/articles/create', [ArticleController::class, 'create'])->name('organization.articles.create');
+    Route::post('/articles/submit-form', [ArticleController::class, 'store'])->name('organization.articles.store');
+    Route::get('/articles/{id}', [ArticleController::class, 'getOne'])->name('organization.articles.single');
+    Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('organization.articles.destroy');
+    Route::put('/articles/{id}', [ArticleController::class, 'update'])->name('organization.articles.update');
+    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('organization.articles.edit');
+
     // Member management
     Route::get('/members', [OrganizationMemberController::class, 'index'])->name('organization.members.index');
     Route::post('/members/{orgId}/invite', [OrganizationMemberController::class, 'invite'])->name('organization.members.invite');
