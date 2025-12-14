@@ -52,7 +52,9 @@ Route::middleware('auth')->group(function () {
   Route::post('/articles/submit-form', [ArticleController::class, 'store'])->name('articles.store');
   Route::get('/articles/{id}', [ArticleController::class, 'getOne'])->name('articles.single');
   Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
-
+  Route::put('/articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+  Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+  
   // Organization dashboard routes
   Route::prefix('organization')->group(function () {
     Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('organization.dashboard');

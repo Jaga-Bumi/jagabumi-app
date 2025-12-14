@@ -176,7 +176,7 @@ class ArticleController extends Controller
             'org_id' => $request->org_id,
         ]);
 
-        return response()->json(['message' => 'Article updated successfully']);
+        return redirect('/dashboard');
     }
 
     public function destroy($id)
@@ -243,6 +243,12 @@ class ArticleController extends Controller
             'article' => $article,
             'writer' => $writer
         ]);
+
+    }
+
+    public function edit(Article $article){
+
+        return view('pages.articles.edit', compact('article'));
 
     }
 }
