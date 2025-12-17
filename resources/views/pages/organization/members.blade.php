@@ -2,8 +2,8 @@
 
 @section('content')
 @php
-$title = 'Member Management';
-$subtitle = "Manage your organization's team members";
+$title = 'Manajemen Anggota';
+$subtitle = "Manage anggota tim dari organisasi Anda";
 @endphp
   <div class="max-w-4xl mx-auto space-y-6" x-data="{
     inviteModalOpen: false,
@@ -36,7 +36,7 @@ $subtitle = "Manage your organization's team members";
       this.errorMessage = '';
       
       if (!this.inviteEmail || !this.inviteEmail.includes('@')) {
-        this.errorMessage = 'Please enter a valid email address.';
+        this.errorMessage = 'Tolong masukan email yang valid.';
         return;
       }
       
@@ -61,17 +61,17 @@ $subtitle = "Manage your organization's team members";
           this.inviteModalOpen = false;
           window.location.reload();
         } else {
-          this.errorMessage = data.message || 'Failed to send invitation';
+          this.errorMessage = data.message || 'Gagal mengirim undangan';
         }
       } catch (error) {
-        this.errorMessage = 'An error occurred. Please try again.';
+        this.errorMessage = 'Sebuah error terjadi. Mohon coba lagi nanti.';
       } finally {
         this.isSubmitting = false;
       }
     },
     
     async removeMember(memberId) {
-      if (!confirm('Are you sure you want to remove this member? They will lose access to the organization dashboard.')) {
+      if (!confirm('Apakah Anda yakin ingin menghapus anggota ini? Mereka akan kehilangan akses ke dashboard organisasi.')) {
         return;
       }
       
@@ -87,10 +87,10 @@ $subtitle = "Manage your organization's team members";
         const data = await response.json();
         
         if (response.ok) {
-          alert(data.message || 'Member removed successfully');
+          alert(data.message || 'Anggota berhasil dihapus');
           window.location.reload();
         } else {
-          alert(data.message || 'Failed to remove member');
+          alert(data.message || 'Gagal menghapus anggota');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -108,7 +108,7 @@ $subtitle = "Manage your organization's team members";
         <input 
           type="text" 
           x-model="searchQuery"
-          placeholder="Search members..." 
+          placeholder="Cari anggota..." 
           class="pl-9 w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-all"
         >
       </div>
@@ -121,7 +121,7 @@ $subtitle = "Manage your organization's team members";
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
           </svg>
-          Invite Manager
+          Undang Manager
         </button>
       @endif
     </div>
@@ -133,9 +133,9 @@ $subtitle = "Manage your organization's team members";
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
-          <h2 class="text-base font-semibold">Team Members (<span x-text="members.length"></span>)</h2>
+          <h2 class="text-base font-semibold">Anggota Tim (<span x-text="members.length"></span>)</h2>
         </div>
-        <p class="text-sm text-muted-foreground">Manage who has access to your organization dashboard</p>
+        <p class="text-sm text-muted-foreground">Tentukan siapa yang memiliki akses ke dasbor organisasi Anda.</p>
       </div>
 
       <div class="p-6">
@@ -144,7 +144,7 @@ $subtitle = "Manage your organization's team members";
             <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <p>No members found</p>
+            <p>Belum ada anggota</p>
           </div>
         </template>
 
@@ -209,7 +209,7 @@ $subtitle = "Manage your organization's team members";
                     <span>Joined <span x-text="new Date(member.joined_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })"></span></span>
                   </template>
                   <template x-if="member.status === 'PENDING'">
-                    <span>Invitation pending</span>
+                    <span>Undangan pending</span>
                   </template>
                 </p>
               </div>
@@ -245,7 +245,7 @@ $subtitle = "Manage your organization's team members";
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
-                            Resend Invitation
+                            Kirim Ulang Undangan
                           </button>
                         </template>
                         <button 
@@ -255,7 +255,7 @@ $subtitle = "Manage your organization's team members";
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
-                          Remove Member
+                          Hapus Anggota
                         </button>
                       </div>
                     </div>
@@ -307,9 +307,9 @@ $subtitle = "Manage your organization's team members";
               <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
-              <h3 class="text-lg font-semibold">Invite New Manager</h3>
+              <h3 class="text-lg font-semibold">Undang Manager Baru</h3>
             </div>
-            <p class="text-sm text-muted-foreground">Send an invitation to join your organization as a manager.</p>
+            <p class="text-sm text-muted-foreground">Kirim undangan untuk memasuki organisasi Anda sebagai manager.</p>
           </div>
 
           {{-- Modal Body --}}
@@ -348,10 +348,10 @@ $subtitle = "Manage your organization's team members";
             <div class="p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground">
               <p class="font-medium text-foreground mb-1">Manager Permissions:</p>
               <ul class="list-disc list-inside space-y-1">
-                <li>Create and manage quests</li>
+                <li>Membuat dan urus quests</li>
                 <li>Review submissions</li>
-                <li>Select winners</li>
-                <li>Distribute prizes</li>
+                <li>Memilih pemenang</li>
+                <li>Memberikan hadiah</li>
               </ul>
             </div>
           </div>
@@ -362,7 +362,7 @@ $subtitle = "Manage your organization's team members";
               @click="inviteModalOpen = false"
               class="px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors font-medium"
             >
-              Cancel
+              Batal
             </button>
             <button 
               @click="submitInvite()"
@@ -370,8 +370,8 @@ $subtitle = "Manage your organization's team members";
               :class="isSubmitting && 'opacity-50 cursor-not-allowed'"
               class="px-4 py-2.5 rounded-lg gradient-primary text-primary-foreground shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300 font-semibold"
             >
-              <span x-show="!isSubmitting">Send Invitation</span>
-              <span x-show="isSubmitting">Sending...</span>
+              <span x-show="!isSubmitting">Kirim Undangan</span>
+              <span x-show="isSubmitting">Sedang dikirim...</span>
             </button>
           </div>
         </div>
