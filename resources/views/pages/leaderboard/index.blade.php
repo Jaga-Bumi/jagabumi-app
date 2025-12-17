@@ -17,7 +17,7 @@
           Top <span class="gradient-text">Eco-Warriors</span>
         </h1>
         <p class="text-muted-foreground max-w-lg mx-auto">
-          Celebrating the champions of environmental action. Ranked by total quests completed!
+          Merayakan para pahlawan aksi lingkungan. Diurutkan berdasarkan jumlah misi yang diselesaikan!
         </p>
       </div>
 
@@ -41,7 +41,7 @@
             <div class="bg-muted-foreground/20 rounded-t-lg pt-4 pb-8 px-6 min-w-[120px]">
               <p class="font-semibold text-sm truncate">{{ $topUsers[1]->name }}</p>
               <p class="text-primary font-bold">{{ $topUsers[1]->completed_quests_count }}</p>
-              <p class="text-xs text-muted-foreground">quests completed</p>
+              <p class="text-xs text-muted-foreground">quests selesai</p>
             </div>
           </div>
 
@@ -67,7 +67,7 @@
             <div class="gradient-primary rounded-t-lg pt-6 pb-12 px-8 min-w-[140px]">
               <p class="font-semibold text-primary-foreground truncate">{{ $topUsers[0]->name }}</p>
               <p class="text-primary-foreground font-bold text-lg">{{ $topUsers[0]->completed_quests_count }}</p>
-              <p class="text-xs text-primary-foreground/80">quests completed</p>
+              <p class="text-xs text-primary-foreground/80">quests selesai</p>
             </div>
           </div>
 
@@ -88,7 +88,7 @@
             <div class="bg-highlight/20 rounded-t-lg pt-4 pb-6 px-6 min-w-[120px]">
               <p class="font-semibold text-sm truncate">{{ $topUsers[2]->name }}</p>
               <p class="text-primary font-bold">{{ $topUsers[2]->completed_quests_count }}</p>
-              <p class="text-xs text-muted-foreground">quests completed</p>
+              <p class="text-xs text-muted-foreground">quests selesai</p>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@
               <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
-              Top Eco-Warriors by Quests Completed
+              Top Eco-Warriors berdasarkan Jumlah Quests Selesai
             </h3>
           </div>
           <div class="p-6">
@@ -170,7 +170,7 @@
                       <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      {{ $user->completed_quests_count }} quests completed
+                      {{ $user->completed_quests_count }} quests selesai
                     </p>
                   </div>
                   
@@ -189,7 +189,7 @@
                   <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
-                  <p>No users yet</p>
+                  <p>Belum ada users saat ini</p>
                 </div>
               @endforelse
             </div>
@@ -203,7 +203,7 @@
               <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
-              Most Popular Quests
+              Quests Terpopuler
             </h3>
           </div>
           <div class="p-6">
@@ -236,7 +236,7 @@
                   
                   <div class="flex-1 min-w-0">
                     <p class="font-semibold truncate">{{ $quest->title }}</p>
-                    <p class="text-sm text-muted-foreground">by {{ $quest->organization->name ?? 'Organization' }}</p>
+                    <p class="text-sm text-muted-foreground">oleh {{ $quest->organization->name ?? 'Organization' }}</p>
                   </div>
                   
                   <div class="text-right">
@@ -259,7 +259,7 @@
                   <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                   </svg>
-                  <p>No quests yet</p>
+                  <p>Belum ada quests saat ini</p>
                 </div>
               @endforelse
             </div>
