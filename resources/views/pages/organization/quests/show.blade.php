@@ -183,7 +183,7 @@ $isInReview = $quest->status === 'IN REVIEW';
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
       </svg>
-      Back to Quests
+      Balik ke Quests
     </a>
   </div>
 
@@ -232,7 +232,7 @@ $isInReview = $quest->status === 'IN REVIEW';
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
-            Cancel
+            Batal
           </button>
           <button @click="saveQuest" :disabled="isSaving" class="px-4 py-2 rounded-lg gradient-primary text-primary-foreground shadow-glow hover-lift flex items-center gap-2 disabled:opacity-50">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -269,7 +269,7 @@ $isInReview = $quest->status === 'IN REVIEW';
         <template x-if="isEditing">
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-2">Quest Title</label>
+              <label class="block text-sm font-medium mb-2">Judul Quest</label>
               <input 
                 type="text" 
                 x-model="formData.title"
@@ -281,7 +281,7 @@ $isInReview = $quest->status === 'IN REVIEW';
               </template>
             </div>
             <div>
-              <label class="block text-sm font-medium mb-2">Description</label>
+              <label class="block text-sm font-medium mb-2">Deskripsi</label>
               <textarea 
                 x-model="formData.desc"
                 rows="6"
@@ -303,7 +303,7 @@ $isInReview = $quest->status === 'IN REVIEW';
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
-          Location & Geofencing
+          Lokasi & Geofencing
         </h2>
         
         <template x-if="!isEditing">
@@ -315,7 +315,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 </svg>
               </div>
               <div class="flex-1">
-                <p class="text-sm text-muted-foreground">Location</p>
+                <p class="text-sm text-muted-foreground">Lokasi</p>
                 <p class="font-medium">{{ $quest->location_name }}</p>
               </div>
             </div>
@@ -327,7 +327,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <p class="text-sm text-muted-foreground">Coordinates</p>
+                  <p class="text-sm text-muted-foreground">Koordinat</p>
                   <p class="font-medium text-sm">{{ $quest->latitude }}, {{ $quest->longitude }}</p>
                 </div>
               </div>
@@ -349,7 +349,7 @@ $isInReview = $quest->status === 'IN REVIEW';
         <template x-if="isEditing">
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-2">Location Name</label>
+              <label class="block text-sm font-medium mb-2">Nama Lokasi</label>
               <input 
                 type="text" 
                 x-model="formData.location_name"
@@ -456,7 +456,7 @@ $isInReview = $quest->status === 'IN REVIEW';
           <div class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium mb-2">Registration Start</label>
+                <label class="block text-sm font-medium mb-2">Mulai Registrasi</label>
                 <input 
                   type="datetime-local" 
                   x-model="formData.registration_start_at"
@@ -464,7 +464,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium mb-2">Registration End</label>
+                <label class="block text-sm font-medium mb-2">Akhir Registrasi</label>
                 <input 
                   type="datetime-local" 
                   x-model="formData.registration_end_at"
@@ -474,7 +474,7 @@ $isInReview = $quest->status === 'IN REVIEW';
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium mb-2">Quest Start</label>
+                <label class="block text-sm font-medium mb-2">Mulai Quest</label>
                 <input 
                   type="datetime-local" 
                   x-model="formData.quest_start_at"
@@ -482,7 +482,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium mb-2">Quest End</label>
+                <label class="block text-sm font-medium mb-2">Akhir Quest</label>
                 <input 
                   type="datetime-local" 
                   x-model="formData.quest_end_at"
@@ -492,7 +492,7 @@ $isInReview = $quest->status === 'IN REVIEW';
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium mb-2">Judging Start</label>
+                <label class="block text-sm font-medium mb-2">Mulai Penjurian</label>
                 <input 
                   type="datetime-local" 
                   x-model="formData.judging_start_at"
@@ -500,7 +500,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium mb-2">Judging End</label>
+                <label class="block text-sm font-medium mb-2">Akhir Penjurian</label>
                 <input 
                   type="datetime-local" 
                   x-model="formData.judging_end_at"
@@ -509,7 +509,7 @@ $isInReview = $quest->status === 'IN REVIEW';
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium mb-2">Prize Distribution Date</label>
+              <label class="block text-sm font-medium mb-2">Tanggal Pemberian Hadiah</label>
               <input 
                 type="datetime-local" 
                 x-model="formData.prize_distribution_date"
@@ -526,7 +526,7 @@ $isInReview = $quest->status === 'IN REVIEW';
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
           </svg>
-          Prizes & Rewards
+          Hadiah & Rewards
         </h2>
         
         <template x-if="!isEditing">
@@ -558,7 +558,7 @@ $isInReview = $quest->status === 'IN REVIEW';
           <div class="space-y-6">
             {{-- Certificate Prize --}}
             <div class="space-y-3">
-              <h3 class="font-medium text-sm">Certificate Prize (Required)</h3>
+              <h3 class="font-medium text-sm">Hadiah Sertifikat (Required)</h3>
               
               {{-- Certificate Image Preview --}}
               <div class="relative w-full h-32 rounded-lg overflow-hidden bg-muted/30">
@@ -584,7 +584,7 @@ $isInReview = $quest->status === 'IN REVIEW';
               </div>
               
               <div>
-                <label class="block text-sm font-medium mb-2">Name</label>
+                <label class="block text-sm font-medium mb-2">Nama</label>
                 <input 
                   type="text" 
                   x-model="formData.cert_name"
@@ -592,7 +592,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium mb-2">Description</label>
+                <label class="block text-sm font-medium mb-2">Deskripsi</label>
                 <textarea 
                   x-model="formData.cert_description"
                   rows="2"
@@ -603,7 +603,7 @@ $isInReview = $quest->status === 'IN REVIEW';
             
             {{-- Coupon Prize --}}
             <div class="space-y-3 pt-4 border-t border-border">
-              <h3 class="font-medium text-sm">Coupon Prize (Optional)</h3>
+              <h3 class="font-medium text-sm">Hadiah Kupon (Opsional)</h3>
               
               {{-- Coupon Image Preview --}}
               <div class="relative w-full h-32 rounded-lg overflow-hidden bg-muted/30">
@@ -629,7 +629,7 @@ $isInReview = $quest->status === 'IN REVIEW';
               </div>
               
               <div>
-                <label class="block text-sm font-medium mb-2">Name</label>
+                <label class="block text-sm font-medium mb-2">Nama</label>
                 <input 
                   type="text" 
                   x-model="formData.coupon_name"
@@ -638,7 +638,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium mb-2">Description</label>
+                <label class="block text-sm font-medium mb-2">Deskripsi</label>
                 <textarea 
                   x-model="formData.coupon_description"
                   rows="2"
@@ -661,15 +661,15 @@ $isInReview = $quest->status === 'IN REVIEW';
           <template x-if="!isEditing">
             <div>
               <div class="flex items-center justify-between text-sm mb-1">
-                <span class="text-muted-foreground">Participant Limit</span>
+                <span class="text-muted-foreground">Limit Peserta</span>
                 <span class="font-semibold">{{ $quest->participant_limit }}</span>
               </div>
               <div class="flex items-center justify-between text-sm mb-1">
-                <span class="text-muted-foreground">Winner Limit</span>
+                <span class="text-muted-foreground">Limit Pemenang</span>
                 <span class="font-semibold">{{ $quest->winner_limit }}</span>
               </div>
               <div class="flex items-center justify-between text-sm">
-                <span class="text-muted-foreground">Current Participants</span>
+                <span class="text-muted-foreground">Peserta Sekarang</span>
                 <span class="font-semibold text-primary">{{ $quest->quest_participants_count }}</span>
               </div>
             </div>
@@ -678,7 +678,7 @@ $isInReview = $quest->status === 'IN REVIEW';
           <template x-if="isEditing">
             <div class="space-y-3">
               <div>
-                <label class="block text-sm font-medium mb-2">Participant Limit</label>
+                <label class="block text-sm font-medium mb-2">Limit Peserta</label>
                 <input 
                   type="number" 
                   x-model="formData.participant_limit"
@@ -686,7 +686,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium mb-2">Winner Limit</label>
+                <label class="block text-sm font-medium mb-2">Limit Pemenang</label>
                 <input 
                   type="number" 
                   x-model="formData.winner_limit"
@@ -700,7 +700,7 @@ $isInReview = $quest->status === 'IN REVIEW';
 
       {{-- Organization Info --}}
       <div class="glass-card rounded-xl p-6">
-        <h3 class="font-semibold mb-4">Organization</h3>
+        <h3 class="font-semibold mb-4">Organisai</h3>
         <div class="flex items-center gap-3">
           @if($quest->organization->logo_img)
             <img src="{{ asset('OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-12 h-12 rounded-full object-cover">
@@ -719,7 +719,7 @@ $isInReview = $quest->status === 'IN REVIEW';
       {{-- Additional Settings --}}
       <template x-if="isEditing">
         <div class="glass-card rounded-xl p-6">
-          <h3 class="font-semibold mb-4">Additional Settings</h3>
+          <h3 class="font-semibold mb-4">Settings Tambahan</h3>
           <div>
             <label class="block text-sm font-medium mb-2">Liveness Code</label>
             <input 
@@ -728,7 +728,7 @@ $isInReview = $quest->status === 'IN REVIEW';
               placeholder="Optional verification code"
               class="w-full px-4 py-2 rounded-lg bg-muted/50 border border-border focus:ring-2 focus:ring-primary focus:border-primary"
             >
-            <p class="text-xs text-muted-foreground mt-1">Used for on-site verification</p>
+            <p class="text-xs text-muted-foreground mt-1">Digunakan untuk on-site verification</p>
           </div>
         </div>
       </template>
@@ -771,7 +771,7 @@ $isInReview = $quest->status === 'IN REVIEW';
               }
           }
       }">
-        <h3 class="font-semibold mb-4">Quest Status</h3>
+        <h3 class="font-semibold mb-4">Status Quest</h3>
         
         <div class="flex items-center justify-between gap-3 mb-4">
           <span class="px-3 py-1.5 rounded-lg text-sm font-medium"
@@ -791,7 +791,7 @@ $isInReview = $quest->status === 'IN REVIEW';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span x-show="!isUpdating">Change</span>
+              <span x-show="!isUpdating">Ganti</span>
               <span x-show="isUpdating">...</span>
             </button>
             
@@ -836,15 +836,15 @@ $isInReview = $quest->status === 'IN REVIEW';
         <div class="text-xs space-y-2 pt-3 border-t border-border">
           <div class="flex items-center gap-2" :class="currentStatus === 'ACTIVE' ? 'text-green-500' : 'text-muted-foreground'">
             <span class="w-2 h-2 rounded-full bg-green-500"></span>
-            <span>Active - Open for participation</span>
+            <span>Active - Buka untuk peserta</span>
           </div>
           <div class="flex items-center gap-2" :class="currentStatus === 'ENDED' ? 'text-blue-500' : 'text-muted-foreground'">
             <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-            <span>Ended - Quest completed</span>
+            <span>Ended - Quest selesai</span>
           </div>
           <div class="flex items-center gap-2" :class="currentStatus === 'CANCELLED' ? 'text-red-500' : 'text-muted-foreground'">
             <span class="w-2 h-2 rounded-full bg-red-500"></span>
-            <span>Cancelled - Quest discontinued</span>
+            <span>Cancelled - Quest dibatalkan</span>
           </div>
         </div>
       </div>
@@ -859,7 +859,7 @@ $isInReview = $quest->status === 'IN REVIEW';
             </svg>
             <div>
               <p class="text-sm font-medium text-yellow-600 dark:text-yellow-400 mb-1">Pending Review</p>
-              <p class="text-xs text-yellow-600/80 dark:text-yellow-400/80">This quest is waiting for admin approval. You can edit it until it's approved.</p>
+              <p class="text-xs text-yellow-600/80 dark:text-yellow-400/80">Quest ini sedang menunggu persetujuan admin. Anda dapat mengeditnya hingga disetujui.</p>
             </div>
           </div>
         </div>
