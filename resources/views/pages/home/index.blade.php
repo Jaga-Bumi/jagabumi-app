@@ -17,26 +17,26 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
           </svg>
-          #1 Environmental Gamification Platform
+          #1 Platform Gamifikasi Lingkungan
         </span>
         
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-          Turn Your <span class="gradient-text">Eco-Actions</span><br />Into Real Impact
+          Ubah <span class="gradient-text">Aksi Ramah Lingkungan</span><br />Anda Menjadi Dampak Nyata
         </h1>
         
         <p class="text-lg text-muted-foreground max-w-xl">
-          Join thousands of eco-warriors completing quests, earning rewards, and making a real difference for Mother Earth. Every action counts.
+          Bergabunglah dengan ribuan Eco Warriors yang menyelesaikan quest, mendapatkan hadiah, dan membuat perbedaan nyata untuk Bumi. Setiap tindakan bermakna.
         </p>
         
         <div class="flex flex-wrap gap-4">
           <a href="{{ route('quests.all') }}" class="inline-flex items-center gap-2 h-14 px-8 rounded-lg font-semibold gradient-primary text-primary-foreground shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300">
-            Explore Quests
+            Telusuri Quests
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </a>
           <a href="{{ route('join-us') }}" class="inline-flex items-center gap-2 h-14 px-8 rounded-lg font-semibold glass-card hover-lift transition-all duration-300">
-            Join Us
+            Bergabung dengan Kami
           </a>
         </div>
 
@@ -45,9 +45,9 @@
           @php
             $stats = [
               ['value' => '12K+', 'label' => 'Eco Warriors', 'icon' => 'users'],
-              ['value' => number_format(\App\Models\Quest::count()), 'label' => 'Active Quests', 'icon' => 'target'],
-              ['value' => '2.4M', 'label' => 'Trees Planted', 'icon' => 'tree'],
-              ['value' => number_format(\App\Models\Organization::count()) . '+', 'label' => 'Organizations', 'icon' => 'leaf'],
+              ['value' => number_format(\App\Models\Quest::count()), 'label' => 'Quests Aktif', 'icon' => 'target'],
+              ['value' => '2.4M', 'label' => 'Pohon Ditanam', 'icon' => 'tree'],
+              ['value' => number_format(\App\Models\Organization::count()) . '+', 'label' => 'Organisasi', 'icon' => 'leaf'],
             ];
           @endphp
           @foreach($stats as $index => $stat)
@@ -104,10 +104,10 @@
           <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium mb-3">
             Featured Quests
           </span>
-          <h2 class="text-3xl font-bold">Active Quests Near You</h2>
+          <h2 class="text-3xl font-bold">Quests Aktif Dekat Kamu</h2>
         </div>
         <a href="{{ route('quests.all') }}" class="inline-flex items-center gap-2 h-11 px-6 rounded-lg font-semibold border border-border hover:bg-muted transition-all duration-300 hover-lift">
-          View All Quests
+          Lihat Semua Quests
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
@@ -163,7 +163,7 @@
                 </span>
               </div>
               <a href="{{ route('quests.detail', $quest->slug) }}" class="inline-flex items-center justify-center w-full h-11 px-4 rounded-lg font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300">
-                View Quest
+                Lihat Quest
               </a>
             </div>
           </div>
@@ -172,7 +172,7 @@
             <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
             </svg>
-            <p>No active quests at the moment. Check back soon!</p>
+            <p>Saat ini tidak ada quest aktif. Silakan cek kembali nanti!</p>
           </div>
         @endforelse
       </div>
@@ -187,19 +187,19 @@
         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium mb-3">
           Our Impact
         </span>
-        <h2 class="text-3xl font-bold mb-4">Together, We're Making History</h2>
+        <h2 class="text-3xl font-bold mb-4">Bersama, Kita Membuat Sejarah</h2>
         <p class="text-muted-foreground">
-          Every quest completed, every tree planted, every piece of trash collected brings us closer to a sustainable future.
+          Setiap quest yang diselesaikan, setiap pohon yang ditanam, dan setiap sampah yang dikumpulkan membawa kita lebih dekat ke masa depan yang berkelanjutan.
         </p>
       </div>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @php
           $impactStats = [
-            ['value' => '2.4M+', 'label' => 'Trees Planted', 'icon' => 'tree'],
-            ['value' => '15K', 'label' => 'Water Sources Cleaned', 'icon' => 'droplet'],
-            ['value' => '890T', 'label' => 'Waste Recycled', 'icon' => 'recycle'],
-            ['value' => '12K+', 'label' => 'Active Warriors', 'icon' => 'users'],
+            ['value' => '2.4M+', 'label' => 'Pohon Ditanam', 'icon' => 'tree'],
+            ['value' => '15K', 'label' => 'Sumber Air Dibersihkan', 'icon' => 'droplet'],
+            ['value' => '890T', 'label' => 'Sampah Didaur Ulang', 'icon' => 'recycle'],
+            ['value' => '12K+', 'label' => 'Warriors Aktif', 'icon' => 'users'],
           ];
         @endphp
         @foreach($impactStats as $stat)
@@ -237,12 +237,12 @@
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
         <div>
           <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-sm font-medium mb-3">
-            Top Organizations
+            Top Organisasi
           </span>
-          <h2 class="text-3xl font-bold">Trusted by Leading Eco-Organizations</h2>
+          <h2 class="text-3xl font-bold">Dipercaya oleh Eco-Organizations Terkenal</h2>
         </div>
         <a href="{{ route('organizations.all') }}" class="inline-flex items-center gap-2 h-11 px-6 rounded-lg font-semibold border border-border hover:bg-muted transition-all duration-300 hover-lift">
-          View All
+          Lihat Semua
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
@@ -263,12 +263,12 @@
               <span>{{ $org->quests_count ?? 0 }} Quests</span>
             </div>
             <a href="{{ route('organizations.all') }}" class="inline-flex items-center justify-center w-full h-9 px-4 rounded-lg font-semibold bg-muted hover:bg-muted/80 transition-all duration-300 mt-2">
-              View Profile
+              Lihat Profil
             </a>
           </div>
         @empty
           <div class="col-span-full text-center py-12 text-muted-foreground">
-            <p>No organizations yet.</p>
+            <p>Belum ada organisasi saat ini.</p>
           </div>
         @endforelse
       </div>
@@ -283,29 +283,29 @@
     <div class="container relative z-10 text-center">
       <div class="max-w-2xl mx-auto space-y-6">
         <h2 class="text-3xl sm:text-4xl font-bold text-primary-foreground">
-          Ready to Make a Difference?
+          Siap untuk Membuat Perbedaan?
         </h2>
         <p class="text-primary-foreground/80 text-lg">
-          Join JagaBumi today and start your journey as an eco-warrior. Complete quests, earn rewards, and help save our planet.
+          Bergabunglah dengan JagaBumi hari ini dan mulailah perjalanan Anda sebagai Eco-Warrior. Selesaikan quest, dapatkan hadiah, dan bantu selamatkan planet kita.
         </p>
         <div class="flex flex-wrap justify-center gap-4 pt-4">
           @guest
             <button id="auth-btn-cta" type="button" class="inline-flex items-center gap-2 h-14 px-8 rounded-lg font-semibold bg-card text-foreground hover:bg-card/90 shadow-lift transition-all duration-300">
-              Get Started Now
+              Mulai Sekarang
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </button>
           @else
             <a href="{{ route('quests.all') }}" class="inline-flex items-center gap-2 h-14 px-8 rounded-lg font-semibold bg-card text-foreground hover:bg-card/90 shadow-lift transition-all duration-300">
-              Explore Quests
+              Telusuri Quests
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
           @endguest
           <a href="{{ route('join-us') }}" class="inline-flex items-center gap-2 h-14 px-8 rounded-lg font-semibold border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 transition-all duration-300">
-            Become an Organization
+            Menjadi Organisasi
           </a>
         </div>
       </div>
