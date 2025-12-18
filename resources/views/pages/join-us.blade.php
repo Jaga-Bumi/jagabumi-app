@@ -14,16 +14,16 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
-          <span class="text-sm font-medium">Become a Creator</span>
+          <span class="text-sm font-medium">Jadi Sebuah Creator</span>
         </div>
         <h1 class="text-3xl sm:text-4xl font-bold mb-4">
-          Create Impact with <span class="gradient-text">JagaBumi</span>
+          Ciptakan Dampak dengan <span class="gradient-text">JagaBumi</span>
         </h1>
         <p class="text-muted-foreground text-lg">
-          Join our platform as an organization creator and launch environmental quests that inspire thousands.
+          Bergabunglah dengan platform kami sebagai creator organisasi dan luncurkan misi lingkungan yang menginspirasi ribuan orang.
         </p>
         <p class="text-sm text-muted-foreground mt-4 bg-muted/50 rounded-lg px-4 py-2 inline-block">
-          <strong>Note:</strong> Each user can only be a Creator of 1 organization, but can be a Manager in multiple organizations.
+          <strong>Note:</strong> Setiap pengguna hanya dapat menjadi Creator untuk 1 organisasi, tetapi dapat menjadi Manajer di beberapa organisasi.
         </p>
       </div>
 
@@ -32,18 +32,18 @@
         @php
           $benefits = [
             [
-              'title' => 'Create Quests',
-              'description' => 'Design and launch your own environmental quests',
+              'title' => 'Buat Quests',
+              'description' => 'Rancang dan luncurkan misi lingkungan Anda sendiri',
               'icon' => 'target'
             ],
             [
-              'title' => 'Build Community',
-              'description' => 'Connect with thousands of eco-warriors',
+              'title' => 'Bangun Komunitas',
+              'description' => 'Hubung dengan ribuan pejuang lingkungan',
               'icon' => 'users'
             ],
             [
-              'title' => 'Track Impact',
-              'description' => 'Measure and showcase your organization\'s impact',
+              'title' => 'Lacak Dampak',
+              'description' => 'Ukur dan tunjukkan dampak organisasi Anda',
               'icon' => 'chart'
             ]
           ];
@@ -84,9 +84,9 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h2 class="text-2xl font-bold mb-2">Login Required</h2>
+          <h2 class="text-2xl font-bold mb-2">Login Dibutuhkan</h2>
           <p class="text-muted-foreground mb-6">
-            Please login to submit an organization request and become a creator.
+            Silakan login untuk mengirimkan permintaan organisasi dan menjadi seorang Creator.
           </p>
           <button id="auth-btn-join" type="button" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-gradient-to-r from-primary to-secondary text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,8 +127,8 @@
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-xl font-bold mb-1">Application Under Review</h3>
-                  <p class="text-sm text-muted-foreground">Your request is currently being reviewed by our admin team.</p>
+                  <h3 class="text-xl font-bold mb-1">Permohonan Sedang Di Review</h3>
+                  <p class="text-sm text-muted-foreground">Permintaan Anda saat ini sedang di review oleh tim admin kami.</p>
                 </div>
                 <span class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-700 text-xs font-medium">
                   Pending
@@ -138,11 +138,11 @@
               <div class="bg-muted/50 rounded-lg p-4 space-y-3">
                 <div class="grid sm:grid-cols-2 gap-3 text-sm">
                   <div>
-                    <span class="text-muted-foreground block mb-1">Organization Name</span>
+                    <span class="text-muted-foreground block mb-1">Nama Organisasi</span>
                     <span class="font-medium">{{ $latestRequest->organization_name }}</span>
                   </div>
                   <div>
-                    <span class="text-muted-foreground block mb-1">Type</span>
+                    <span class="text-muted-foreground block mb-1">Tipe</span>
                     <span class="font-medium">{{ $latestRequest->organization_type }}</span>
                   </div>
                   <div>
@@ -157,7 +157,7 @@
               </div>
 
               <p class="text-sm text-muted-foreground mt-4 italic">
-                Please wait for admin approval. We'll notify you via email once your request is processed.
+                Mohon tunggu persetujuan admin. Kami akan memberi tahu Anda melalui email setelah permohonan Anda diproses.
               </p>
             </div>
 
@@ -171,8 +171,8 @@
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-xl font-bold mb-1">Application Approved! 🎉</h3>
-                  <p class="text-sm text-muted-foreground">Congratulations! Your request has been approved.</p>
+                  <h3 class="text-xl font-bold mb-1">Permohonan Disetujui! 🎉</h3>
+                  <p class="text-sm text-muted-foreground">Selamat! Permohonan Anda telah disetujui..</p>
                 </div>
                 <span class="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium">
                   Approved
@@ -182,22 +182,22 @@
               <div class="bg-primary/5 rounded-lg p-4 space-y-3 mb-4">
                 <div class="grid sm:grid-cols-2 gap-3 text-sm">
                   <div>
-                    <span class="text-muted-foreground block mb-1">Organization Name</span>
+                    <span class="text-muted-foreground block mb-1">Nama Organisasi</span>
                     <span class="font-medium">{{ $latestRequest->organization_name }}</span>
                   </div>
                   <div>
-                    <span class="text-muted-foreground block mb-1">Type</span>
+                    <span class="text-muted-foreground block mb-1">Tipe</span>
                     <span class="font-medium">{{ $latestRequest->organization_type }}</span>
                   </div>
                   @if($latestRequest->responded_at)
                     <div>
-                      <span class="text-muted-foreground block mb-1">Approved At</span>
+                      <span class="text-muted-foreground block mb-1">Disetujui pada</span>
                       <span class="font-medium">{{ $latestRequest->responded_at->format('M d, Y H:i') }}</span>
                     </div>
                   @endif
                   @if($latestRequest->approver)
                     <div>
-                      <span class="text-muted-foreground block mb-1">Approved By</span>
+                      <span class="text-muted-foreground block mb-1">Disetujui oleh</span>
                       <span class="font-medium">{{ $latestRequest->approver->name }}</span>
                     </div>
                   @endif
@@ -217,7 +217,7 @@
                 <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p>You can now proceed to create your organization "<strong>{{ $latestRequest->organization_name }}</strong>" and start making an impact!</p>
+                <p>Anda dapat melanjutkan untuk membuat organisasi "<strong>{{ $latestRequest->organization_name }}</strong>" dan mulailah memberikan dampak!</p>
               </div>
             </div>
 
@@ -231,8 +231,8 @@
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-xl font-bold mb-1">Application Not Approved</h3>
-                  <p class="text-sm text-muted-foreground">Unfortunately, your previous request was not approved.</p>
+                  <h3 class="text-xl font-bold mb-1">Permohonan Ditolak</h3>
+                  <p class="text-sm text-muted-foreground">Sayangnya, permohonan Anda sebelumnya tidak disetujui.</p>
                 </div>
                 <span class="inline-flex items-center px-3 py-1 rounded-full bg-destructive/20 text-destructive text-xs font-medium">
                   Rejected
@@ -242,22 +242,22 @@
               <div class="bg-destructive/5 rounded-lg p-4 space-y-3 mb-4">
                 <div class="grid sm:grid-cols-2 gap-3 text-sm">
                   <div>
-                    <span class="text-muted-foreground block mb-1">Organization Name</span>
+                    <span class="text-muted-foreground block mb-1">Nama Organisasi</span>
                     <span class="font-medium">{{ $latestRequest->organization_name }}</span>
                   </div>
                   <div>
-                    <span class="text-muted-foreground block mb-1">Type</span>
+                    <span class="text-muted-foreground block mb-1">Tipe</span>
                     <span class="font-medium">{{ $latestRequest->organization_type }}</span>
                   </div>
                   @if($latestRequest->responded_at)
                     <div>
-                      <span class="text-muted-foreground block mb-1">Rejected At</span>
+                      <span class="text-muted-foreground block mb-1">Ditolak Pada</span>
                       <span class="font-medium">{{ $latestRequest->responded_at->format('M d, Y H:i') }}</span>
                     </div>
                   @endif
                   @if($latestRequest->approver)
                     <div>
-                      <span class="text-muted-foreground block mb-1">Reviewed By</span>
+                      <span class="text-muted-foreground block mb-1">Reviewed Oleh</span>
                       <span class="font-medium">{{ $latestRequest->approver->name }}</span>
                     </div>
                   @endif
@@ -277,7 +277,7 @@
                 <svg class="w-5 h-5 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p>You can submit a new request below. Please review the feedback and address any concerns.</p>
+                <p>Anda dapat mengirimkan permohonan baru di bawah ini. Silakan tinjau feedback dan sampaikan kekhawatiran Anda.</p>
               </div>
             </div>
           @endif
@@ -291,7 +291,7 @@
                 {{ $latestRequest && $latestRequest->status === 'REJECTED' ? 'Submit New Organization Request' : 'Organization Application' }}
               </h2>
               <p class="text-sm text-muted-foreground">
-                Fill out the form below to request creating an organization on our platform. All fields marked with * are required.
+                Isi formulir di bawah ini untuk mengajukan permohonan pembuatan organisasi di platform kami. Semua kolom yang ditandai dengan * wajib diisi.
               </p>
             </div>
 
@@ -301,7 +301,7 @@
               {{-- Organization Name --}}
               <div>
                 <label for="organization_name" class="block text-sm font-medium mb-2">
-                  Organization Name <span class="text-destructive">*</span>
+                  Nama Organisasi <span class="text-destructive">*</span>
                 </label>
                 <input 
                   type="text" 
@@ -313,7 +313,7 @@
                   class="w-full px-4 py-3 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary @error('organization_name') border-destructive @enderror"
                   placeholder="e.g., Green Earth Foundation"
                 />
-                <p class="text-xs text-muted-foreground mt-1">3-30 characters. Letters, numbers, spaces, hyphens, and underscores only.</p>
+                <p class="text-xs text-muted-foreground mt-1">3-30 karakter. Huruf, angka, spasi, hyphen, dan underscore.</p>
                 @error('organization_name')
                   <p class="text-xs text-destructive mt-1">{{ $message }}</p>
                 @enderror
@@ -322,7 +322,7 @@
               {{-- Organization Type --}}
               <div>
                 <label for="organization_type" class="block text-sm font-medium mb-2">
-                  Organization Type <span class="text-destructive">*</span>
+                  Tipe Organisasi <span class="text-destructive">*</span>
                 </label>
                 <select 
                   id="organization_type" 
@@ -330,7 +330,7 @@
                   required
                   class="w-full px-4 py-3 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary @error('organization_type') border-destructive @enderror"
                 >
-                  <option value="">-- Select Type --</option>
+                  <option value="">-- Pilih Tipe --</option>
                   <option value="NGO" {{ old('organization_type') === 'NGO' ? 'selected' : '' }}>NGO / Non-Profit</option>
                   <option value="Community Group" {{ old('organization_type') === 'Community Group' ? 'selected' : '' }}>Community Group</option>
                   <option value="Educational" {{ old('organization_type') === 'Educational' ? 'selected' : '' }}>Educational Institution</option>
@@ -346,7 +346,7 @@
               {{-- Organization Description --}}
               <div>
                 <label for="organization_description" class="block text-sm font-medium mb-2">
-                  Organization Description <span class="text-destructive">*</span>
+                  Deskripsi Organisasi <span class="text-destructive">*</span>
                 </label>
                 <textarea 
                   id="organization_description" 
@@ -354,9 +354,9 @@
                   required 
                   rows="4"
                   class="w-full px-4 py-3 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary @error('organization_description') border-destructive @enderror"
-                  placeholder="Describe your organization's mission and purpose..."
+                  placeholder="Deskripsikan misi dan tujuan organisasi Anda..."
                 >{{ old('organization_description') }}</textarea>
-                <p class="text-xs text-muted-foreground mt-1">50-1000 characters. Describe your organization's mission and purpose.</p>
+                <p class="text-xs text-muted-foreground mt-1">50-1000 karakter. Deskripsikan misi dan tujuan organisasi Anda.</p>
                 @error('organization_description')
                   <p class="text-xs text-destructive mt-1">{{ $message }}</p>
                 @enderror
@@ -365,7 +365,7 @@
               {{-- Planned Activities --}}
               <div>
                 <label for="planned_activities" class="block text-sm font-medium mb-2">
-                  Planned Activities <span class="text-destructive">*</span>
+                  Rencana Kegiatan <span class="text-destructive">*</span>
                 </label>
                 <textarea 
                   id="planned_activities" 
@@ -373,9 +373,9 @@
                   required 
                   rows="4"
                   class="w-full px-4 py-3 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary @error('planned_activities') border-destructive @enderror"
-                  placeholder="What quests or activities do you plan to organize?"
+                  placeholder="Kegiatan atau quest apa yang akan Anda selenggarakan?"
                 >{{ old('planned_activities') }}</textarea>
-                <p class="text-xs text-muted-foreground mt-1">50-1000 characters. What quests or activities do you plan to organize?</p>
+                <p class="text-xs text-muted-foreground mt-1">50-1000 karakter. Kegiatan atau quest apa yang akan Anda selenggarakan?</p>
                 @error('planned_activities')
                   <p class="text-xs text-destructive mt-1">{{ $message }}</p>
                 @enderror
@@ -384,7 +384,7 @@
               {{-- Reason --}}
               <div>
                 <label for="reason" class="block text-sm font-medium mb-2">
-                  Reason for Creating Organization <span class="text-destructive">*</span>
+                  Alasan untuk Membuat Organisasi <span class="text-destructive">*</span>
                 </label>
                 <textarea 
                   id="reason" 
@@ -392,9 +392,9 @@
                   required 
                   rows="3"
                   class="w-full px-4 py-3 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary @error('reason') border-destructive @enderror"
-                  placeholder="Why do you want to create this organization on our platform?"
+                  placeholder="Mengapa Anda ingin membuat organisasi ini di platform kami?"
                 >{{ old('reason') }}</textarea>
-                <p class="text-xs text-muted-foreground mt-1">50-500 characters. Why do you want to create this organization on our platform?</p>
+                <p class="text-xs text-muted-foreground mt-1">50-500 karakter. Mengapa Anda ingin membuat organisasi ini di platform kami?</p>
                 @error('reason')
                   <p class="text-xs text-destructive mt-1">{{ $message }}</p>
                 @enderror
@@ -402,7 +402,7 @@
 
               {{-- Optional Information --}}
               <div class="border-t border-border pt-6">
-                <h3 class="font-semibold mb-4">Optional Information (Helps with verification)</h3>
+                <h3 class="font-semibold mb-4">Informasi Opsional (Membantu dalam verifikasi)</h3>
                 
                 <div class="grid sm:grid-cols-2 gap-4">
                   <div>
@@ -479,7 +479,7 @@
                   Submit Request
                 </button>
                 <p class="text-xs text-muted-foreground hidden sm:block">
-                  Your request will be reviewed within 3-5 business days
+                  Permohonan Anda akan di review dalam waktu 3-5 hari kerja.
                 </p>
               </div>
             </form>
@@ -511,17 +511,17 @@
           min: 3,
           max: 30,
           messages: {
-            required: 'Organization name is required.',
-            min: 'Organization name must be at least 3 characters.',
-            max: 'Organization name cannot exceed 30 characters.'
+            required: 'Nama organisasi harus diisi.',
+            min: 'Nama organisasi harus minimal 3 karakter.',
+            max: 'Nama organisasi harus maximum 30 karakter.'
           }
         },
         organization_type: {
           required: true,
           in: ['NGO', 'Community Group', 'Educational', 'Corporate CSR', 'Environmental', 'Other'],
           messages: {
-            required: 'Organization type is required.',
-            in: 'Please select a valid organization type.'
+            required: 'Tipe organisasi harus diisi.',
+            in: 'Tolong pilih tipe organisasi yang valid.'
           }
         },
         organization_description: {
@@ -529,9 +529,9 @@
           min: 50,
           max: 1000,
           messages: {
-            required: 'Organization description is required.',
-            min: 'Description must be at least 50 characters.',
-            max: 'Description cannot exceed 1000 characters.'
+            required: 'Deskripsi organisasi harus diisi.',
+            min: 'Deskripsi organisasi harus minimal 50 karakter.',
+            max: 'Deskripsi organisasi harus maximal 1000 karakter.'
           }
         },
         planned_activities: {
@@ -539,9 +539,9 @@
           min: 50,
           max: 1000,
           messages: {
-            required: 'Planned activities are required.',
-            min: 'Planned activities must be at least 50 characters.',
-            max: 'Planned activities cannot exceed 1000 characters.'
+            required: 'Rencana kegiatan harus diisi.',
+            min: 'Rencana kegiatan harus minimal 50 karakter.',
+            max: 'Rencana kegiatan harus maximal 1000 karakter.'
           }
         },
         reason: {
@@ -549,33 +549,33 @@
           min: 50,
           max: 500,
           messages: {
-            required: 'Reason for joining is required.',
-            min: 'Reason must be at least 50 characters.',
-            max: 'Reason cannot exceed 500 characters.'
+            required: 'Alasan untuk pembuatan harus diisi.',
+            min: 'Alasan harus minimal 50 karakter.',
+            max: 'Alasan harus maximal 500 karakter.'
           }
         },
         website_url: {
           url: true,
           messages: {
-            url: 'Please enter a valid website URL.'
+            url: 'Tolong masukan website URL yang valid.'
           }
         },
         instagram_url: {
           url: true,
           messages: {
-            url: 'Please enter a valid Instagram URL.'
+            url: 'Tolong masukan Instagram URL yang valid.'
           }
         },
         x_url: {
           url: true,
           messages: {
-            url: 'Please enter a valid X/Twitter URL.'
+            url: 'Tolong masukan X/Twitter URL yang valid.'
           }
         },
         facebook_url: {
           url: true,
           messages: {
-            url: 'Please enter a valid Facebook URL.'
+            url: 'Tolong masukan Facebook URL yang valid.'
           }
         }
       });

@@ -18,7 +18,7 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
       </svg>
-      Back to Quests
+      Balik ke Quests
     </a>
   </div>
 </div>
@@ -67,15 +67,15 @@
           <!-- Progress Bar -->
           <div class="space-y-2">
             <div class="flex justify-between text-sm">
-              <span class="font-medium text-muted-foreground">Participation</span>
+              <span class="font-medium text-muted-foreground">Peserta</span>
               <span class="font-bold text-emerald-600">{{ number_format(($quest->quest_participants_count / $quest->participant_limit) * 100, 0) }}%</span>
             </div>
             <div class="w-full bg-muted/50 rounded-full h-3 overflow-hidden border border-border">
               <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-3 rounded-full transition-all duration-500 shadow-lg shadow-emerald-500/30" style="width: {{ ($quest->quest_participants_count / $quest->participant_limit) * 100 }}%"></div>
             </div>
             <div class="flex justify-between text-xs text-muted-foreground">
-              <span>{{ $quest->quest_participants_count }} participants</span>
-              <span>{{ $quest->participant_limit - $quest->quest_participants_count }} spots left</span>
+              <span>{{ $quest->quest_participants_count }} peserta</span>
+              <span>{{ $quest->participant_limit - $quest->quest_participants_count }} tempat tersisa</span>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
                   </svg>
-                  <span>Prizes</span>
+                  <span>Hadiah</span>
                 </div>
               </button>
               <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all" data-tab="managers">
@@ -105,7 +105,7 @@
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                   </svg>
-                  <span>Managers</span>
+                  <span>Manajer</span>
                 </div>
               </button>
               <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all" data-tab="submissions">
@@ -122,7 +122,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <span>Attendance</span>
+                    <span>Kehadiran</span>
                   </div>
                 </button>
                 <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all" data-tab="dashboard">
@@ -139,7 +139,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
-                    <span>Attendance</span>
+                    <span>Kehadiran</span>
                   </div>
                 </button>
                 <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-medium border-b-2 border-transparent text-muted-foreground/50 cursor-not-allowed" disabled>
@@ -173,9 +173,9 @@
         <div class="glass-card rounded-2xl shadow-xl p-5 border border-border/50">
           <div class="text-center mb-5">
             <h2 class="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-1.5">
-              Join This Quest
+              Ikut Quest Ini
             </h2>
-            <p class="text-xs text-muted-foreground">Be part of the change</p>
+            <p class="text-xs text-muted-foreground">Jadilah bagian dari perubahan ini</p>
           </div>
 
           <div id="message-box" style="display: none;" class="mb-4"></div>
@@ -198,9 +198,9 @@
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
-                  Organization Member
+                  Anggota Organisasi
                 </div>
-                <p class="text-xs text-foreground">You are a member of this organization and cannot join this quest as a participant.</p>
+                <p class="text-xs text-foreground">Anda adalah anggota organisasi ini dan tidak dapat bergabung dalam quest ini sebagai peserta.</p>
               </div>
             @elseif($userParticipation)
               <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3.5 mb-4">
@@ -208,7 +208,7 @@
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
-                  You're Registered!
+                  Anda Terdaftar!
                 </div>
                 <p class="text-xs text-foreground mb-0.5">Status: <strong class="text-emerald-600">{{ $userParticipation->status }}</strong></p>
                 <p class="text-xs text-muted-foreground">Joined: {{ $userParticipation->joined_at->format('M d, Y H:i') }}</p>
@@ -216,23 +216,23 @@
 
               @if($userParticipation->status === 'REGISTERED' && !$regClosed)
                 <button id="cancel-btn" data-quest-id="{{ $quest->id }}" class="w-full px-3 py-2.5 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-sm">
-                  Cancel Registration
+                  Batal Registrasi
                 </button>
-                <p class="text-[10px] text-muted-foreground mt-1.5 text-center">You can cancel before {{ $quest->registration_end_at->format('M d, Y H:i') }}</p>
+                <p class="text-[10px] text-muted-foreground mt-1.5 text-center">Anda dapat batal sebelum {{ $quest->registration_end_at->format('M d, Y H:i') }}</p>
               @endif
             @else
               @if($regOpen && !$regClosed && !$isFull)
                 <button id="join-btn" data-quest-id="{{ $quest->id }}" class="w-full px-3 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl transition-all text-base shadow-lg hover:shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50">
-                  Join Quest
+                  Ikut Quest
                 </button>
               @elseif(!$regOpen)
                 <button disabled class="w-full px-3 py-2.5 bg-muted text-muted-foreground font-semibold rounded-xl cursor-not-allowed opacity-60 text-sm">
-                  Registration Not Started
+                  Registrasi Belum Mulai
                 </button>
                 <p class="text-[10px] text-muted-foreground mt-1.5 text-center">Opens {{ $quest->registration_start_at->format('M d, Y') }}</p>
               @elseif($regClosed)
                 <button disabled class="w-full px-3 py-2.5 bg-muted text-muted-foreground font-semibold rounded-xl cursor-not-allowed opacity-60 text-sm">
-                  Registration Closed
+                  Registrasi Ditutup
                 </button>
               @elseif($isFull)
                 <button disabled class="w-full px-3 py-2.5 bg-muted text-muted-foreground font-semibold rounded-xl cursor-not-allowed opacity-60 text-sm">
@@ -242,7 +242,7 @@
             @endif
           @else
             <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3.5 mb-4">
-              <p class="text-xs text-foreground text-center font-medium">Please login to join this quest</p>
+              <p class="text-xs text-foreground text-center font-medium">Tolong login untuk mengikuti quest ini</p>
             </div>
             <button id="auth-btn-2" type="button" class="w-full px-3 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 text-base">
               Login / Register
@@ -251,15 +251,15 @@
 
           <div class="pt-5 mt-5 border-t border-border space-y-2.5">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-muted-foreground">Spots Left</span>
+              <span class="text-muted-foreground">Tempat Tersisa</span>
               <span class="font-bold text-foreground">{{ $quest->participant_limit - $quest->quest_participants_count }}</span>
             </div>
             <div class="flex items-center justify-between text-xs">
-              <span class="text-muted-foreground">Winners Limit</span>
+              <span class="text-muted-foreground">Limit Pemenang</span>
               <span class="font-bold text-foreground">{{ $quest->winner_limit }}</span>
             </div>
             <div class="flex items-center justify-between text-xs">
-              <span class="text-muted-foreground">Quest Date</span>
+              <span class="text-muted-foreground">Tanggal Mulai Quest</span>
               <span class="font-bold text-foreground">{{ $quest->quest_start_at->format('M d, Y') }}</span>
             </div>
           </div>
@@ -377,9 +377,9 @@
         const messageBox = document.getElementById('message-box');
         messageBox.style.display = 'block';
         messageBox.className = 'bg-destructive/10 border border-destructive/20 rounded-xl p-4 text-destructive';
-        messageBox.textContent = 'Failed to join quest. Please try again.';
+        messageBox.textContent = 'Gagal bergabung quest. Silakan coba lagi.';
         this.disabled = false;
-        this.textContent = 'Join Quest';
+        this.textContent = 'Ikut Quest';
       }
     });
   }
@@ -388,11 +388,11 @@
   const cancelBtn = document.getElementById('cancel-btn');
   if (cancelBtn) {
     cancelBtn.addEventListener('click', async function() {
-      if (!confirm('Are you sure you want to cancel your registration?')) return;
+      if (!confirm('Apakah Anda yakin ingin membatalkan pendaftaran Anda?')) return;
 
       const questId = this.dataset.questId;
       this.disabled = true;
-      this.textContent = 'Cancelling...';
+      this.textContent = 'Membatalkan...';
 
       try {
         const response = await fetch(`/quests/${questId}/cancel`, {
@@ -415,15 +415,15 @@
           setTimeout(() => location.reload(), 1500);
         } else {
           this.disabled = false;
-          this.textContent = 'Cancel Registration';
+          this.textContent = 'Batal Registrasi';
         }
       } catch (error) {
         const messageBox = document.getElementById('message-box');
         messageBox.style.display = 'block';
         messageBox.className = 'bg-destructive/10 border border-destructive/20 rounded-xl p-4 text-destructive';
-        messageBox.textContent = 'Failed to cancel. Please try again.';
+        messageBox.textContent = 'Pembatalan gagal. Silakan coba lagi.';
         this.disabled = false;
-        this.textContent = 'Cancel Registration';
+        this.textContent = 'Batal Registrasi';
       }
     });
   }
@@ -448,7 +448,7 @@
       });
     } else {
       navigator.clipboard.writeText(url);
-      alert('Link copied to clipboard!');
+      alert('Link disalin ke clipboard!');
     }
   }
 </script>
