@@ -2,8 +2,8 @@
 
 @section('content')
 @php
-$title = 'Organization Profile';
-$subtitle = "Manage your organization's public profile";
+$title = 'Profil Organisasi';
+$subtitle = "Atur profil publik organisasi Anda";
 $isCreator = $currentOrg['role'] === 'CREATOR';
 @endphp
   <div class="max-w-4xl mx-auto space-y-6" x-data="profileEditor()">
@@ -43,7 +43,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            Change Banner
+            Ganti Banner
           </button>
         @endif
       </div>
@@ -102,20 +102,20 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Edit Profile
+                Edit Profil
               </button>
               <div x-show="isEditing" class="flex gap-2">
                 <button @click="isEditing = false; resetForm()" class="px-4 py-2 rounded-lg hover:bg-muted transition-colors flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  Cancel
+                  Batal
                 </button>
                 <button @click="saveProfile()" class="px-4 py-2 rounded-lg gradient-primary text-primary-foreground shadow-glow hover-lift flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
-                  Save
+                  Simpan
                 </button>
               </div>
             </div>
@@ -131,7 +131,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
         <p class="text-2xl font-bold">{{ $stats['rating'] }}</p>
-        <p class="text-xs text-muted-foreground">Average Rating</p>
+        <p class="text-xs text-muted-foreground">Rata-rata Rating</p>
       </div>
       <div class="glass-card p-4 rounded-xl text-center">
         <svg class="w-6 h-6 text-primary mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,14 +145,14 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
         <p class="text-2xl font-bold">{{ number_format($stats['total_participants']) }}</p>
-        <p class="text-xs text-muted-foreground">Participants</p>
+        <p class="text-xs text-muted-foreground">Peserta</p>
       </div>
       <div class="glass-card p-4 rounded-xl text-center">
         <svg class="w-6 h-6 text-accent mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
         </svg>
         <p class="text-2xl font-bold">{{ $stats['active_quests'] }}</p>
-        <p class="text-xs text-muted-foreground">Active Quests</p>
+        <p class="text-xs text-muted-foreground">Quests Aktif</p>
       </div>
     </div>
 
@@ -209,8 +209,8 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
             </svg>
           </div>
           <div>
-            <h3 class="font-semibold">Organization Status</h3>
-            <p class="text-sm text-muted-foreground">Control your organization's visibility</p>
+            <h3 class="font-semibold">Status Organisasi</h3>
+            <p class="text-sm text-muted-foreground">Kendalikan visibilitas organisasi Anda</p>
           </div>
         </div>
         
@@ -234,7 +234,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span x-show="!isUpdating">Change Status</span>
+              <span x-show="!isUpdating">Update Status</span>
               <span x-show="isUpdating">Updating...</span>
             </button>
             
@@ -283,21 +283,21 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
             <span class="w-2 h-2 rounded-full bg-green-500 mt-1 flex-shrink-0"></span>
             <div>
               <span class="font-medium text-green-600 dark:text-green-400">Active</span>
-              <p class="text-muted-foreground">Visible to public, can create quests</p>
+              <p class="text-muted-foreground">Terlihat oleh publik, dapat membuat quest.</p>
             </div>
           </div>
           <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'HIATUS' ? 'bg-yellow-500/5' : ''">
             <span class="w-2 h-2 rounded-full bg-yellow-500 mt-1 flex-shrink-0"></span>
             <div>
               <span class="font-medium text-yellow-600 dark:text-yellow-400">Hiatus</span>
-              <p class="text-muted-foreground">Temporarily paused, limited visibility</p>
+              <p class="text-muted-foreground">Dihentikan sementara, visibilitas terbatas.</p>
             </div>
           </div>
           <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'INACTIVE' ? 'bg-red-500/5' : ''">
             <span class="w-2 h-2 rounded-full bg-red-500 mt-1 flex-shrink-0"></span>
             <div>
               <span class="font-medium text-red-600 dark:text-red-400">Inactive</span>
-              <p class="text-muted-foreground">Hidden from public, no new quests</p>
+              <p class="text-muted-foreground">Tersembunyi dari publik, tidak ada quest baru.</p>
             </div>
           </div>
         </div>
@@ -311,7 +311,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
-        <h2 class="text-base font-semibold">About Organization</h2>
+        <h2 class="text-base font-semibold">Tentang Organisasi</h2>
       </div>
       <textarea x-show="isEditing && {{ $isCreator ? 'true' : 'false' }}" 
                 x-model="profile.desc" 
@@ -424,22 +424,22 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
           const value = this.profile[field];
           
           if (field === 'name' && value && value.length > 30) {
-            this.errors[field] = 'Organization name cannot exceed 30 characters';
+            this.errors[field] = 'Nama Organisasi tidak boleh lebih dari 30 karakter';
           }
           
           if (field === 'org_email' && value && !this.isValidEmail(value)) {
-            this.errors[field] = 'Please provide a valid email address';
+            this.errors[field] = 'Tolong masukan email yang valid';
           }
           
           if (field === 'motto' && value && value.length > 255) {
-            this.errors[field] = 'Motto cannot exceed 255 characters';
+            this.errors[field] = 'Motto tidak boleh lebih dari 255 karakter';
           }
           
           if (['website_url', 'instagram_url', 'x_url', 'facebook_url'].includes(field) && value) {
             if (value.length > 255) {
-              this.errors[field] = 'URL cannot exceed 255 characters';
+              this.errors[field] = 'URL tidak boleh lebih dari 255 karakter';
             } else if (!this.isValidUrl(value)) {
-              this.errors[field] = 'Please provide a valid URL';
+              this.errors[field] = 'Tolong masukan URL yang valid';
             }
           }
         },
@@ -470,7 +470,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
             // Validate file size (5MB = 5120KB)
             const maxSize = 5120 * 1024; // 5MB in bytes
             if (file.size > maxSize) {
-              this.errors.banner_img = 'Banner cannot exceed 5MB.';
+              this.errors.banner_img = 'Banner tidak boleh lebih dari 5MB.';
               event.target.value = ''; // Clear the file input
               return;
             }
@@ -478,7 +478,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
             // Validate file type
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
             if (!validTypes.includes(file.type)) {
-              this.errors.banner_img = 'Banner must be: jpeg, png, jpg, gif, or webp.';
+              this.errors.banner_img = 'Banner harus format: jpeg, png, jpg, gif, or webp.';
               event.target.value = '';
               return;
             }
@@ -501,7 +501,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
             // Validate file size (2MB = 2048KB)
             const maxSize = 2048 * 1024; // 2MB in bytes
             if (file.size > maxSize) {
-              this.errors.logo_img = 'Logo cannot exceed 2MB.';
+              this.errors.logo_img = 'Logo tidak boleh lebih dari 2MB.';
               event.target.value = ''; // Clear the file input
               return;
             }
@@ -509,7 +509,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
             // Validate file type
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
             if (!validTypes.includes(file.type)) {
-              this.errors.logo_img = 'Logo must be: jpeg, png, jpg, gif, or webp.';
+              this.errors.logo_img = 'Logo harus format: jpeg, png, jpg, gif, or webp.';
               event.target.value = '';
               return;
             }
@@ -610,15 +610,15 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
                   this.errors[field] = messages[0]; // Take first error message
                 });
                 console.error('Validation errors:', result.errors);
-                alert('Please fix the validation errors highlighted on the form.');
+                alert('Mohon perbaiki kesalahan validasi yang ditandai pada formulir.');
               } else {
                 console.error('Update failed:', result);
-                alert(result.message || 'Failed to update profile');
+                alert(result.message || 'Gagal untuk update profil');
               }
             }
           } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while updating. Please try again.');
+            alert('Terjadi kesalahan saat update. Silakan coba lagi.');
           }
         }
       }

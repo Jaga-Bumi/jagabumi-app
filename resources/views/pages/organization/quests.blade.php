@@ -2,8 +2,8 @@
 
 @section('content')
 @php
-$title = 'Quest Management';
-$subtitle = "Create and manage your organization's quests";
+$title = 'Manajemen Quest';
+$subtitle = "Buat dan atur quests organisasi Anda";
 @endphp
   <div class="space-y-6" x-data="{
     activeTab: 'all',
@@ -125,107 +125,107 @@ $subtitle = "Create and manage your organization's quests";
       if (step === 1) {
         // Basic Information
         if (!this.formData.title || this.formData.title.trim().length === 0) {
-          this.formErrors.title = ['Quest title is required'];
+          this.formErrors.title = ['Judul quest harus diisi'];
           isValid = false;
         } else if (this.formData.title.length > 255) {
-          this.formErrors.title = ['Quest title must not exceed 255 characters'];
+          this.formErrors.title = ['Judul quest tidak boleh lebih dari 255 karakter'];
           isValid = false;
         }
         
         if (!this.formData.desc || this.formData.desc.trim().length === 0) {
-          this.formErrors.desc = ['Description is required'];
+          this.formErrors.desc = ['Deskripsi harus diisi'];
           isValid = false;
         }
         
         if (!this.formData.banner) {
-          this.formErrors.banner = ['Quest banner image is required'];
+          this.formErrors.banner = ['Gambar quest banner harus diisi'];
           isValid = false;
         }
       } else if (step === 2) {
         // Location & Geofencing
         if (!this.formData.location_name || this.formData.location_name.trim().length === 0) {
-          this.formErrors.location_name = ['Location name is required'];
+          this.formErrors.location_name = ['Nama lokasi harus diisi'];
           isValid = false;
         }
         
         if (!this.formData.latitude || isNaN(this.formData.latitude)) {
-          this.formErrors.latitude = ['Valid latitude is required'];
+          this.formErrors.latitude = ['Latitude valid harus diisi'];
           isValid = false;
         } else if (this.formData.latitude < -90 || this.formData.latitude > 90) {
-          this.formErrors.latitude = ['Latitude must be between -90 and 90'];
+          this.formErrors.latitude = ['Latitude harus antara -90 dan 90'];
           isValid = false;
         }
         
         if (!this.formData.longitude || isNaN(this.formData.longitude)) {
-          this.formErrors.longitude = ['Valid longitude is required'];
+          this.formErrors.longitude = ['Longitude valid harus diisi'];
           isValid = false;
         } else if (this.formData.longitude < -180 || this.formData.longitude > 180) {
-          this.formErrors.longitude = ['Longitude must be between -180 and 180'];
+          this.formErrors.longitude = ['Longitude harud antara -180 dan 180'];
           isValid = false;
         }
         
         if (this.formData.radius_meter && (isNaN(this.formData.radius_meter) || this.formData.radius_meter < 10)) {
-          this.formErrors.radius_meter = ['Radius must be at least 10 meters'];
+          this.formErrors.radius_meter = ['Radius harus minimal 10 meter'];
           isValid = false;
         }
       } else if (step === 3) {
         // Timeline
         if (!this.formData.registration_start_at) {
-          this.formErrors.registration_start_at = ['Registration start date is required'];
+          this.formErrors.registration_start_at = ['Tanggal mulai registrasi harus diisi'];
           isValid = false;
         }
         if (!this.formData.registration_end_at) {
-          this.formErrors.registration_end_at = ['Registration end date is required'];
+          this.formErrors.registration_end_at = ['Tanggal akhir registrasi harus diisi'];
           isValid = false;
         }
         if (!this.formData.quest_start_at) {
-          this.formErrors.quest_start_at = ['Quest start date is required'];
+          this.formErrors.quest_start_at = ['Tanggal mulai quest harus diisi'];
           isValid = false;
         }
         if (!this.formData.quest_end_at) {
-          this.formErrors.quest_end_at = ['Quest end date is required'];
+          this.formErrors.quest_end_at = ['Tanggal akhir quest harus diisi'];
           isValid = false;
         }
         if (!this.formData.judging_start_at) {
-          this.formErrors.judging_start_at = ['Judging start date is required'];
+          this.formErrors.judging_start_at = ['Tanggal mulai penjurian harus diisi'];
           isValid = false;
         }
         if (!this.formData.judging_end_at) {
-          this.formErrors.judging_end_at = ['Judging end date is required'];
+          this.formErrors.judging_end_at = ['Tanggal akhir penjurian harus diisi'];
           isValid = false;
         }
         if (!this.formData.prize_distribution_date) {
-          this.formErrors.prize_distribution_date = ['Prize distribution date is required'];
+          this.formErrors.prize_distribution_date = ['Tanggal pemberian hadiah harus diisi'];
           isValid = false;
         }
       } else if (step === 4) {
         // Participants & Winners
         if (!this.formData.participant_limit || isNaN(this.formData.participant_limit) || this.formData.participant_limit < 1) {
-          this.formErrors.participant_limit = ['Participant limit must be at least 1'];
+          this.formErrors.participant_limit = ['Limit perserta harus minimal 1'];
           isValid = false;
         }
         
         if (!this.formData.winner_limit || isNaN(this.formData.winner_limit) || this.formData.winner_limit < 1) {
-          this.formErrors.winner_limit = ['Winner limit must be at least 1'];
+          this.formErrors.winner_limit = ['Limit pemenang harus minimal 1'];
           isValid = false;
         } else if (this.formData.winner_limit > this.formData.participant_limit) {
-          this.formErrors.winner_limit = ['Winner limit cannot exceed participant limit'];
+          this.formErrors.winner_limit = ['Limit pemenang tidak boleh lebih dari limit peserta'];
           isValid = false;
         }
       } else if (step === 5) {
         // Prizes
         if (!this.formData.cert_name || this.formData.cert_name.trim().length === 0) {
-          this.formErrors.cert_name = ['Certificate name is required'];
+          this.formErrors.cert_name = ['Nama sertifikat harus diisi'];
           isValid = false;
         }
         
         if (!this.formData.cert_image) {
-          this.formErrors.cert_image = ['Certificate image is required'];
+          this.formErrors.cert_image = ['Gambar sertifikat harus diisi'];
           isValid = false;
         }
         
         if (!this.formData.cert_description || this.formData.cert_description.trim().length === 0) {
-          this.formErrors.cert_description = ['Certificate description is required'];
+          this.formErrors.cert_description = ['Deskripsi sertifikat harus diisi'];
           isValid = false;
         }
       }
@@ -286,13 +286,13 @@ $subtitle = "Create and manage your organization's quests";
             // Go back to first step with errors
             this.currentStep = 1;
           } else {
-            alert(data.message || 'Failed to create quest. Please try again.');
+            alert(data.message || 'Gagal membuat quest. Tolong coba lagi.');
           }
           this.isSubmitting = false;
         }
       } catch (error) {
         console.error('Quest creation error:', error);
-        alert('An error occurred while creating the quest. Please try again.');
+        alert('Sebuah error terjadi ketika membuat quest. Tolong coba lagi.');
         this.isSubmitting = false;
       }
     },
@@ -402,7 +402,7 @@ $subtitle = "Create and manage your organization's quests";
     {{-- Header with Create Button --}}
     <div class="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
       <div class="flex flex-col gap-1">
-        <p class="text-sm text-muted-foreground">Manage all your environmental quests in one place</p>
+        <p class="text-sm text-muted-foreground">Atur semua quest lingkungan Anda di sini</p>
       </div>
       
       <button 
@@ -412,7 +412,7 @@ $subtitle = "Create and manage your organization's quests";
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        Create Quest
+        Buat Quest
       </button>
     </div>
 
@@ -450,7 +450,7 @@ $subtitle = "Create and manage your organization's quests";
                 <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
-                Create New Quest
+                Buat Quest Baru
               </h2>
               <p class="text-muted-foreground text-sm mt-1">
                 Step <span x-text="currentStep"></span> of <span x-text="totalSteps"></span>: 
@@ -489,7 +489,7 @@ $subtitle = "Create and manage your organization's quests";
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div class="flex-1">
-                  <h4 class="font-semibold text-destructive mb-1">Please fix the following errors:</h4>
+                  <h4 class="font-semibold text-destructive mb-1">Mohon benarkan error tersebut:</h4>
                   <ul class="text-sm text-destructive/90 list-disc list-inside space-y-0.5">
                     <template x-for="(error, field) in formErrors" :key="field">
                       <li x-text="Array.isArray(error) ? error[0] : error"></li>
@@ -501,10 +501,10 @@ $subtitle = "Create and manage your organization's quests";
           
             {{-- Step 1: Basic Information --}}
             <div x-show="currentStep === 1" x-transition class="space-y-4">
-              <h4 class="font-medium text-sm text-muted-foreground">Basic Information</h4>
+              <h4 class="font-medium text-sm text-muted-foreground">Informasi Dasar</h4>
             
               <div class="space-y-2">
-                <label for="quest_title" class="block font-medium text-sm">Quest Title *</label>
+                <label for="quest_title" class="block font-medium text-sm">Judul Quest *</label>
                 <input type="text" name="title" id="quest_title" x-model="formData.title" required
                      :class="formErrors.title ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                      class="w-full px-4 py-3 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all"
@@ -513,12 +513,12 @@ $subtitle = "Create and manage your organization's quests";
             </div>
 
             <div class="space-y-2">
-              <label for="quest_desc" class="block font-medium text-sm">Description *</label>
+              <label for="quest_desc" class="block font-medium text-sm">Deskripsi *</label>
               <textarea name="desc" id="quest_desc" rows="4" required
                         x-model="formData.desc"
                         :class="formErrors.desc ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                         class="w-full px-4 py-3 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all resize-none"
-                        placeholder="Describe the quest objectives and requirements..."></textarea>
+                        placeholder="Jelaskan tujuan dan kebutuhan quest Anda..."></textarea>
               <p x-show="formErrors.desc" class="text-xs text-destructive" x-text="formErrors.desc?.[0]" style="display: none;"></p>
             </div>
           </div>
@@ -530,11 +530,11 @@ $subtitle = "Create and manage your organization's quests";
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Location & Geofencing
+              Lokasi & Geofencing
             </h4>
             
             <div class="space-y-2">
-              <label for="location_name" class="block font-medium text-sm">Location Name *</label>
+              <label for="location_name" class="block font-medium text-sm">Nama Lokasi *</label>
               <input type="text" name="location_name" id="location_name" required
                      x-model="formData.location_name"
                      class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
@@ -567,12 +567,12 @@ $subtitle = "Create and manage your organization's quests";
             </div>
 
             <div class="space-y-2">
-              <label for="liveness_code" class="block font-medium text-sm">Liveness Code (Secret on-site code)</label>
+              <label for="liveness_code" class="block font-medium text-sm">Liveness Code (Kode Rahasia on-site)</label>
               <input type="text" name="liveness_code" id="liveness_code"
                      x-model="formData.liveness_code"
                      class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                      placeholder="e.g., ECO2024">
-              <p class="text-xs text-muted-foreground">This code will be shown at the event location for participants to verify attendance.</p>
+              <p class="text-xs text-muted-foreground">Kode ini akan ditampilkan di lokasi acara agar peserta dapat memverifikasi kehadiran mereka.</p>
             </div>
           </div>
 
@@ -587,14 +587,14 @@ $subtitle = "Create and manage your organization's quests";
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label for="registration_start_at" class="block font-medium text-sm">Registration Start *</label>
+                <label for="registration_start_at" class="block font-medium text-sm">Mulai Registrasi *</label>
                 <input type="datetime-local" name="registration_start_at" id="registration_start_at" required
                        x-model="formData.registration_start_at"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
               </div>
               
               <div class="space-y-2">
-                <label for="registration_end_at" class="block font-medium text-sm">Registration End *</label>
+                <label for="registration_end_at" class="block font-medium text-sm">Akhir Registrasi *</label>
                 <input type="datetime-local" name="registration_end_at" id="registration_end_at" required
                        x-model="formData.registration_end_at"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
@@ -603,14 +603,14 @@ $subtitle = "Create and manage your organization's quests";
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label for="quest_start_at" class="block font-medium text-sm">Quest Start *</label>
+                <label for="quest_start_at" class="block font-medium text-sm">Mulai Quest *</label>
                 <input type="datetime-local" name="quest_start_at" id="quest_start_at" required
                        x-model="formData.quest_start_at"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
               </div>
               
               <div class="space-y-2">
-                <label for="quest_end_at" class="block font-medium text-sm">Quest End *</label>
+                <label for="quest_end_at" class="block font-medium text-sm">Akhir Quest *</label>
                 <input type="datetime-local" name="quest_end_at" id="quest_end_at" required
                        x-model="formData.quest_end_at"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
@@ -619,14 +619,14 @@ $subtitle = "Create and manage your organization's quests";
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label for="judging_start_at" class="block font-medium text-sm">Judging Start *</label>
+                <label for="judging_start_at" class="block font-medium text-sm">Mulai Penjurian *</label>
                 <input type="datetime-local" name="judging_start_at" id="judging_start_at" required
                        x-model="formData.judging_start_at"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
               </div>
               
               <div class="space-y-2">
-                <label for="judging_end_at" class="block font-medium text-sm">Judging End *</label>
+                <label for="judging_end_at" class="block font-medium text-sm">Akhir Penjurian *</label>
                 <input type="datetime-local" name="judging_end_at" id="judging_end_at" required
                        x-model="formData.judging_end_at"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
@@ -634,7 +634,7 @@ $subtitle = "Create and manage your organization's quests";
             </div>
 
             <div class="space-y-2">
-              <label for="prize_distribution_date" class="block font-medium text-sm">Prize Distribution Date *</label>
+              <label for="prize_distribution_date" class="block font-medium text-sm">Tanggal Pemberian Hadiah *</label>
               <input type="datetime-local" name="prize_distribution_date" id="prize_distribution_date" required
                      x-model="formData.prize_distribution_date"
                      class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
@@ -647,19 +647,19 @@ $subtitle = "Create and manage your organization's quests";
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
-              Participants & Winners
+              Peserta & Pemenang
             </h4>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label for="participant_limit" class="block font-medium text-sm">Max Participants *</label>
+                <label for="participant_limit" class="block font-medium text-sm">Max Peserta *</label>
                 <input type="number" name="participant_limit" id="participant_limit" required
                        x-model="formData.participant_limit"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
               </div>
               
               <div class="space-y-2">
-                <label for="winner_limit" class="block font-medium text-sm">Max Winners *</label>
+                <label for="winner_limit" class="block font-medium text-sm">Max Pemenang *</label>
                 <input type="number" name="winner_limit" id="winner_limit" required
                        x-model="formData.winner_limit"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
@@ -673,7 +673,7 @@ $subtitle = "Create and manage your organization's quests";
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
               </svg>
-              Quest Images & Prizes
+              Quest Images & Hadiah
             </h4>
             
             <div class="space-y-2">
@@ -682,38 +682,38 @@ $subtitle = "Create and manage your organization's quests";
                      :class="formErrors.banner ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'"
                      class="w-full px-4 py-3 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all">
               <p x-show="formErrors.banner" class="text-xs text-destructive" x-text="formErrors.banner?.[0]" style="display: none;"></p>
-              <p x-show="!formErrors.banner" class="text-xs text-muted-foreground">Quest cover image (wide landscape recommended)</p>
+              <p x-show="!formErrors.banner" class="text-xs text-muted-foreground">Gambar quest cover (wide landscape direkomendasikan)</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label for="cert_name" class="block font-medium text-sm">Certificate Name *</label>
+                <label for="cert_name" class="block font-medium text-sm">Nama Sertifikat *</label>
                 <input type="text" name="cert_name" id="cert_name" required
                        x-model="formData.cert_name"
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
               </div>
               
               <div class="space-y-2">
-                <label for="cert_image" class="block font-medium text-sm">Certificate Image *</label>
+                <label for="cert_image" class="block font-medium text-sm">Gambar Sertifikat *</label>
                 <input type="file" name="cert_image" id="cert_image" accept="image/jpeg,image/jpg,image/png" required
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
               </div>
             </div>
 
             <div class="space-y-2">
-              <label for="cert_description" class="block font-medium text-sm">Certificate Description *</label>
+              <label for="cert_description" class="block font-medium text-sm">Deskripsi Sertifikat *</label>
               <textarea name="cert_description" id="cert_description" rows="2" required
                         x-model="formData.cert_description"
                         class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
-                        placeholder="Description of the certificate prize..."></textarea>
+                        placeholder="Deskripsi hadiah sertifikat..."></textarea>
             </div>
 
             <div class="border-t border-border pt-4 space-y-4">
-              <p class="text-sm font-medium text-muted-foreground">Coupon Prize (Optional)</p>
+              <p class="text-sm font-medium text-muted-foreground">Hadiah Kupon (Opsional)</p>
               
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-2">
-                  <label for="coupon_name" class="block font-medium text-sm">Coupon Name</label>
+                  <label for="coupon_name" class="block font-medium text-sm">Nama Kupon</label>
                   <input type="text" name="coupon_name" id="coupon_name"
                          x-model="formData.coupon_name"
                          class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
@@ -721,18 +721,18 @@ $subtitle = "Create and manage your organization's quests";
                 </div>
                 
                 <div class="space-y-2">
-                  <label for="coupon_image" class="block font-medium text-sm">Coupon Image</label>
+                  <label for="coupon_image" class="block font-medium text-sm">Gambar Kupon</label>
                   <input type="file" name="coupon_image" id="coupon_image" accept="image/jpeg,image/jpg,image/png"
                          class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
                 </div>
               </div>
 
               <div class="space-y-2">
-                <label for="coupon_description" class="block font-medium text-sm">Coupon Description</label>
+                <label for="coupon_description" class="block font-medium text-sm">Deskripsi Kupon</label>
                 <textarea name="coupon_description" id="coupon_description" rows="2"
                           x-model="formData.coupon_description"
                           class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
-                          placeholder="Description of the coupon prize..."></textarea>
+                          placeholder="Deskripsi hadiah kupon..."></textarea>
               </div>
             </div>
           </div>
@@ -741,7 +741,7 @@ $subtitle = "Create and manage your organization's quests";
           <div class="flex justify-end gap-3 pt-4 border-t border-border">
             <button type="button" @click="showCreateQuestDialog = false; resetQuestForm()" :disabled="isSubmitting"
                     class="px-6 py-3 rounded-lg border border-border hover:bg-muted/50 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed">
-              Cancel
+              Batal
             </button>
             <button type="submit" :disabled="isSubmitting"
                     class="px-6 py-3 rounded-lg gradient-primary text-primary-foreground shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2">
@@ -749,7 +749,7 @@ $subtitle = "Create and manage your organization's quests";
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <span x-text="isSubmitting ? 'Creating...' : 'Create Quest'">Create Quest</span>
+              <span x-text="isSubmitting ? 'Creating...' : 'Create Quest'">Buat Quest</span>
             </button>
           </div>
         </form>
@@ -811,8 +811,8 @@ $subtitle = "Create and manage your organization's quests";
               x-model="sortBy"
               class="w-full px-4 py-2.5 pr-10 rounded-lg bg-background border border-border focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-all appearance-none"
             >
-              <option value="date">Sort by Date</option>
-              <option value="participants">Sort by Participants</option>
+              <option value="date">Urut dengan Tanggal</option>
+              <option value="participants">Urut dengan Peserta</option>
             </select>
             <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -828,10 +828,10 @@ $subtitle = "Create and manage your organization's quests";
             <svg class="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
             </svg>
-            <p class="text-lg font-medium text-muted-foreground mb-2">No quests found</p>
+            <p class="text-lg font-medium text-muted-foreground mb-2">Tidak ada quest ditemukan</p>
             <p class="text-sm text-muted-foreground mb-6">
-              <template x-if="searchQuery">Try adjusting your search</template>
-              <template x-if="!searchQuery">Create your first quest to get started</template>
+              <template x-if="searchQuery">Coba menyesuaikan pencarian Anda</template>
+              <template x-if="!searchQuery">Buat quest pertama Anda untuk memulai</template>
             </p>
             <template x-if="!searchQuery">
               <button 
@@ -841,7 +841,7 @@ $subtitle = "Create and manage your organization's quests";
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Create Your First Quest
+                Buat Quest Pertama Anda
               </button>
             </template>
           </div>
@@ -902,7 +902,7 @@ $subtitle = "Create and manage your organization's quests";
                   {{-- Dates --}}
                   <div class="mt-auto pt-3 border-t border-border space-y-1.5">
                     <div class="flex items-center justify-between text-xs">
-                      <span class="text-muted-foreground">Registration:</span>
+                      <span class="text-muted-foreground">Registrasi:</span>
                       <span class="font-medium" x-text="`${formatDate(quest.registration_start_at)} - ${formatDate(quest.registration_end_at)}`"></span>
                     </div>
                     <div class="flex items-center justify-between text-xs">

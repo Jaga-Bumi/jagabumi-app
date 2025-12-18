@@ -3,7 +3,7 @@
 @section('content')
 @php
 $title = 'Submission Review';
-$subtitle = 'Select winners from participant submissions';
+$subtitle = 'Pilih pemenang dari submission peserta';
 $questsData = $quests ?? collect([]);
 @endphp
   <div class="space-y-6" x-data="{
@@ -136,11 +136,11 @@ $questsData = $quests ?? collect([]);
           this.updateFilteredSubmissions();
           
           this.showToast('success', 
-            isCurrentlyWinner ? 'Removed from Winners' : 'Winner Added',
-            isCurrentlyWinner ? 'Participant returned to pending' : 'Participant is now a winner!'
+            isCurrentlyWinner ? 'Dihapus dari pemenang' : 'Pemenang ditambahkan',
+            isCurrentlyWinner ? 'Participant returned to pending' : 'Peserta ini sekarang pemenang!'
           );
         } else {
-          this.showToast('error', 'Error', data.message || 'Failed to update status');
+          this.showToast('error', 'Error', data.message || 'Gagal update status');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -185,7 +185,7 @@ $questsData = $quests ?? collect([]);
         <div class="flex items-center justify-between">
           <div>
             <p class="text-3xl font-bold text-primary" x-text="winnersCount"></p>
-            <p class="text-sm text-muted-foreground">Winners Selected</p>
+            <p class="text-sm text-muted-foreground">Pemenang Dipilih</p>
           </div>
           <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
             <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,7 +203,7 @@ $questsData = $quests ?? collect([]);
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
-          Winner Slots by Quest
+          Slot Pemenang dari Quest
         </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <template x-for="quest in questsData" :key="quest.id">
@@ -247,7 +247,7 @@ $questsData = $quests ?? collect([]);
             :class="activeTab === 'winners' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'"
             class="px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2"
           >
-            <span>Winners</span>
+            <span>Pemenang</span>
             <span class="px-2 py-0.5 text-xs rounded-full" :class="activeTab === 'winners' ? 'bg-white/20' : 'bg-primary/20 text-primary'" x-text="winnersCount"></span>
           </button>
         </div>
@@ -270,7 +270,7 @@ $questsData = $quests ?? collect([]);
             x-model="questFilter"
             class="w-full sm:w-44 px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
-            <option value="all">All Quests</option>
+            <option value="all">Semua Quest</option>
             <template x-for="quest in quests" :key="quest.slug">
               <option :value="quest.slug" x-text="quest.title"></option>
             </template>
@@ -287,8 +287,8 @@ $questsData = $quests ?? collect([]);
           <svg class="w-16 h-16 mx-auto mb-4 text-muted-foreground/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p class="text-muted-foreground text-lg">No submissions found</p>
-          <p class="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
+          <p class="text-muted-foreground text-lg">Tidak ada submissions ditemukan</p>
+          <p class="text-sm text-muted-foreground/60 mt-1">Coba menyesuaikan filter Anda.</p>
         </div>
       </template>
 
@@ -398,7 +398,7 @@ $questsData = $quests ?? collect([]);
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
-                      View
+                      Lihat
                     </button>
                   </td>
                 </tr>
@@ -436,8 +436,8 @@ $questsData = $quests ?? collect([]);
           {{-- Modal Header --}}
           <div class="flex items-start justify-between mb-6">
             <div>
-              <h2 class="text-xl font-bold">Submission Details</h2>
-              <p class="text-sm text-muted-foreground mt-1">Review participant submission</p>
+              <h2 class="text-xl font-bold">Detail Submissions</h2>
+              <p class="text-sm text-muted-foreground mt-1">Review submission peserta</p>
             </div>
             <button 
               @click="viewModalOpen = false"
@@ -477,20 +477,20 @@ $questsData = $quests ?? collect([]);
                 <div>
                   <h4 class="text-sm font-medium mb-3">Proof Video</h4>
                   <video :src="selectedSubmission.video_url" controls class="w-full rounded-xl border border-border">
-                    Your browser does not support the video tag.
+                    Browser Anda tidak mendukung tag video.
                   </video>
                 </div>
               </template>
 
               {{-- Description --}}
               <div>
-                <h4 class="text-sm font-medium mb-2">Description</h4>
+                <h4 class="text-sm font-medium mb-2">Deskripsi</h4>
                 <p class="text-sm text-muted-foreground p-4 rounded-xl bg-muted/50" x-text="selectedSubmission.description || 'No description provided'"></p>
               </div>
 
               {{-- Quick Action --}}
               <div class="flex items-center justify-between pt-4 border-t border-border">
-                <span class="text-sm text-muted-foreground">Toggle winner status:</span>
+                <span class="text-sm text-muted-foreground">Toggle status pemenang:</span>
                 <button
                   @click="toggleWinner(selectedSubmission); viewModalOpen = false;"
                   :disabled="isProcessing(selectedSubmission.id)"
