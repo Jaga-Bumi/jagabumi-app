@@ -3,7 +3,7 @@
     <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
     </svg>
-    All Submissions ({{ $submissions->count() }})
+    Semua Submissions ({{ $submissions->count() }})
   </h3>
 
   @if($submissions && $submissions->count() > 0)
@@ -42,7 +42,7 @@
                 @if($submission->description && strlen($submission->description) > 150)
                   {{ substr($submission->description, 0, 150) }}...
                 @else
-                  {{ $submission->description ?? 'No description' }}
+                  {{ $submission->description ?? 'Tidak ada deskripsi' }}
                 @endif
               </p>
 
@@ -58,7 +58,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                 </svg>
-                View Details
+                Lihat Details
               </button>
             </div>
           </div>
@@ -70,7 +70,7 @@
       <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
       </svg>
-      <p class="text-gray-500">No submissions yet</p>
+      <p class="text-gray-500">Belum ada submissions</p>
     </div>
   @endif
 </div>
@@ -144,7 +144,7 @@
               <p class="text-sm text-gray-600 mb-2">Proof Video</p>
               <video controls class="w-full rounded-lg bg-black" controlsList="nodownload">
                 <source src="${submission.video_url}" type="video/mp4">
-                Your browser does not support the video tag.
+                Browser Anda tidak mendukung tag video.
               </video>
             </div>
           ` : ''}
@@ -153,7 +153,7 @@
           <div>
             <p class="text-sm text-gray-600 mb-2">Description</p>
             <div class="bg-gray-50 rounded-lg p-4 text-gray-900 whitespace-pre-line">
-              ${submission.description || 'No description provided'}
+              ${submission.description || 'Tidak ada deskripsi diberikan'}
             </div>
           </div>
         </div>

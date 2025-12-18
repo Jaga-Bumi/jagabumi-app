@@ -33,11 +33,11 @@
         <h3 class="text-xl font-bold text-foreground mb-2">Quest Submission Dashboard</h3>
         <p class="text-muted-foreground mb-3">
           @if($canSubmit)
-            Submit your final proof of completion including video documentation and description.
+            Kirimkan bukti penyelesaian akhir Anda, termasuk dokumentasi video dan deskripsi.
           @elseif($hasSubmission)
-            Your submission has been received. Check the status below.
+            Submission Anda telah diterima. Periksa status di bawah ini.
           @else
-            You need to register for this quest first.
+            Anda perlu mendaftar untuk misi ini terlebih dahulu.
           @endif
         </p>
         
@@ -61,7 +61,7 @@
         <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
         </svg>
-        Submit Final Proof
+        Submit Bukti Terakhir
       </h3>
 
       <form id="submit-proof-form" class="space-y-6" enctype="multipart/form-data">
@@ -74,9 +74,9 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
               </svg>
-              Liveness Code Required
+              Liveness Code Dibutuhkan
             </div>
-            <p class="text-sm text-amber-700 dark:text-amber-300 mb-3">This quest requires you to be at the location to get the liveness code.</p>
+            <p class="text-sm text-amber-700 dark:text-amber-300 mb-3">Misi ini mengharuskan Anda berada di lokasi tersebut untuk mendapatkan Liveness Code.</p>
             <label for="liveness_code" class="block text-sm font-medium text-foreground mb-2">
               Enter Liveness Code <span class="text-destructive">*</span>
             </label>
@@ -85,7 +85,7 @@
               id="liveness_code" 
               name="liveness_code" 
               required
-              placeholder="Enter the code from location"
+              placeholder="Enter code dari lokasi"
               class="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             >
           </div>
@@ -94,7 +94,7 @@
         <!-- Video Upload -->
         <div>
           <label class="block text-sm font-medium text-foreground mb-2">
-            Proof Video <span class="text-destructive">*</span>
+            Bukti Video <span class="text-destructive">*</span>
           </label>
           
           <!-- Upload Area (shown when no video) -->
@@ -103,7 +103,7 @@
             <svg class="w-16 h-16 mx-auto mb-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
             </svg>
-            <p class="text-foreground font-medium mb-1">Click to upload video</p>
+            <p class="text-foreground font-medium mb-1">Click untuk upload video</p>
             <p class="text-sm text-muted-foreground">MP4, MOV, AVI up to 3GB</p>
           </div>
           
@@ -125,7 +125,7 @@
               </div>
               <div class="bg-black">
                 <video id="video-player" controls class="w-full max-h-96">
-                  Your browser does not support the video tag.
+                  Browser Anda tidak mendukung tag video.
                 </video>
               </div>
               <div class="p-4 bg-muted/30 border-t border-border">
@@ -133,7 +133,7 @@
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                   </svg>
-                  Replace Video
+                  Ganti Video
                 </button>
               </div>
             </div>
@@ -143,7 +143,7 @@
         <!-- Description -->
         <div>
           <label for="description" class="block text-sm font-medium text-foreground mb-2">
-            Description <span class="text-destructive">*</span>
+            Deskripsi <span class="text-destructive">*</span>
           </label>
           <textarea 
             id="description" 
@@ -152,11 +152,11 @@
             required
             minlength="50"
             maxlength="10000"
-            placeholder="Describe your contribution to this quest in detail... (minimum 50 characters)"
+            placeholder="Jelaskan kontribusi Anda pada misi ini secara detail... (minimal 50 karakter)"
             class="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
           ></textarea>
           <div class="flex justify-between items-center mt-2">
-            <p class="text-xs text-muted-foreground">Minimum 50 characters required</p>
+            <p class="text-xs text-muted-foreground">Minimum 50 karakter</p>
             <p class="text-xs text-muted-foreground"><span id="char-count">0</span> / 10,000</p>
           </div>
         </div>
@@ -172,7 +172,7 @@
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
           </svg>
-          <span id="submit-text">Submit Final Proof</span>
+          <span id="submit-text">Submit Bukti Terakhir</span>
         </button>
       </form>
     </div>
@@ -182,7 +182,7 @@
     <div class="bg-card border border-border rounded-2xl overflow-hidden">
       <!-- Header -->
       <div class="p-6 border-b border-border">
-        <h3 class="text-2xl font-bold text-foreground mb-2">Your Submission</h3>
+        <h3 class="text-2xl font-bold text-foreground mb-2">Submission Anda</h3>
         <p class="text-muted-foreground">Submitted on {{ $latestSubmission->created_at->format('F d, Y \a\t H:i') }}</p>
       </div>
 
@@ -205,11 +205,11 @@
             </span>
             
             @if($latestSubmission->status === 'COMPLETED')
-              <span class="text-sm text-muted-foreground">⏳ Waiting for review</span>
+              <span class="text-sm text-muted-foreground">⏳ Ditunggu untuk review</span>
             @elseif($latestSubmission->status === 'APPROVED')
-              <span class="text-sm text-emerald-600 dark:text-emerald-400">✓ Congratulations! Your submission has been approved</span>
+              <span class="text-sm text-emerald-600 dark:text-emerald-400">✓ Selamat! Submission Anda diterima</span>
             @elseif($latestSubmission->status === 'REJECTED')
-              <span class="text-sm text-destructive">✗ Your submission was rejected</span>
+              <span class="text-sm text-destructive">✗ Submission Anda ditolak</span>
             @endif
           </div>
         </div>
@@ -220,7 +220,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
             </svg>
-            Your Description
+            Deskripsi Anda
           </h4>
           <div class="p-4 bg-muted/30 rounded-lg border border-border">
             <p class="text-foreground whitespace-pre-wrap">{{ $latestSubmission->description }}</p>
@@ -239,7 +239,7 @@
             <div class="rounded-xl overflow-hidden border border-border bg-black">
               <video controls class="w-full max-h-96">
                 <source src="{{ $latestSubmission->video_url }}" type="video/mp4">
-                Your browser does not support the video tag.
+                Browser Anda tidak mendukung tag video.
               </video>
             </div>
           </div>
@@ -252,7 +252,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              Rejection Reason
+              Alasan Ditolak
             </h4>
             <p class="text-destructive">{{ $latestSubmission->rejection_reason }}</p>
           </div>
@@ -265,8 +265,8 @@
       <svg class="w-20 h-20 mx-auto mb-4 text-muted-foreground/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
       </svg>
-      <h3 class="text-xl font-bold text-foreground mb-2">Join Quest First</h3>
-      <p class="text-muted-foreground mb-6">You need to register for this quest before you can submit proof.</p>
+      <h3 class="text-xl font-bold text-foreground mb-2">Ikut Quest Dulu</h3>
+      <p class="text-muted-foreground mb-6">Anda perlu mendaftar untuk quest ini sebelum dapat mengirimkan bukti.</p>
     </div>
   @endif
 </div>
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (file) {
         // Check file size (3GB = 3221225472 bytes)
         if (file.size > 3221225472) {
-          alert('File size exceeds 3GB. Please choose a smaller file.');
+          alert('Ukuran lebih dari 3GB. Tolong pilih file lebih kecil.');
           videoInput.value = '';
           return;
         }
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const livenessCodeInput = document.getElementById('liveness_code');
       if (livenessCodeInput && livenessCodeInput.value.trim() === '') {
         messageBox.className = 'p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive font-medium';
-        messageBox.textContent = 'Please enter the liveness code.';
+        messageBox.textContent = 'Tolong isi liveness code.';
         messageBox.classList.remove('hidden');
         return;
       }
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const desc = description.value.trim();
       if (desc.length < 50) {
         messageBox.className = 'p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive font-medium';
-        messageBox.textContent = 'Description must be at least 50 characters.';
+        messageBox.textContent = 'Deskripsi harus minimal 50 karakter.';
         messageBox.classList.remove('hidden');
         return;
       }
@@ -387,17 +387,17 @@ document.addEventListener('DOMContentLoaded', function() {
           setTimeout(() => location.reload(), 2000);
         } else {
           messageBox.className = 'p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive font-medium';
-          messageBox.textContent = data.message || 'Failed to submit proof. Please try again.';
+          messageBox.textContent = data.message || 'Gagal untuk submit bukti. Tolong coba lain.';
           submitBtn.disabled = false;
-          submitText.textContent = 'Submit Final Proof';
+          submitText.textContent = 'Submit Bukti Terakhir';
         }
       } catch (error) {
         console.error('Submission error:', error);
         messageBox.classList.remove('hidden');
         messageBox.className = 'p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive font-medium';
-        messageBox.textContent = 'An error occurred. Please try again.';
+        messageBox.textContent = 'Sebuah error terjadi. Tolong coba lagi.';
         submitBtn.disabled = false;
-        submitText.textContent = 'Submit Final Proof';
+        submitText.textContent = 'Submit Bukti Terakhir';
       }
     });
   }
