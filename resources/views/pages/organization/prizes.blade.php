@@ -2,8 +2,8 @@
 
 @section('content')
 @php
-$title = 'Prize Distribution';
-$subtitle = 'Manage prize distribution to quest winners';
+$title = 'Pemberian Hadiah';
+$subtitle = 'Atur pembagian hadiah kepada pemenang quest';
 @endphp
   <div class="space-y-6" x-data="{
     quests: {{ Js::from($quests) }},
@@ -165,9 +165,9 @@ $subtitle = 'Manage prize distribution to quest winners';
             }
           }
           
-          this.showToast('Success', 'Prize distributed successfully!', 'success');
+          this.showToast('Success', 'Hadiah berhasil dibagikan!', 'success');
         } else {
-          this.showToast('Error', data.message || 'Failed to distribute prize', 'error');
+          this.showToast('Error', data.message || 'Gagal membagikan hadiah', 'error');
         }
       } catch (error) {
         console.error('Distribution error:', error);
@@ -179,7 +179,7 @@ $subtitle = 'Manage prize distribution to quest winners';
     
     copyWalletAddress(address) {
       navigator.clipboard.writeText(address);
-      this.showToast('Copied', 'Wallet address copied to clipboard', 'success');
+      this.showToast('Copied', 'Wallet address berhasil disalin ke clipboard', 'success');
     },
     
     formatDate(date) {
@@ -231,7 +231,7 @@ $subtitle = 'Manage prize distribution to quest winners';
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
         </svg>
         <p class="text-2xl font-bold" x-text="totalWinners"></p>
-        <p class="text-xs text-muted-foreground">Total Winners</p>
+        <p class="text-xs text-muted-foreground">Total Pemenang</p>
       </div>
       
       <div class="glass-card p-4 text-center">
@@ -247,7 +247,7 @@ $subtitle = 'Manage prize distribution to quest winners';
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <p class="text-2xl font-bold" x-text="completedDistributions"></p>
-        <p class="text-xs text-muted-foreground">Distributed</p>
+        <p class="text-xs text-muted-foreground">Berhasil</p>
       </div>
       
       <div class="glass-card p-4 text-center">
@@ -255,7 +255,7 @@ $subtitle = 'Manage prize distribution to quest winners';
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <p class="text-2xl font-bold" x-text="failedDistributions"></p>
-        <p class="text-xs text-muted-foreground">Failed</p>
+        <p class="text-xs text-muted-foreground">Gagal</p>
       </div>
     </div>
     
@@ -268,7 +268,7 @@ $subtitle = 'Manage prize distribution to quest winners';
         <input 
           type="text" 
           x-model="searchQuery"
-          placeholder="Search quests..." 
+          placeholder="Cari quests..." 
           class="w-full pl-9 pr-4 py-2 rounded-lg bg-muted/50 border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
         >
       </div>
@@ -277,9 +277,9 @@ $subtitle = 'Manage prize distribution to quest winners';
         x-model="statusFilter"
         class="px-4 py-2 rounded-lg bg-muted/50 border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm w-full sm:w-48"
       >
-        <option value="all">All Status</option>
-        <option value="pending">Pending Distribution</option>
-        <option value="completed">Completed</option>
+        <option value="all">Semua Status</option>
+        <option value="pending">Pending Pemberian</option>
+        <option value="completed">Selesai</option>
       </select>
     </div>
     
@@ -290,7 +290,7 @@ $subtitle = 'Manage prize distribution to quest winners';
           <svg class="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
           </svg>
-          <p class="text-muted-foreground">No quests found with winners</p>
+          <p class="text-muted-foreground">Tidak ada quest dengan pemenang ditemukan</p>
         </div>
       </template>
       
@@ -313,19 +313,19 @@ $subtitle = 'Manage prize distribution to quest winners';
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
-                    <span x-text="quest.winners.length + ' Winner' + (quest.winners.length !== 1 ? 's' : '')"></span>
+                    <span x-text="quest.winners.length + ' Pemenang' + (quest.winners.length !== 1 ? 's' : '')"></span>
                   </div>
                   <div class="flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <span x-text="getDistributedCount(quest) + ' Distributed'"></span>
+                    <span x-text="getDistributedCount(quest) + ' Diberikan'"></span>
                   </div>
                   <div class="flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
-                    <span x-text="'Ended ' + formatDate(quest.quest_end_at)"></span>
+                    <span x-text="'Selesai ' + formatDate(quest.quest_end_at)"></span>
                   </div>
                 </div>
               </div>
@@ -339,7 +339,7 @@ $subtitle = 'Manage prize distribution to quest winners';
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
-                    Distribute All
+                    Berikan ke Semua
                   </button>
                 </template>
                 
@@ -419,7 +419,7 @@ $subtitle = 'Manage prize distribution to quest winners';
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Distributed
+                            Sudah Diberikan
                           </span>
                           <span class="text-xs text-muted-foreground" x-text="formatDate(winner.distributed_at)"></span>
                         </div>
@@ -433,7 +433,7 @@ $subtitle = 'Manage prize distribution to quest winners';
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            <span>Distribution failed</span>
+                            <span>Pemberian Gagal</span>
                           </div>
                           <button 
                             @click="retryDistribution(winner, quest.id)"
@@ -490,7 +490,7 @@ $subtitle = 'Manage prize distribution to quest winners';
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
             </svg>
-            <h3 class="text-lg font-semibold">Distribute Prizes</h3>
+            <h3 class="text-lg font-semibold">Pemberian Hadiah</h3>
           </div>
           <button 
             @click="distributeModalOpen = false"
@@ -507,7 +507,7 @@ $subtitle = 'Manage prize distribution to quest winners';
           <template x-if="selectedQuest">
             <div class="space-y-4">
               <p class="text-sm text-muted-foreground">
-                Distribute NFT prizes to all pending winners of this quest.
+                Berikan hadiah NFT kepada semua pending pemenang quest ini.
               </p>
               
               {{-- Quest Info --}}
@@ -517,7 +517,7 @@ $subtitle = 'Manage prize distribution to quest winners';
                   <span class="font-medium" x-text="selectedQuest.title"></span>
                 </div>
                 <div class="flex justify-between text-sm">
-                  <span class="text-muted-foreground">Pending Winners:</span>
+                  <span class="text-muted-foreground">Pending Pemenang:</span>
                   <span class="font-medium" x-text="getPendingCount(selectedQuest)"></span>
                 </div>
                 <div class="flex justify-between text-sm">
@@ -529,7 +529,7 @@ $subtitle = 'Manage prize distribution to quest winners';
               {{-- Prizes Preview --}}
               <template x-if="selectedQuest.prizes && selectedQuest.prizes.length > 0">
                 <div>
-                  <h4 class="text-sm font-medium mb-3">Prizes to Distribute:</h4>
+                  <h4 class="text-sm font-medium mb-3">Hadiah untuk Diberikan:</h4>
                   <div class="grid grid-cols-2 gap-3">
                     <template x-for="prize in selectedQuest.prizes" :key="prize.id">
                       <div class="flex items-center gap-3 p-3 rounded-lg border border-border bg-card">
@@ -563,7 +563,7 @@ $subtitle = 'Manage prize distribution to quest winners';
                   <div>
                     <p class="font-medium">Blockchain Minting</p>
                     <p class="text-muted-foreground mt-1">
-                      This will mint NFTs on zkSync Era network. Each winner will receive all configured prizes as NFTs.
+                      Ini akan mencetak NFT di jaringan zkSync Era. Setiap pemenang akan menerima semua hadiah yang telah dikonfigurasi dalam bentuk NFT.
                     </p>
                   </div>
                 </div>
@@ -578,7 +578,7 @@ $subtitle = 'Manage prize distribution to quest winners';
             @click="distributeModalOpen = false"
             class="px-4 py-2 rounded-lg border border-border hover:bg-muted/50 transition-colors text-sm font-medium"
           >
-            Cancel
+            Batal
           </button>
           <button 
             @click="distributeAllPrizes()"
@@ -595,7 +595,7 @@ $subtitle = 'Manage prize distribution to quest winners';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
               </svg>
             </template>
-            <span x-text="isDistributing ? 'Distributing...' : 'Distribute Prizes'"></span>
+            <span x-text="isDistributing ? 'Sedang diberikan...' : 'Berikan Hadiah'"></span>
           </button>
         </div>
       </div>

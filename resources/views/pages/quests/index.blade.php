@@ -7,9 +7,9 @@
     <div class="container">
       {{-- Header --}}
       <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-2">Explore Quests</h1>
+        <h1 class="text-3xl font-bold mb-2">Telusuri Quests</h1>
         <p class="text-muted-foreground">
-          Discover environmental challenges and make a real impact
+          Temukan tantangan lingkungan dan berikan dampak nyata
         </p>
       </div>
 
@@ -26,7 +26,7 @@
               name="search" 
               id="search-input"
               value="{{ request('search') }}" 
-              placeholder="Search quests..." 
+              placeholder="Cari quests..." 
               class="w-full h-11 pl-10 pr-10 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
             />
             @if(request('search'))
@@ -45,7 +45,7 @@
               onchange="this.form.submit()"
               class="h-11 px-4 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all min-w-[140px]"
             >
-              <option value="">All Status</option>
+              <option value="">Semua Status</option>
               <option value="ACTIVE" {{ request('status') === 'ACTIVE' ? 'selected' : '' }}>Active</option>
               <option value="ENDED" {{ request('status') === 'ENDED' ? 'selected' : '' }}>Ended</option>
               <option value="APPROVED" {{ request('status') === 'APPROVED' ? 'selected' : '' }}>Approved</option>
@@ -59,8 +59,8 @@
               onchange="this.form.submit()"
               class="h-11 px-4 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all min-w-[140px]"
             >
-              <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Newest</option>
-              <option value="ending_soon" {{ request('sort') === 'ending_soon' ? 'selected' : '' }}>Ending Soon</option>
+              <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Terbaru</option>
+              <option value="ending_soon" {{ request('sort') === 'ending_soon' ? 'selected' : '' }}>Akan Berakhir</option>
             </select>
 
             {{-- Clear Filters Button --}}
@@ -69,7 +69,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                Clear Filters
+                Hapus Filters
               </a>
             @endif
           </div>
@@ -127,7 +127,7 @@
                   </span>
                 </div>
                 <a href="{{ route('quests.detail', $quest->slug) }}" class="inline-flex items-center justify-center w-full h-11 px-4 rounded-lg font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300">
-                  View Quest
+                  Lihat Quest
                 </a>
               </div>
             </div>
@@ -140,11 +140,11 @@
             <div class="flex gap-2">
               @if($quests->onFirstPage())
                 <button disabled class="h-11 px-6 rounded-lg border border-border bg-muted text-muted-foreground cursor-not-allowed font-semibold">
-                  Previous
+                  Sebelumnya
                 </button>
               @else
                 <a href="{{ $quests->previousPageUrl() }}" class="inline-flex items-center justify-center h-11 px-6 rounded-lg border border-border hover:bg-muted transition-all duration-300 font-semibold hover-lift">
-                  Previous
+                  Sebelumnya
                 </a>
               @endif
 
@@ -162,11 +162,11 @@
 
               @if($quests->hasMorePages())
                 <a href="{{ $quests->nextPageUrl() }}" class="inline-flex items-center justify-center h-11 px-6 rounded-lg border border-border hover:bg-muted transition-all duration-300 font-semibold hover-lift">
-                  Next
+                  Selanjutnya
                 </a>
               @else
                 <button disabled class="h-11 px-6 rounded-lg border border-border bg-muted text-muted-foreground cursor-not-allowed font-semibold">
-                  Next
+                  Selanjutnya
                 </button>
               @endif
             </div>
@@ -178,17 +178,17 @@
           <svg class="w-24 h-24 mx-auto mb-6 text-muted-foreground opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
-          <h3 class="text-2xl font-bold mb-2">No Quests Found</h3>
+          <h3 class="text-2xl font-bold mb-2">Tidak Ada Quest Ditemukan</h3>
           <p class="text-muted-foreground mb-6">
             @if(request('search') || request('status'))
-              Try adjusting your filters to find what you're looking for.
+              Cobalah menyesuaikan filter Anda untuk menemukan apa yang Anda cari.
             @else
-              No quests are available at the moment. Check back soon!
+              Saat ini tidak ada quest yang tersedia. Silakan periksa kembali nanti!
             @endif
           </p>
           @if(request('search') || request('status'))
             <a href="{{ route('quests.all') }}" class="inline-flex items-center gap-2 h-11 px-6 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300">
-              Clear Filters
+              Hapus Filters
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>

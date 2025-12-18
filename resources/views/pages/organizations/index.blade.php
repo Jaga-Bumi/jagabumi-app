@@ -8,11 +8,11 @@
       {{-- Header --}}
       <div class="mb-8">
         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-sm font-medium mb-3">
-          Organization Directory
+          Direktori Orgnanisasi
         </span>
-        <h1 class="text-3xl font-bold mb-2">Trusted Eco-Organizations</h1>
+        <h1 class="text-3xl font-bold mb-2">Eco-Organizations yang Terpercaya</h1>
         <p class="text-muted-foreground">
-          Discover and join organizations making real environmental impact
+          Temukan dan bergabunglah dengan organisasi yang memberikan dampak nyata terhadap lingkungan.
         </p>
       </div>
 
@@ -28,7 +28,7 @@
               name="search" 
               id="search-input"
               value="{{ request('search') }}" 
-              placeholder="Search organizations..." 
+              placeholder="Cari organisasi..." 
               class="w-full h-11 pl-10 pr-10 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
             />
             @if(request('search'))
@@ -44,7 +44,7 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
-              Clear Search
+              Hapus Search
             </a>
           @endif
         </form>
@@ -103,7 +103,7 @@
                     </a>
                   @else
                     <button disabled class="inline-flex items-center justify-center flex-1 h-9 px-4 rounded-lg border border-border bg-muted text-muted-foreground cursor-not-allowed text-sm font-semibold">
-                      View Profile
+                      Lihat Profil
                     </button>
                   @endif
                   @if($org->instagram_url)
@@ -125,11 +125,11 @@
             <div class="flex gap-2">
               @if($organizations->onFirstPage())
                 <button disabled class="h-11 px-6 rounded-lg border border-border bg-muted text-muted-foreground cursor-not-allowed font-semibold">
-                  Previous
+                  Sebelumnya
                 </button>
               @else
                 <a href="{{ $organizations->previousPageUrl() }}" class="inline-flex items-center justify-center h-11 px-6 rounded-lg border border-border hover:bg-muted transition-all duration-300 font-semibold hover-lift">
-                  Previous
+                  Sebelumnya
                 </a>
               @endif
 
@@ -147,11 +147,11 @@
 
               @if($organizations->hasMorePages())
                 <a href="{{ $organizations->nextPageUrl() }}" class="inline-flex items-center justify-center h-11 px-6 rounded-lg border border-border hover:bg-muted transition-all duration-300 font-semibold hover-lift">
-                  Next
+                  Selanjutnya
                 </a>
               @else
                 <button disabled class="h-11 px-6 rounded-lg border border-border bg-muted text-muted-foreground cursor-not-allowed font-semibold">
-                  Next
+                  Selanjutnya
                 </button>
               @endif
             </div>
@@ -163,17 +163,17 @@
           <svg class="w-24 h-24 mx-auto mb-6 text-muted-foreground opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
-          <h3 class="text-2xl font-bold mb-2">No Organizations Found</h3>
+          <h3 class="text-2xl font-bold mb-2">Tidak Ada Organisasi Ditemukan</h3>
           <p class="text-muted-foreground mb-6">
             @if(request('search'))
-              Try adjusting your search to find what you're looking for.
+              Cobalah menyesuaikan pencarian Anda untuk menemukan apa yang Anda cari.
             @else
-              No organizations are available at the moment. Check back soon!
+              Saat ini belum ada organisasi yang tersedia. Silakan periksa kembali nanti!
             @endif
           </p>
           @if(request('search'))
             <a href="{{ route('organizations.all') }}" class="inline-flex items-center gap-2 h-11 px-6 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300">
-              Clear Search
+              Hapus Search
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>

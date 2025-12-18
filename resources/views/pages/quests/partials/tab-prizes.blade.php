@@ -4,9 +4,9 @@
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
       </svg>
-      All prizes are EQUAL for all winners!
+      Semua hadiah SAMA untuk semua pemenang!
     </div>
-    <p class="text-sm text-emerald-700">Every approved submission receives the same prizes. No ranking system.</p>
+    <p class="text-sm text-emerald-700">Setiap submission yang disetujui akan menerima hadiah yang sama. Tidak ada sistem peringkat.</p>
   </div>
 
   @if($quest->prizes && $quest->prizes->count() > 0)
@@ -42,7 +42,7 @@
       <svg class="w-16 h-16 mx-auto mb-4 text-muted-foreground/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
       </svg>
-      <p class="text-muted-foreground">No prizes configured yet</p>
+      <p class="text-muted-foreground">Belum ada hadiah yang dikonfigurasi.</p>
     </div>
   @endif
 </div>

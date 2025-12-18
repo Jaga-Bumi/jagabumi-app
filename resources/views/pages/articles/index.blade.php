@@ -10,18 +10,18 @@
           <!-- Left side (existing content) -->
           <div>
               <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium mb-3">
-                  Articles
+                  Artikel
               </span>
-              <h1 class="text-3xl font-bold mb-2">Learn & Get Inspired</h1>
+              <h1 class="text-3xl font-bold mb-2">Belajar & Dapatkan Inspirasi</h1>
               <p class="text-muted-foreground">
-                  Discover tips, stories, and insights for sustainable living
+                  Temukan tips, cerita, dan wawasan untuk gaya hidup berkelanjutan
               </p>
           </div>
 
           <!-- Right side button -->
           <a href="{{ route('articles.create') }}"
             class="px-4 py-2 rounded-lg bg-primary text-white font-medium shadow hover:bg-primary/90">
-              + Create Article
+              + Buat Artikel
           </a>
       </div>
       {{-- Filters --}}
@@ -56,10 +56,10 @@
               onchange="this.form.submit()"
               class="h-[50px] px-4 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all min-w-[160px]"
             >
-              <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Newest</option>
-              <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
-              <option value="title_asc" {{ request('sort') === 'title_asc' ? 'selected' : '' }}>Title (A-Z)</option>
-              <option value="title_desc" {{ request('sort') === 'title_desc' ? 'selected' : '' }}>Title (Z-A)</option>
+              <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Terbaru</option>
+              <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Terlama</option>
+              <option value="title_asc" {{ request('sort') === 'title_asc' ? 'selected' : '' }}>Judul (A-Z)</option>
+              <option value="title_desc" {{ request('sort') === 'title_desc' ? 'selected' : '' }}>Judul (Z-A)</option>
             </select>
 
             {{-- Clear Filters Button --}}
@@ -68,7 +68,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                Clear Filters
+                Hapus Filters
               </a>
             @endif
           </div>
@@ -141,11 +141,11 @@
             <div class="flex gap-2">
               @if($articles->onFirstPage())
                 <button disabled class="h-11 px-6 rounded-lg border border-border bg-muted text-muted-foreground cursor-not-allowed font-semibold">
-                  Previous
+                  Sebelumnya
                 </button>
               @else
                 <a href="{{ $articles->previousPageUrl() }}" class="inline-flex items-center justify-center h-11 px-6 rounded-lg border border-border hover:bg-muted transition-all duration-300 font-semibold hover-lift">
-                  Previous
+                  Sebelumnya
                 </a>
               @endif
 
@@ -163,11 +163,11 @@
 
               @if($articles->hasMorePages())
                 <a href="{{ $articles->nextPageUrl() }}" class="inline-flex items-center justify-center h-11 px-6 rounded-lg border border-border hover:bg-muted transition-all duration-300 font-semibold hover-lift">
-                  Next
+                  Selanjutnya
                 </a>
               @else
                 <button disabled class="h-11 px-6 rounded-lg border border-border bg-muted text-muted-foreground cursor-not-allowed font-semibold">
-                  Next
+                  Selanjutnya
                 </button>
               @endif
             </div>
@@ -182,14 +182,14 @@
           <h3 class="text-2xl font-bold mb-2">No Articles Found</h3>
           <p class="text-muted-foreground mb-6">
             @if(request('search') || request('sort'))
-              Try adjusting your filters to find what you're looking for.
+              Coba sesuaikan filter Anda untuk menemukan apa yang Anda cari.
             @else
-              No articles are available at the moment. Check back soon!
+              Saat ini tidak ada artikel yang tersedia. Silakan cek kembali nanti!
             @endif
           </p>
           @if(request('search') || (request('sort') && request('sort') !== 'newest'))
             <a href="{{ route('articles.all') }}" class="inline-flex items-center gap-2 h-11 px-6 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300">
-              Clear Filters
+              Hapus Filters
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>

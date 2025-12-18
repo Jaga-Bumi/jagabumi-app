@@ -109,7 +109,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
           <input 
             type="text" 
             x-model="searchQuery"
-            placeholder="Search quests..." 
+            placeholder="Cari quests..." 
             class="pl-9 w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-all"
           >
         </div>
@@ -135,7 +135,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        Create New Quest
+        Buat Quest Baru
       </a>
     </div>
 
@@ -192,7 +192,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
           </div>
           <div>
             <p class="text-2xl font-bold" x-text="quests.reduce((sum, q) => sum + (q.quest_participants_count || 0), 0)">0</p>
-            <p class="text-sm text-muted-foreground">Total Participants</p>
+            <p class="text-sm text-muted-foreground">Total Peserta</p>
           </div>
         </div>
       </div>
@@ -205,7 +205,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
-          <h2 class="text-base font-semibold">Your Quests</h2>
+          <h2 class="text-base font-semibold">Quests Anda</h2>
         </div>
       </div>
 
@@ -215,7 +215,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
             <svg class="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            <p class="text-muted-foreground mb-4">No quests found</p>
+            <p class="text-muted-foreground mb-4">Belum ada quest</p>
             <a 
               href="{{ route('organization.quests.create') }}"
               class="inline-flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-primary-foreground shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300 font-semibold"
@@ -223,7 +223,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
-              Create Your First Quest
+              Buat Quest Pertama Anda
             </a>
           </div>
         </template>
@@ -296,7 +296,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
-                      View
+                      Lihat
                     </a>
                     
                     <template x-if="quest.status === 'IN REVIEW'">
@@ -307,7 +307,7 @@ $subtitle = 'Create and manage environmental quests for your organization';
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                        Delete
+                        Hapus
                       </button>
                     </template>
                   </div>

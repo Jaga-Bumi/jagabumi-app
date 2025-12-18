@@ -12,7 +12,7 @@
           <span class="text-xl font-bold gradient-text">JagaBumi</span>
         </a>
         <p class="text-muted-foreground text-sm leading-relaxed">
-          Gamifying environmental action. Join thousands of eco-warriors making real impact through fun quests and challenges.
+          Gamifying environmental action. Bergabunglah dengan ribuan Eco-Warriors yang memberikan dampak nyata melalui quest dan tantangan yang menyenangkan.
         </p>
         <div class="flex gap-2 pt-2">
           @php
@@ -45,12 +45,12 @@
 
       {{-- Quick Links --}}
       <div class="space-y-4">
-        <h3 class="font-semibold text-foreground text-base">Explore</h3>
+        <h3 class="font-semibold text-foreground text-base">Telusuri</h3>
         <nav class="flex flex-col gap-3">
-          <a href="{{ route('quests.all') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Active Quests</a>
+          <a href="{{ route('quests.all') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Quest Aktif</a>
           <a href="{{ route('leaderboard') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Leaderboard</a>
-          <a href="{{ route('organizations.all') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Organizations</a>
-          <a href="{{ route('articles.all') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Articles</a>
+          <a href="{{ route('organizations.all') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Organisasi</a>
+          <a href="{{ route('articles.all') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Artikel</a>
           <a href="{{ route('join-us') }}" class="text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">Join as Creator</a>
         </nav>
       </div>
@@ -70,12 +70,12 @@
       {{-- Newsletter --}}
       <div class="space-y-4">
         <h3 class="font-semibold text-foreground text-base">Stay Updated</h3>
-        <p class="text-sm text-muted-foreground leading-relaxed">Get the latest quests and eco-tips delivered to your inbox.</p>
+        <p class="text-sm text-muted-foreground leading-relaxed">Dapatkan quest terbaru dan eco-tips yang dikirimkan ke inbox Anda.</p>
         <form class="space-y-3" onsubmit="event.preventDefault(); alert('Newsletter signup coming soon!');">
           <div class="relative">
             <input 
               type="email" 
-              placeholder="Enter your email" 
+              placeholder="Masukan email" 
               required
               class="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300"
             />

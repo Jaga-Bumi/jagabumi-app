@@ -3,7 +3,7 @@
 @section('content')
 @php
 $title = 'Dashboard';
-$subtitle = "Welcome back! Here's your organization overview.";
+$subtitle = "Selamat datang kembali! Berikut ini adalah overview organisasi Anda.";
 @endphp
 
   {{-- Create Organization Popup --}}
@@ -16,7 +16,7 @@ $subtitle = "Welcome back! Here's your organization overview.";
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        Create Organization
+        Buat Organisasi
       </button>
     </div>
     @endif
@@ -55,9 +55,9 @@ $subtitle = "Welcome back! Here's your organization overview.";
                 <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
-                Create New Organization
+                Buat Organisasi Baru
               </h2>
-              <p class="text-muted-foreground text-sm mt-1">New organizations are automatically set to "IN REVIEW" status and require admin approval.</p>
+              <p class="text-muted-foreground text-sm mt-1">Organisasi baru secara otomatis ditetapkan ke status "IN REVIEW" dan memerlukan persetujuan admin.</p>
             </div>
             <button @click="showCreateOrgDialog = false" class="text-muted-foreground hover:text-foreground transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,10 +73,10 @@ $subtitle = "Welcome back! Here's your organization overview.";
           
           {{-- Basic Information --}}
           <div class="space-y-4">
-            <h4 class="font-medium text-sm text-muted-foreground">Basic Information</h4>
+            <h4 class="font-medium text-sm text-muted-foreground">Informasi Dasar</h4>
             
             <div class="space-y-2">
-              <label for="name" class="block font-medium text-sm">Organization Name *</label>
+              <label for="name" class="block font-medium text-sm">Nama Organisasi *</label>
               <input type="text" name="name" id="name" required
                      class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                      placeholder="e.g., Green Earth Initiative">
@@ -90,11 +90,11 @@ $subtitle = "Welcome back! Here's your organization overview.";
                        class="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                        placeholder="organization_handle">
               </div>
-              <p class="text-xs text-muted-foreground">Only letters, numbers, and underscores allowed</p>
+              <p class="text-xs text-muted-foreground">Hanya huruh, angka, atau underscore yang diperbolehkan</p>
             </div>
 
             <div class="space-y-2">
-              <label for="org_email" class="block font-medium text-sm">Organization Email *</label>
+              <label for="org_email" class="block font-medium text-sm">Email Organisasi *</label>
               <input type="email" name="org_email" id="org_email" required
                      class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                      placeholder="contact@organization.com">
@@ -108,10 +108,10 @@ $subtitle = "Welcome back! Here's your organization overview.";
             </div>
 
             <div class="space-y-2">
-              <label for="desc" class="block font-medium text-sm">Description *</label>
+              <label for="desc" class="block font-medium text-sm">Deskripsi *</label>
               <textarea name="desc" id="desc" rows="4" required
                         class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
-                        placeholder="Tell us about your organization's mission, vision, and goals..."></textarea>
+                        placeholder="Ceritakan kepada kami tentang misi, visi, dan tujuan organisasi Anda..."></textarea>
             </div>
           </div>
 
@@ -129,21 +129,21 @@ $subtitle = "Welcome back! Here's your organization overview.";
                 <label for="logo_img" class="block font-medium text-sm">Logo *</label>
                 <input type="file" name="logo_img" id="logo_img" accept="image/*" required
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-                <p class="text-xs text-muted-foreground">Square image recommended</p>
+                <p class="text-xs text-muted-foreground">Gambar bentuk persegi direkomendasikan</p>
               </div>
               
               <div class="space-y-2">
                 <label for="banner_img" class="block font-medium text-sm">Banner *</label>
                 <input type="file" name="banner_img" id="banner_img" accept="image/*" required
                        class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-                <p class="text-xs text-muted-foreground">Wide landscape image recommended</p>
+                <p class="text-xs text-muted-foreground">Gambar landscape lebar direkomendasikan</p>
               </div>
             </div>
           </div>
 
           {{-- Social Media --}}
           <div class="space-y-4">
-            <h4 class="font-medium text-sm text-muted-foreground">Social Media (Optional)</h4>
+            <h4 class="font-medium text-sm text-muted-foreground">Social Media (Opsional)</h4>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
@@ -180,11 +180,11 @@ $subtitle = "Welcome back! Here's your organization overview.";
           <div class="flex justify-end gap-3 pt-4 border-t border-border">
             <button type="button" @click="showCreateOrgDialog = false"
                     class="px-6 py-3 rounded-lg border border-border hover:bg-muted/50 transition-colors font-medium">
-              Cancel
+              Batal
             </button>
             <button type="submit"
                     class="px-6 py-3 rounded-lg gradient-primary text-primary-foreground shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300 font-semibold">
-              Create Organization
+              Buat Organisasi
             </button>
           </div>
         </form>
@@ -198,7 +198,7 @@ $subtitle = "Welcome back! Here's your organization overview.";
     <div class="glass-card hover-lift p-4 rounded-xl">
       <div class="flex items-start justify-between">
         <div>
-          <p class="text-sm text-muted-foreground">Active Quests</p>
+          <p class="text-sm text-muted-foreground">Quests Aktif</p>
           <p class="text-2xl font-bold mt-1">{{ $stats['active_quests'] }}</p>
           <div class="flex items-center gap-1 mt-2">
             <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +219,7 @@ $subtitle = "Welcome back! Here's your organization overview.";
     <div class="glass-card hover-lift p-4 rounded-xl">
       <div class="flex items-start justify-between">
         <div>
-          <p class="text-sm text-muted-foreground">Total Participants</p>
+          <p class="text-sm text-muted-foreground">Total Peserta</p>
           <p class="text-2xl font-bold mt-1">{{ number_format($stats['total_participants']) }}</p>
           <div class="flex items-center gap-1 mt-2">
             <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,7 +240,7 @@ $subtitle = "Welcome back! Here's your organization overview.";
     <div class="glass-card hover-lift p-4 rounded-xl">
       <div class="flex items-start justify-between">
         <div>
-          <p class="text-sm text-muted-foreground">Prizes Distributed</p>
+          <p class="text-sm text-muted-foreground">Hadiah Disebarkan</p>
           <p class="text-2xl font-bold mt-1">{{ $stats['prizes_distributed'] }}</p>
           <div class="flex items-center gap-1 mt-2">
             <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,7 +265,7 @@ $subtitle = "Welcome back! Here's your organization overview.";
         <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <h2 class="text-base font-semibold">Participant Growth</h2>
+        <h2 class="text-base font-semibold">Pertumbuhan Peserta</h2>
       </div>
       <div class="h-64">
         <canvas id="participantChart"></canvas>
@@ -282,10 +282,10 @@ $subtitle = "Welcome back! Here's your organization overview.";
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
           </svg>
-          <h2 class="text-base font-semibold">Recent Quests</h2>
+          <h2 class="text-base font-semibold">Quests Terbaru</h2>
         </div>
         <a href="{{ route('organization.quests.index') }}" class="text-sm text-primary hover:underline flex items-center gap-1">
-          View All
+          Lihat Semua
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
@@ -327,7 +327,7 @@ $subtitle = "Welcome back! Here's your organization overview.";
             <svg class="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
             </svg>
-            <p class="text-sm">No quests yet</p>
+            <p class="text-sm">Belum ada quest</p>
           </div>
         @endforelse
       </div>
@@ -340,10 +340,10 @@ $subtitle = "Welcome back! Here's your organization overview.";
           <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6-2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <h2 class="text-base font-semibold">Recent Submissions</h2>
+          <h2 class="text-base font-semibold">Submissions Terbaru</h2>
         </div>
         <a href="{{ route('organization.submissions') }}" class="text-sm text-primary hover:underline flex items-center gap-1">
-          Review All
+          Review Semua
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
@@ -370,7 +370,7 @@ $subtitle = "Welcome back! Here's your organization overview.";
             <svg class="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <p class="text-sm">No submissions yet</p>
+            <p class="text-sm">Belum ada submissions</p>
           </div>
         @endforelse
       </div>

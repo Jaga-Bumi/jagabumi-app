@@ -6,9 +6,9 @@
         {{-- Header --}}
         <div class="mb-8">
             <h1 class="text-3xl md:text-4xl font-bold gradient-text mb-2">
-                Welcome back, {{ auth()->user()->name }}!
+                Selamat datang kembali, {{ auth()->user()->name }}!
             </h1>
-            <p class="text-muted-foreground">Here's your personal dashboard</p>
+            <p class="text-muted-foreground">Ini adalah dashboard pribadi Anda</p>
         </div>
 
         {{-- Organization Creation Banner --}}
@@ -21,16 +21,16 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-primary mb-2">🎉 Your Organization Request is Approved!</h3>
+                        <h3 class="text-xl font-bold text-primary mb-2">🎉 Permohonan Organisasi Anda Telah Disetujui!</h3>
                         <p class="text-foreground mb-4">
-                            Congratulations! Your request to create "<strong>{{ $approvedRequest->name }}</strong>" has been approved by our admin team. 
-                            You can now create your organization and start managing environmental quests!
+                            Selamat! Permohonan Anda untuk membuat "<strong>{{ $approvedRequest->name }}</strong>" telah disetujui oleh tim admin kami. 
+                            Anda sekarang dapat membuat organisasi Anda dan mulai mengelola misi lingkungan!
                         </p>
                         <a href="{{ route('organization.create') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-glow hover:shadow-lift hover:-translate-y-1 transition-all duration-300">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                             </svg>
-                            Create Your Organization Now
+                            Buat Organisasi Anda Sekarang
                         </a>
                     </div>
                 </div>
@@ -91,15 +91,15 @@
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
-                                        Manager Invitation
+                                        Undangan Manajer
                                     </span>
                                 </div>
                                 <h3 class="text-lg font-semibold text-foreground mb-1">
                                     {{ $invitation->organization->name }}
                                 </h3>
                                 <p class="text-sm text-muted-foreground">
-                                    You've been invited to join as a <strong class="text-secondary">Manager</strong>. 
-                                    You'll be able to create quests, review submissions, and distribute prizes.
+                                    Anda telah diundang untuk menjadi <strong class="text-secondary">Manager</strong>. 
+                                    Anda akan dapat membuat quest, meninjau pengiriman, dan mendistribusikan hadiah.
                                 </p>
                             </div>
                             
@@ -112,7 +112,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                     </svg>
-                                    Accept
+                                    Terima
                                 </button>
                                 <button 
                                     @click="handleInvitation({{ $invitation->id }}, 'decline')"
@@ -121,7 +121,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                    Decline
+                                    Tolak
                                 </button>
                             </div>
                         </div>
@@ -141,8 +141,8 @@
                     </div>
                     <span class="text-3xl font-bold">{{ auth()->user()->questParticipants()->count() }}</span>
                 </div>
-                <h3 class="font-semibold text-foreground mb-1">Joined Quests</h3>
-                <p class="text-sm text-muted-foreground">Total quests you've participated in</p>
+                <h3 class="font-semibold text-foreground mb-1">Quests yang Diikuti</h3>
+                <p class="text-sm text-muted-foreground">Total quests yang Anda telah berpartisipasi</p>
             </div>
 
             <div class="glass-card p-6 rounded-2xl hover-lift">
@@ -154,8 +154,8 @@
                     </div>
                     <span class="text-3xl font-bold text-green-500">{{ auth()->user()->questParticipants()->where('status', 'COMPLETED')->count() }}</span>
                 </div>
-                <h3 class="font-semibold text-foreground mb-1">Completed Quests</h3>
-                <p class="text-sm text-muted-foreground">Successfully finished quests</p>
+                <h3 class="font-semibold text-foreground mb-1">Quests yang Selesai</h3>
+                <p class="text-sm text-muted-foreground">Quests yang berhasil diselesaikan</p>
             </div>
 
             <div class="glass-card p-6 rounded-2xl hover-lift">
@@ -167,14 +167,14 @@
                     </div>
                     <span class="text-3xl font-bold text-yellow-500">{{ auth()->user()->questParticipants()->where('status', 'APPROVED')->count() }}</span>
                 </div>
-                <h3 class="font-semibold text-foreground mb-1">Won Prizes</h3>
-                <p class="text-sm text-muted-foreground">Approved as winner</p>
+                <h3 class="font-semibold text-foreground mb-1">Hadiah yang Dimenangkan</h3>
+                <p class="text-sm text-muted-foreground">Ditetapkan sebagai pemenang</p>
             </div>
         </div>
 
         {{-- Recent Activity --}}
         <div class="glass-card p-6 rounded-2xl">
-            <h2 class="text-2xl font-bold mb-6">Your Recent Quests</h2>
+            <h2 class="text-2xl font-bold mb-6">Quests Terakhir Anda</h2>
             
             @php
                 $recentQuests = auth()->user()->questParticipants()
@@ -205,21 +205,21 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        Winner
+                                        Pemenang
                                     </span>
                                 @elseif($participation->status === 'COMPLETED')
                                     <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-sm font-medium">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                         </svg>
-                                        Completed
+                                        Selesai
                                     </span>
                                 @elseif($participation->status === 'JOINED')
                                     <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-500 text-sm font-medium">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        In Progress
+                                        Dalam progres
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-muted text-muted-foreground text-sm font-medium">
@@ -237,10 +237,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">No quests yet</h3>
-                    <p class="text-muted-foreground mb-4">Start your environmental journey by joining a quest!</p>
+                    <h3 class="text-lg font-semibold mb-2">Belum ada quest</h3>
+                    <p class="text-muted-foreground mb-4">Mulailah perjalanan lingkungan Anda dengan bergabung dalam quest</p>
                     <a href="{{ route('quests.all') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-glow hover:shadow-lift hover:-translate-y-1 transition-all duration-300">
-                        Explore Quests
+                        Telusuri Quests
                     </a>
                 </div>
             @endif
@@ -249,12 +249,12 @@
         {{-- Articles --}}
         <div class="glass-card p-6 rounded-2xl">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Your Articles</h2>
+                <h2 class="text-2xl font-bold">Artikel Anda</h2>
                 <a href="{{ route('articles.create') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-foreground hover:bg-primary transition-colors px-4 py-2 rounded-lg border border-primary/50">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    New Article
+                    Buat Artikel
                 </a>
             </div>
             
@@ -275,17 +275,17 @@
                             </div>
                             <div class="flex items-center gap-2 flex-shrink-0">
                                 {{-- Edit Link --}}
-                                <a href="{{ route('articles.edit', $article) }}" class="text-primary hover:text-primary/80 transition-colors p-2 rounded-full hover:bg-primary/10" title="Edit Article">
+                                <a href="{{ route('articles.edit', $article) }}" class="text-primary hover:text-primary/80 transition-colors p-2 rounded-full hover:bg-primary/10" title="Edit Artikel">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                     </svg>
                                 </a>
 
                                 {{-- Delete Form (Requires confirmation for safety) --}}
-                                <form action="{{ route('articles.destroy', $article->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this article?');">
+                                <form action="{{ route('articles.destroy', $article->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel ini?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-400 transition-colors p-2 rounded-full hover:bg-red-500/10" title="Delete Article">
+                                    <button type="submit" class="text-red-500 hover:text-red-400 transition-colors p-2 rounded-full hover:bg-red-500/10" title="Hapus Artikel">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
@@ -302,10 +302,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">You haven't written any articles yet</h3>
-                    <p class="text-muted-foreground mb-4">Share your knowledge and start writing!</p>
+                    <h3 class="text-lg font-semibold mb-2">Anda belum menulis artikel.</h3>
+                    <p class="text-muted-foreground mb-4">Bagikan pengetahuan Anda dan mulailah menulis!</p>
                     <a href="{{ route('articles.create') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-glow hover:shadow-lift hover:-translate-y-1 transition-all duration-300">
-                        Create First Article
+                        Buat Artikel Pertama
                     </a>
                 </div>
             @endif

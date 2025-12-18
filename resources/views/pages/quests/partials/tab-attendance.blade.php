@@ -33,9 +33,9 @@
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        Proof Submitted
+        Bukti Submitted
       </div>
-      <p class="text-sm text-amber-700">You have submitted your proof. Attendance is now disabled. {{ $canCheckOut ? 'You can still check-out if you haven\'t already.' : '' }}</p>
+      <p class="text-sm text-amber-700">Anda telah mengirimkan bukti Anda. Kehadiran sekarang dinonaktifkan. {{ $canCheckOut ? 'You can still check-out if you haven\'t already.' : '' }}</p>
     </div>
   @endif
 
@@ -50,7 +50,7 @@
       <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
-      Attendance Check-in/out
+      Kehadiran Check-in/out
     </h3>
 
     @if($questActive)
@@ -65,20 +65,20 @@
             </div>
             <div>
               <h4 class="font-bold text-emerald-900 text-lg">Check-In</h4>
-              <p class="text-sm text-emerald-700">Mark your arrival</p>
+              <p class="text-sm text-emerald-700">Tandai kedatangan Anda</p>
             </div>
           </div>
           @if($canCheckIn)
             <button onclick="openAttendanceModal('CHECK_IN')" class="w-full px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors">
-              Check-In Now
+              Check-In Sekarang
             </button>
           @elseif($hasSubmission)
             <button disabled class="w-full px-4 py-3 bg-gray-300 text-gray-500 font-semibold rounded-lg cursor-not-allowed">
-              Disabled (Proof Submitted)
+              Disabled (Bukti Submitted)
             </button>
           @else
             <button disabled class="w-full px-4 py-3 bg-gray-300 text-gray-500 font-semibold rounded-lg cursor-not-allowed">
-              Already Checked-In
+              Sudah Checked-In
             </button>
           @endif
         </div>
@@ -93,20 +93,20 @@
             </div>
             <div>
               <h4 class="font-bold text-red-900 text-lg">Check-Out</h4>
-              <p class="text-sm text-red-700">Mark your departure</p>
+              <p class="text-sm text-red-700">Tandai keberangkatan Anda</p>
             </div>
           </div>
           @if($canCheckOut)
             <button onclick="openAttendanceModal('CHECK_OUT')" class="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
-              Check-Out Now
+              Check-Out Sekarang
             </button>
           @elseif($hasSubmission && $lastAttendance && $lastAttendance->type === 'CHECK_OUT')
             <button disabled class="w-full px-4 py-3 bg-gray-300 text-gray-500 font-semibold rounded-lg cursor-not-allowed">
-              Already Checked-Out
+              Sudah Checked-Out
             </button>
           @else
             <button disabled class="w-full px-4 py-3 bg-gray-300 text-gray-500 font-semibold rounded-lg cursor-not-allowed">
-              Must Check-In First
+              Harus Check-In Dulu
             </button>
           @endif
         </div>
@@ -119,11 +119,11 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            Current Status
+            Status Sekarang
           </div>
-          <p class="text-blue-800">Last action: <strong>{{ $lastAttendance->type }}</strong> at {{ $lastAttendance->created_at->format('M d, Y H:i') }}</p>
+          <p class="text-blue-800">Aksi Terakhir: <strong>{{ $lastAttendance->type }}</strong> at {{ $lastAttendance->created_at->format('M d, Y H:i') }}</p>
           @if($lastAttendance->distance_from_quest_location)
-            <p class="text-sm text-blue-700 mt-1">Distance from location: {{ number_format($lastAttendance->distance_from_quest_location, 2) }}m</p>
+            <p class="text-sm text-blue-700 mt-1">Jarak dari Lokasi: {{ number_format($lastAttendance->distance_from_quest_location, 2) }}m</p>
           @endif
         </div>
       @endif
@@ -134,7 +134,7 @@
           <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
-          Attendance History
+          History Kehadiran
         </h4>
         @php
           $attendances = $userParticipation->questAttendances()->orderBy('created_at', 'desc')->get();
@@ -159,9 +159,9 @@
                     <div class="flex items-center justify-between">
                       <p class="font-semibold text-gray-900">{{ $attendance->type }}</p>
                       @if($attendance->is_valid_location)
-                        <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Valid Location</span>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Lokasi Valid</span>
                       @elseif($attendance->distance_from_quest_location)
-                        <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Outside Range</span>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Di Luar Jangkauan</span>
                       @endif
                     </div>
                     <p class="text-sm text-gray-600">{{ $attendance->created_at->format('M d, Y H:i:s') }}</p>
@@ -179,7 +179,7 @@
                   <div class="mt-3 pl-14">
                     <button type="button" onclick="showPhotoModal('{{ $attendance->proof_photo_url }}')" class="group">
                       <img src="{{ $attendance->proof_photo_url }}" alt="Proof Photo" class="w-24 h-24 object-cover rounded-lg border border-gray-200 group-hover:border-emerald-500 transition-colors">
-                      <p class="text-xs text-gray-500 mt-1 group-hover:text-emerald-600 transition-colors">Click to view</p>
+                      <p class="text-xs text-gray-500 mt-1 group-hover:text-emerald-600 transition-colors">Click untuk lihat</p>
                     </button>
                   </div>
                 @endif
@@ -187,7 +187,7 @@
             @endforeach
           </div>
         @else
-          <p class="text-gray-500 text-center py-4">No attendance records yet</p>
+          <p class="text-gray-500 text-center py-4">Belum ada catatan kehadiran</p>
         @endif
       </div>
     @else
@@ -195,8 +195,8 @@
         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        <p class="text-gray-600 font-medium">Quest is not currently active</p>
-        <p class="text-sm text-gray-500 mt-2">Active period: {{ $quest->quest_start_at->format('M d, Y H:i') }} - {{ $quest->quest_end_at->format('M d, Y H:i') }}</p>
+        <p class="text-gray-600 font-medium">Quest saat ini tidak aktif.</p>
+        <p class="text-sm text-gray-500 mt-2">Periode Aktif: {{ $quest->quest_start_at->format('M d, Y H:i') }} - {{ $quest->quest_end_at->format('M d, Y H:i') }}</p>
       </div>
     @endif
   </div>
@@ -220,7 +220,7 @@
         <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
-        <span>Verifying your location...</span>
+        <span>Memverifikasi lokasi Anda...</span>
       </div>
     </div>
     
@@ -235,9 +235,9 @@
       <!-- Photo Capture Section -->
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-2">
-          Proof Photo <span class="text-red-500">*</span>
+          Bukti Foto <span class="text-red-500">*</span>
         </label>
-        <p class="text-xs text-gray-500 mb-3">Take a photo to verify your presence at the location</p>
+        <p class="text-xs text-gray-500 mb-3">Ambil foto untuk memverifikasi kehadiran Anda di lokasi tersebut.</p>
         
         <!-- Camera Preview Container -->
         <div id="camera-container" class="relative rounded-xl overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50">
@@ -256,7 +256,7 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
               </svg>
-              Retake
+              Ambil Ulang
             </button>
           </div>
           
@@ -268,8 +268,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
             </button>
-            <span class="text-sm font-medium text-gray-700">Tap to open camera</span>
-            <span class="text-xs text-gray-500 mt-1">or upload a photo below</span>
+            <span class="text-sm font-medium text-gray-700">Tap untuk buka camera</span>
+            <span class="text-xs text-gray-500 mt-1">atau upload foto</span>
           </div>
           
           <!-- Error message -->
@@ -285,7 +285,7 @@
         <!-- Or Upload Button -->
         <div class="mt-3 text-center">
           <button type="button" onclick="document.getElementById('file-upload-input').click()" class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
-            Or upload from gallery →
+            Atau upload dari galeri →
           </button>
           <input type="file" id="file-upload-input" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
         </div>
@@ -296,7 +296,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
-            Photo captured successfully!
+            Foto berhasil diambil!
           </span>
         </div>
       </div>
@@ -307,7 +307,7 @@
           <label for="liveness-code" class="block text-sm font-semibold text-gray-700 mb-2">
             Liveness Code <span class="text-red-500">*</span>
           </label>
-          <p class="text-xs text-gray-500 mb-2">Enter the code displayed at the location</p>
+          <p class="text-xs text-gray-500 mb-2">Masukkan kode yang ditampilkan di lokasi tersebut</p>
           <input type="text" id="liveness-code" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Enter code" required>
         </div>
       @endif
@@ -315,17 +315,17 @@
       <!-- Optional Notes -->
       <div class="mb-6">
         <label for="attendance-notes" class="block text-sm font-semibold text-gray-700 mb-2">
-          Notes
+          Catatan
         </label>
         <textarea name="notes" id="attendance-notes" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none" placeholder="Any additional notes..."></textarea>
       </div>
 
       <div class="flex gap-3">
         <button type="button" onclick="closeAttendanceModal()" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold">
-          Cancel
+          Batal
         </button>
         <button type="submit" id="submit-btn" class="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-          Confirm
+          Terima
         </button>
       </div>
     </form>

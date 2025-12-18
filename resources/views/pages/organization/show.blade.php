@@ -55,15 +55,15 @@
                 </div>
                 <div class="text-center">
                     <div class="text-3xl font-bold text-white mb-1">{{ $stats['active_quests'] ?? 0 }}</div>
-                    <div class="text-sm text-white/70">Active Quests</div>
+                    <div class="text-sm text-white/70">Quest Aktif</div>
                 </div>
                 <div class="text-center">
                     <div class="text-3xl font-bold text-white mb-1">{{ $stats['participants'] ?? 0 }}</div>
-                    <div class="text-sm text-white/70">Participants</div>
+                    <div class="text-sm text-white/70">Peserta</div>
                 </div>
                 <div class="text-center">
                     <div class="text-3xl font-bold text-white mb-1">{{ $stats['members'] ?? 0 }}</div>
-                    <div class="text-sm text-white/70">Members</div>
+                    <div class="text-sm text-white/70">Anggota</div>
                 </div>
             </div>
         </div>
@@ -85,11 +85,11 @@
                 {{-- Quests Section --}}
                 <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-xl">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-white">Recent Quests</h2>
+                        <h2 class="text-2xl font-bold text-white">Quests Terkini</h2>
                         @if($quests->count() > 6)
                             <a href="{{ route('quests.all', ['organization' => $organization->id]) }}" 
                                class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-colors text-sm font-medium">
-                                View All
+                                Lihat Semua
                             </a>
                         @endif
                     </div>
@@ -129,7 +129,7 @@
                             <div class="mt-6 text-center">
                                 <a href="{{ route('quests.all', ['organization' => $organization->id]) }}" 
                                    class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all duration-300 font-medium shadow-lg">
-                                    View All Quests
+                                    Lihat Semua Quest
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                                     </svg>
@@ -141,7 +141,7 @@
                             <svg class="w-16 h-16 text-white/20 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            <p class="text-white/60">No quests available yet.</p>
+                            <p class="text-white/60">Belum ada quest.</p>
                         </div>
                     @endif
                 </div>
@@ -151,7 +151,7 @@
             <div class="space-y-8">
                 {{-- Contact Section --}}
                 <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-xl">
-                    <h2 class="text-2xl font-bold text-white mb-6">Contact</h2>
+                    <h2 class="text-2xl font-bold text-white mb-6">Kontak</h2>
                     
                     <div class="space-y-4">
                         @if($organization->org_email)
@@ -250,7 +250,7 @@
                             </div>
                         @empty
                             @if(!$organization->creator)
-                                <p class="text-white/60 text-sm text-center py-4">No team members yet.</p>
+                                <p class="text-white/60 text-sm text-center py-4">Belum ada anggota.</p>
                             @endif
                         @endforelse
                     </div>

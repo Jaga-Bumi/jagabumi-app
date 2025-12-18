@@ -12,16 +12,16 @@
                     Request Approved
                 </div>
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                    Create Your <span class="gradient-text">Organization</span>
+                    Buat <span class="gradient-text">Organisasi</span> Anda
                 </h1>
                 <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
-                    Your organization request has been approved! Complete the details below to launch your organization on JagaBumi.
+                    Permohonan organisasi Anda telah disetujui! Lengkapi detail di bawah ini untuk meluncurkan organisasi Anda di JagaBumi.
                 </p>
                 <div class="mt-6 inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-accent/10 border border-accent/20 text-foreground">
                     <svg class="w-5 h-5 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                     </svg>
-                    <span class="text-sm font-medium">You can only create <strong>ONE</strong> organization as CREATOR</span>
+                    <span class="text-sm font-medium">Anda hanya dapat membuat <strong>SATU</strong> organisasi sebagai CREATOR</span>
                 </div>
             </div>
 
@@ -36,14 +36,14 @@
                             <div class="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
                                 <span class="text-primary-foreground font-bold">1</span>
                             </div>
-                            Basic Information
+                            Informasi Dasar
                         </h2>
 
                         <div class="space-y-6">
                             {{-- Organization Name --}}
                             <div>
                                 <label for="name" class="block font-medium mb-2">
-                                    Organization Name <span class="text-destructive">*</span>
+                                    Nama Organisasi <span class="text-destructive">*</span>
                                 </label>
                                 <input type="text" 
                                        name="name" 
@@ -72,7 +72,7 @@
                                            class="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                                            placeholder="organization_handle">
                                 </div>
-                                <p class="mt-1 text-sm text-muted-foreground">Only letters, numbers, and underscores allowed</p>
+                                <p class="mt-1 text-sm text-muted-foreground">Hanya huruf, angka, atau underscore diperbolehkan</p>
                                 @error('handle')
                                     <p class="mt-2 text-sm text-destructive">{{ $message }}</p>
                                 @enderror
@@ -81,7 +81,7 @@
                             {{-- Email --}}
                             <div>
                                 <label for="org_email" class="block font-medium mb-2">
-                                    Organization Email <span class="text-destructive">*</span>
+                                    Email Organisasi <span class="text-destructive">*</span>
                                 </label>
                                 <input type="email" 
                                        name="org_email" 
@@ -106,8 +106,8 @@
                                    value="{{ old('motto') }}"
                                    maxlength="100"
                                    class="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                                   placeholder="Your organization's inspiring motto">
-                            <p class="mt-1 text-sm text-muted-foreground">Optional tagline for your organization</p>
+                                   placeholder="Motto inspirasi organisasi Anda">
+                            <p class="mt-1 text-sm text-muted-foreground">Tagline opsional untuk organisasi Anda</p>
                             @error('motto')
                                 <p class="mt-2 text-sm text-destructive">{{ $message }}</p>
                             @enderror
@@ -144,7 +144,7 @@
                         {{-- Logo Upload --}}
                         <div>
                             <label for="logo_img" class="block font-medium mb-2">
-                                Organization Logo <span class="text-destructive">*</span>
+                                Logo Organisasi <span class="text-destructive">*</span>
                             </label>
                             <div class="relative">
                                 <input type="file" 
@@ -160,8 +160,8 @@
                                         <svg class="w-12 h-12 text-muted-foreground mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
-                                        <span class="text-foreground text-sm font-medium">Click to upload logo</span>
-                                        <span class="text-muted-foreground text-xs mt-1">Square image recommended</span>
+                                        <span class="text-foreground text-sm font-medium">Click untuk upload logo</span>
+                                        <span class="text-muted-foreground text-xs mt-1">Gambar bentuk persegi direkomendasikan</span>
                                     </div>
                                 </label>
                             </div>
@@ -173,7 +173,7 @@
                         {{-- Banner Upload --}}
                         <div>
                             <label for="banner_img" class="block font-medium mb-2">
-                                Banner Image <span class="text-destructive">*</span>
+                                Gambar Banner <span class="text-destructive">*</span>
                             </label>
                             <div class="relative">
                                 <input type="file" 
@@ -189,8 +189,8 @@
                                         <svg class="w-12 h-12 text-muted-foreground mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
-                                        <span class="text-foreground text-sm font-medium">Click to upload banner</span>
-                                        <span class="text-muted-foreground text-xs mt-1">Wide landscape image recommended</span>
+                                        <span class="text-foreground text-sm font-medium">Click untuk upload banner</span>
+                                        <span class="text-muted-foreground text-xs mt-1">Gambar landscape lebar direkomendasikan</span>
                                     </div>
                                 </label>
                             </div>
@@ -296,14 +296,14 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
-                        Cancel
+                        Batal
                     </a>
                     <button type="submit" 
                             class="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-semibold gradient-primary text-primary-foreground shadow-glow hover:shadow-lift hover:scale-[1.02] transition-all duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                         </svg>
-                        Create Organization
+                        Buat Organisasi
                     </button>
                 </div>
             </form>
@@ -334,8 +334,8 @@
                     required: true,
                     max: 30,
                     messages: {
-                        required: 'Organization name is required.',
-                        max: 'Name cannot exceed 30 characters.'
+                        required: 'Nama organisasi harus diisi.',
+                        max: 'Nama tidak boleh lebih dari 30 karakter.'
                     }
                 },
                 handle: {
@@ -343,9 +343,9 @@
                     max: 30,
                     pattern: '^[a-zA-Z0-9_-]+$',
                     messages: {
-                        required: 'Handle is required.',
-                        max: 'Handle cannot exceed 30 characters.',
-                        pattern: 'Handle can only contain letters, numbers, underscores, and hyphens.'
+                        required: 'Handle harus diisi',
+                        max: 'Handle tidak boleh lebih dari 30 karakter',
+                        pattern: 'Handle hanya boleh mengandung huruf, angka, underscore, atau hypens'
                     }
                 },
                 org_email: {
@@ -353,23 +353,23 @@
                     email: true,
                     max: 255,
                     messages: {
-                        required: 'Organization email is required.',
-                        email: 'Please enter a valid email address.',
-                        max: 'Email cannot exceed 255 characters.'
+                        required: 'Email organisasi harus diisi.',
+                        email: 'Tolong masukan email yang valid',
+                        max: 'Email tidak boleh lebih dari 255 karakter.'
                     }
                 },
                 desc: {
                     required: true,
                     messages: {
-                        required: 'Description is required.'
+                        required: 'Deskripsi harus diisi.'
                     }
                 },
                 motto: {
                     required: true,
                     max: 255,
                     messages: {
-                        required: 'Motto is required.',
-                        max: 'Motto cannot exceed 255 characters.'
+                        required: 'Motto harus diisi.',
+                        max: 'Motto tidak boleh lebih dari 255 karakter.'
                     }
                 },
                 banner_img: {
@@ -378,9 +378,9 @@
                     image: true,
                     maxSize: 5120,
                     messages: {
-                        required: 'Banner image is required.',
-                        image: 'Banner must be an image file.',
-                        maxSize: 'Banner image cannot exceed 5MB.'
+                        required: 'Gambar banner harus diisi',
+                        image: 'Gambar harus berupa image file',
+                        maxSize: 'Gambar banner tidak boleh lebih dari 5MB.'
                     }
                 },
                 logo_img: {
@@ -389,33 +389,33 @@
                     image: true,
                     maxSize: 2048,
                     messages: {
-                        required: 'Logo image is required.',
-                        image: 'Logo must be an image file.',
-                        maxSize: 'Logo image cannot exceed 2MB.'
+                        required: 'Gambar logo harus diisi.',
+                        image: 'Gambar harus berupa image file.',
+                        maxSize: 'Gambar logo tidak boleh lebih dari 2MB.'
                     }
                 },
                 website_url: {
                     url: true,
                     messages: {
-                        url: 'Please enter a valid website URL.'
+                        url: 'Tolong isi website URL yang valid.'
                     }
                 },
                 instagram_url: {
                     url: true,
                     messages: {
-                        url: 'Please enter a valid Instagram URL.'
+                        url: 'Tolong isi Instagram URL yang valid.'
                     }
                 },
                 x_url: {
                     url: true,
                     messages: {
-                        url: 'Please enter a valid X/Twitter URL.'
+                        url: 'Tolong isi X/Twitter URL yang valid.'
                     }
                 },
                 facebook_url: {
                     url: true,
                     messages: {
-                        url: 'Please enter a valid Facebook URL.'
+                        url: 'Tolong isi Facebook URL yang valid.'
                     }
                 }
             });

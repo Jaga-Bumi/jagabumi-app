@@ -22,10 +22,10 @@
         Leaderboard
       </a>
       <a href="{{ route('organizations.all') }}" class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 {{ request()->routeIs('organizations.*') ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted' }}">
-        Organizations
+        Organisasi
       </a>
       <a href="{{ route('articles.all') }}" class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted' }}">
-        Articles
+        Artikel
       </a>
     </nav>
 
@@ -70,7 +70,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                Profile
+                Profil
               </a>
               <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-muted transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,14 +87,14 @@
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
-                  Organization
+                  Organisasi
                 </a>
               @elseif($hasApprovedRequest)
                 <a href="{{ route('organization.create') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-primary hover:bg-primary/10 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                   </svg>
-                  Create Organization
+                  Buat Organisasi
                 </a>
               @endif
               <div class="border-t border-border my-2"></div>
@@ -131,10 +131,10 @@
         Leaderboard
       </a>
       <a href="{{ route('organizations.all') }}" class="px-4 py-3 rounded-xl font-semibold text-sm transition-all {{ request()->routeIs('organizations.*') ? 'bg-primary/10 text-primary' : 'hover:bg-muted' }}">
-        Organizations
+        Organisasi
       </a>
       <a href="{{ route('articles.all') }}" class="px-4 py-3 rounded-xl font-semibold text-sm transition-all {{ request()->routeIs('articles.*') ? 'bg-primary/10 text-primary' : 'hover:bg-muted' }}">
-        Articles
+        Artikel
       </a>
       
       <div class="border-t border-border my-2"></div>
@@ -145,7 +145,7 @@
         </button>
       @else
         <a href="{{ route('profile.index') }}" class="px-4 py-3 rounded-xl font-semibold text-sm hover:bg-muted transition-all">
-          Profile
+          Profil
         </a>
         <a href="{{ route('dashboard.index') }}" class="px-4 py-3 rounded-xl font-semibold text-sm hover:bg-muted transition-all">
           Dashboard
