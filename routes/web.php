@@ -49,6 +49,14 @@ Route::middleware('auth')->group(function () {
   Route::post('/quests/{questId}/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('quests.attendance.check-in');
   Route::post('/quests/{questId}/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('quests.attendance.check-out');
   
+  // Article routes
+  Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+  Route::post('/articles/submit-form', [ArticleController::class, 'store'])->name('articles.store');
+  Route::get('/articles/{id}', [ArticleController::class, 'getOne'])->name('articles.single');
+  Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+  Route::put('/articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+  Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+
   // Organization dashboard routes
   Route::prefix('organization')->group(function () {
     Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('organization.dashboard');
@@ -68,6 +76,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/quests/{id}', [QuestController::class, 'destroy'])->name('organization.quests.destroy');
     Route::post('/quests/{id}/update-status', [QuestController::class, 'updateStatus'])->name('organization.quests.updateStatus');
     
+    // Article management
+    Route::get('/articles', [ArticleController::class, 'organizationArticles'])->name('organization.articles.index');
+    Route::get('/articles/create', [ArticleController::class, 'create'])->name('organization.articles.create');
+    Route::post('/articles/submit-form', [ArticleController::class, 'store'])->name('organization.articles.store');
+    Route::get('/articles/{id}', [ArticleController::class, 'getOne'])->name('organization.articles.single');
+    Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('organization.articles.destroy');
+    Route::put('/articles/{id}', [ArticleController::class, 'update'])->name('organization.articles.update');
+    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('organization.articles.edit');
+
     // Member management
     Route::get('/members', [OrganizationMemberController::class, 'index'])->name('organization.members.index');
     Route::post('/members/{orgId}/invite', [OrganizationMemberController::class, 'invite'])->name('organization.members.invite');
