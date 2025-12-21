@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage; // Added Storage Facade
 use Illuminate\Support\Str;
 
 class QuestController extends Controller
@@ -52,7 +53,6 @@ class QuestController extends Controller
         $quests = $query->paginate(6);
         
         return view('pages.quests.index', compact('quests'));
-
     }
 
     public function getDetail($slug)
@@ -103,11 +103,8 @@ class QuestController extends Controller
             if ($request->hasFile('banner')) {
                 $bannerFile = $request->file('banner');
                 $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerFile->getClientOriginalName());
-                $uploadPath = public_path('QuestStorage/Banner');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                $bannerFile->move($uploadPath, $bannerName);
+                // UPDATED: Use Storage Facade
+                $bannerFile->storeAs('QuestStorage/Banner', $bannerName, 'public');
                 Log::info("Quest banner uploaded: " . $bannerName);
             }
 
@@ -140,11 +137,8 @@ class QuestController extends Controller
             if ($request->hasFile('cert_image')) {
                 $certFile = $request->file('cert_image');
                 $certImageName = Str::uuid() . '_cert_' . str_replace(' ', '_', $certFile->getClientOriginalName());
-                $uploadPath = public_path('PrizeStorage');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                $certFile->move($uploadPath, $certImageName);
+                // UPDATED: Use Storage Facade
+                $certFile->storeAs('PrizeStorage', $certImageName, 'public');
                 Log::info("Certificate image uploaded: " . $certImageName);
             }
 
@@ -164,11 +158,8 @@ class QuestController extends Controller
                 if ($request->hasFile('coupon_image')) {
                     $couponFile = $request->file('coupon_image');
                     $couponImageName = Str::uuid() . '_coupon_' . str_replace(' ', '_', $couponFile->getClientOriginalName());
-                    $uploadPath = public_path('PrizeStorage');
-                    if (!file_exists($uploadPath)) {
-                        mkdir($uploadPath, 0777, true);
-                    }
-                    $couponFile->move($uploadPath, $couponImageName);
+                    // UPDATED: Use Storage Facade
+                    $couponFile->storeAs('PrizeStorage', $couponImageName, 'public');
                     Log::info("Coupon image uploaded: " . $couponImageName);
                 }
 
@@ -253,18 +244,14 @@ class QuestController extends Controller
 
             // Delete images
             if ($quest->banner_url) {
-                $bannerPath = public_path('QuestStorage/Banner/' . $quest->banner_url);
-                if (file_exists($bannerPath)) {
-                    unlink($bannerPath);
-                }
+                // UPDATED: Use Storage Facade
+                Storage::disk('public')->delete('QuestStorage/Banner/' . $quest->banner_url);
             }
 
             foreach ($quest->prizes as $prize) {
                 if ($prize->image_url) {
-                    $prizePath = public_path('PrizeStorage/' . $prize->image_url);
-                    if (file_exists($prizePath)) {
-                        unlink($prizePath);
-                    }
+                    // UPDATED: Use Storage Facade
+                    Storage::disk('public')->delete('PrizeStorage/' . $prize->image_url);
                 }
             }
 
@@ -310,19 +297,15 @@ class QuestController extends Controller
             if ($request->hasFile('banner')) {
                 // Delete old banner if exists
                 if ($quest->banner_url) {
-                    $oldBannerPath = public_path('QuestStorage/Banner/' . $quest->banner_url);
-                    if (file_exists($oldBannerPath)) {
-                        unlink($oldBannerPath);
-                    }
+                    // UPDATED: Use Storage Facade
+                    Storage::disk('public')->delete('QuestStorage/Banner/' . $quest->banner_url);
                 }
                 
                 $bannerFile = $request->file('banner');
                 $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerFile->getClientOriginalName());
-                $uploadPath = public_path('QuestStorage/Banner');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                $bannerFile->move($uploadPath, $bannerName);
+                // UPDATED: Use Storage Facade
+                $bannerFile->storeAs('QuestStorage/Banner', $bannerName, 'public');
+                
                 Log::info("Quest banner updated: " . $bannerName);
                 $quest->banner_url = $bannerName;
             }
@@ -354,19 +337,15 @@ class QuestController extends Controller
             if ($request->hasFile('cert_image')) {
                 // Delete old certificate image if exists
                 if ($certImageName) {
-                    $oldCertPath = public_path('PrizeStorage/' . $certImageName);
-                    if (file_exists($oldCertPath)) {
-                        unlink($oldCertPath);
-                    }
+                    // UPDATED: Use Storage Facade
+                    Storage::disk('public')->delete('PrizeStorage/' . $certImageName);
                 }
                 
                 $certFile = $request->file('cert_image');
                 $certImageName = Str::uuid() . '_cert_' . str_replace(' ', '_', $certFile->getClientOriginalName());
-                $uploadPath = public_path('PrizeStorage');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                $certFile->move($uploadPath, $certImageName);
+                // UPDATED: Use Storage Facade
+                $certFile->storeAs('PrizeStorage', $certImageName, 'public');
+                
                 Log::info("Certificate image updated: " . $certImageName);
             }
 
@@ -384,19 +363,15 @@ class QuestController extends Controller
                 if ($request->hasFile('coupon_image')) {
                     // Delete old coupon image if exists
                     if ($couponImageName) {
-                        $oldCouponPath = public_path('PrizeStorage/' . $couponImageName);
-                        if (file_exists($oldCouponPath)) {
-                            unlink($oldCouponPath);
-                        }
+                        // UPDATED: Use Storage Facade
+                        Storage::disk('public')->delete('PrizeStorage/' . $couponImageName);
                     }
                     
                     $couponFile = $request->file('coupon_image');
                     $couponImageName = Str::uuid() . '_coupon_' . str_replace(' ', '_', $couponFile->getClientOriginalName());
-                    $uploadPath = public_path('PrizeStorage');
-                    if (!file_exists($uploadPath)) {
-                        mkdir($uploadPath, 0777, true);
-                    }
-                    $couponFile->move($uploadPath, $couponImageName);
+                    // UPDATED: Use Storage Facade
+                    $couponFile->storeAs('PrizeStorage', $couponImageName, 'public');
+
                     Log::info("Coupon image updated: " . $couponImageName);
                 }
 
@@ -540,8 +515,8 @@ class QuestController extends Controller
                         Log::info("Extracted filename: " . $imageFilename);
                         
                         // Image is a local file, need to upload to IPFS
-                        // Try to find the image file in PrizeStorage
-                        $imagePath = public_path('PrizeStorage/' . $imageFilename);
+                        // UPDATED: Point to storage/app/public/PrizeStorage since we are using Storage facade
+                        $imagePath = storage_path('app/public/PrizeStorage/' . $imageFilename);
                         
                         if (file_exists($imagePath)) {
                             Log::info("Uploading prize image from: " . $imagePath);
@@ -950,6 +925,4 @@ class QuestController extends Controller
 
         return view('pages.organization.quests.show', compact('quest', 'certificatePrize', 'couponPrize', 'userOrganizations', 'currentOrg'));
     }
-
-    
 }

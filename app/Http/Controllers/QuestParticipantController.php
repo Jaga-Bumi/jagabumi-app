@@ -11,6 +11,7 @@ use App\Models\QuestWinner;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage; // Added Storage Facade
 
 class QuestParticipantController extends Controller
 {
@@ -148,20 +149,20 @@ class QuestParticipantController extends Controller
             ], 400);
         }
 
-        // Upload video
+        // --- UPDATED: Upload video using Storage Facade ---
         $video = $request->file('video');
         $videoName = time() . '_' . $video->getClientOriginalName();
-        $uploadPath = public_path('QuestSubmissionStorage');
         
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
+        // Store directly to storage/app/public/QuestSubmissionStorage
+        $video->storeAs('QuestSubmissionStorage', $videoName, 'public');
         
-        $video->move($uploadPath, $videoName);
-        $videoUrl = '/QuestSubmissionStorage/' . $videoName;
+        // Update model with the relative path (asset helper will handle the 'storage/' prefix)
+        // Or store full relative path 'QuestSubmissionStorage/video.mp4' if your accessor handles it
+        // Assuming your previous code stored '/QuestSubmissionStorage/video.mp4', we'll keep it consistent relative to storage root
+        $videoUrl = $videoName; // Just the filename if you construct path in accessor, or 'QuestSubmissionStorage/' . $videoName
 
         $participant->update([
-            'video_url' => $videoUrl,
+            'video_url' => $videoUrl, // Make sure your frontend/accessor handles this (e.g. asset('storage/QuestSubmissionStorage/' . $videoUrl))
             'description' => $request->description,
             'submission_date' => now(),
             'status' => 'COMPLETED',

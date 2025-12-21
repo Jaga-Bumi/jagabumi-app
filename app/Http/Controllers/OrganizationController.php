@@ -12,6 +12,7 @@ use App\Models\QuestParticipant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage; // Added Storage Facade
 use Illuminate\Support\Str;
 
 class OrganizationController extends Controller
@@ -20,7 +21,7 @@ class OrganizationController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        
+
         // Get user's organizations with role
         $userOrganizations = OrganizationMember::where('user_id', $user->id)
             ->where('status', 'ACTIVE')
@@ -38,7 +39,7 @@ class OrganizationController extends Controller
         // Check if user has approved organization request but hasn't created org yet
         $canCreateOrg = false;
         $approvedRequest = null;
-        
+
         if (!$user->createdOrganization) {
             $approvedRequest = OrganizationRequest::where('user_id', $user->id)
                 ->where('status', 'APPROVED')
@@ -51,7 +52,7 @@ class OrganizationController extends Controller
         $firstOrg = $userOrganizations->first();
         $currentOrgId = session('current_org_id', $firstOrg['id'] ?? null);
         $currentOrg = $userOrganizations->firstWhere('id', $currentOrgId);
-        
+
         if (!$currentOrg && !$canCreateOrg) {
             return redirect()->route('home')->with('error', 'You are not a member of any organization');
         }
@@ -62,7 +63,7 @@ class OrganizationController extends Controller
 
         // Get organization statistics
         $organization = Organization::findOrFail($currentOrg['id']);
-        
+
         $stats = [
             'active_quests' => Quest::where('org_id', $organization->id)
                 ->where('status', 'ACTIVE')
@@ -103,7 +104,7 @@ class OrganizationController extends Controller
             ->whereMonth('created_at', $month->month)
             ->whereYear('created_at', $month->year)
             ->count();
-            
+
             $participantData[] = [
                 'month' => $month->format('M'),
                 'participants' => $count,
@@ -125,7 +126,7 @@ class OrganizationController extends Controller
     public function switchOrganization($orgId)
     {
         $user = Auth::user();
-        
+
         // Verify user is member of this organization
         $membership = OrganizationMember::where('user_id', $user->id)
             ->where('organization_id', $orgId)
@@ -137,7 +138,7 @@ class OrganizationController extends Controller
         }
 
         session(['current_org_id' => $orgId]);
-        
+
         return redirect()->route('organization.dashboard')
             ->with('success', 'Switched to ' . $membership->organization->name);
     }
@@ -195,23 +196,17 @@ class OrganizationController extends Controller
 
         DB::beginTransaction();
         try {
-            // Handle banner upload - store in public folder like update method
+            // --- UPDATED: Handle banner upload using Storage Facade ---
             $bannerFile = $request->file('banner_img');
+            // Create the filename
             $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerFile->getClientOriginalName());
-            $bannerUploadPath = public_path('OrganizationStorage/Banner');
-            if (!file_exists($bannerUploadPath)) {
-                mkdir($bannerUploadPath, 0777, true);
-            }
-            $bannerFile->move($bannerUploadPath, $bannerName);
+            // Store directly to storage/app/public/OrganizationStorage/Banner
+            $bannerFile->storeAs('OrganizationStorage/Banner', $bannerName, 'public');
 
-            // Handle logo upload - store in public folder like update method
+            // --- UPDATED: Handle logo upload using Storage Facade ---
             $logoFile = $request->file('logo_img');
             $logoName = Str::uuid() . '_' . str_replace(' ', '_', $logoFile->getClientOriginalName());
-            $logoUploadPath = public_path('OrganizationStorage/Logo');
-            if (!file_exists($logoUploadPath)) {
-                mkdir($logoUploadPath, 0777, true);
-            }
-            $logoFile->move($logoUploadPath, $logoName);
+            $logoFile->storeAs('OrganizationStorage/Logo', $logoName, 'public');
 
             $organization = Organization::create([
                 'name' => $request->name,
@@ -247,6 +242,9 @@ class OrganizationController extends Controller
                 ->with('success', 'Organization created successfully! Welcome to your dashboard.');
         } catch (\Exception $e) {
             DB::rollBack();
+            // Log the full error for debugging
+            Log::error('Organization Creation Error: ' . $e->getMessage());
+            
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Failed to create organization: ' . $e->getMessage());
@@ -258,7 +256,7 @@ class OrganizationController extends Controller
     {
         try {
             $organization = Organization::findOrFail($id);
-            
+
             $updateData = [];
 
             // Add text fields to update data
@@ -273,42 +271,32 @@ class OrganizationController extends Controller
 
             // Handle banner upload
             if ($request->hasFile('banner_img')) {
-                // Delete old banner if exists
+                // --- UPDATED: Delete old banner using Storage Facade ---
                 if ($organization->banner_img) {
-                    $oldBannerPath = public_path('OrganizationStorage/Banner/' . $organization->banner_img);
-                    if (file_exists($oldBannerPath)) {
-                        unlink($oldBannerPath);
-                    }
+                    Storage::disk('public')->delete('OrganizationStorage/Banner/' . $organization->banner_img);
                 }
-                
+
+                // --- UPDATED: Upload new banner using Storage Facade ---
                 $bannerFile = $request->file('banner_img');
                 $bannerName = Str::uuid() . '_' . str_replace(' ', '_', $bannerFile->getClientOriginalName());
-                $uploadPath = public_path('OrganizationStorage/Banner');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                $bannerFile->move($uploadPath, $bannerName);
+                $bannerFile->storeAs('OrganizationStorage/Banner', $bannerName, 'public');
+                
                 Log::info("Banner image uploaded: " . $bannerName);
                 $updateData['banner_img'] = $bannerName;
             }
 
             // Handle logo upload
             if ($request->hasFile('logo_img')) {
-                // Delete old logo if exists
+                // --- UPDATED: Delete old logo using Storage Facade ---
                 if ($organization->logo_img) {
-                    $oldLogoPath = public_path('OrganizationStorage/Logo/' . $organization->logo_img);
-                    if (file_exists($oldLogoPath)) {
-                        unlink($oldLogoPath);
-                    }
+                    Storage::disk('public')->delete('OrganizationStorage/Logo/' . $organization->logo_img);
                 }
-                
+
+                // --- UPDATED: Upload new logo using Storage Facade ---
                 $logoFile = $request->file('logo_img');
                 $logoName = Str::uuid() . '_' . str_replace(' ', '_', $logoFile->getClientOriginalName());
-                $uploadPath = public_path('OrganizationStorage/Logo');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                $logoFile->move($uploadPath, $logoName);
+                $logoFile->storeAs('OrganizationStorage/Logo', $logoName, 'public');
+
                 Log::info("Logo image uploaded: " . $logoName);
                 $updateData['logo_img'] = $logoName;
             }
@@ -325,8 +313,9 @@ class OrganizationController extends Controller
                 'success' => true,
                 'data' => [
                     'organization' => $organization,
-                    'banner_url' => $organization->banner_img ? asset('OrganizationStorage/Banner/' . $organization->banner_img) : null,
-                    'logo_url' => $organization->logo_img ? asset('OrganizationStorage/Logo/' . $organization->logo_img) : null,
+                    // Note: Ensure php artisan storage:link is run for these assets to work
+                    'banner_url' => $organization->banner_img ? asset('storage/OrganizationStorage/Banner/' . $organization->banner_img) : null,
+                    'logo_url' => $organization->logo_img ? asset('storage/OrganizationStorage/Logo/' . $organization->logo_img) : null,
                 ],
                 'message' => 'Organization updated successfully!',
             ]);
@@ -356,7 +345,7 @@ class OrganizationController extends Controller
         $firstOrg = $userOrganizations->first();
         $currentOrgId = session('current_org_id', $firstOrg['id'] ?? null);
         $currentOrg = $userOrganizations->firstWhere('id', $currentOrgId);
-        
+
         if (!$currentOrg) {
             return redirect()->route('organization.dashboard');
         }
@@ -443,7 +432,7 @@ class OrganizationController extends Controller
     public function updateStatus($id)
     {
         $organization = Organization::findOrFail($id);
-        
+
         // Only creator can update status
         if ($organization->created_by !== Auth::id()) {
             return response()->json([
@@ -454,7 +443,7 @@ class OrganizationController extends Controller
 
         $request = request();
         $validStatuses = ['ACTIVE', 'HIATUS', 'INACTIVE'];
-        
+
         if (!$request->has('status') || !in_array($request->status, $validStatuses)) {
             return response()->json([
                 'success' => false,

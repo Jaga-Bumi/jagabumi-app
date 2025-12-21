@@ -1,6 +1,6 @@
 FROM php:8.3-fpm AS build
 
-RUN sed -i 's/deb.debian.org/kartolo.sby.datautama.net.id/g' /etc/apt/sources.list.d/debian.sources
+# RUN sed -i 's/deb.debian.org/kartolo.sby.datautama.net.id/g' /etc/apt/sources.list.d/debian.sources
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -34,7 +34,7 @@ RUN npm install && npm run build
 
 FROM php:8.3-fpm
 
-RUN sed -i 's/deb.debian.org/kartolo.sby.datautama.net.id/g' /etc/apt/sources.list.d/debian.sources
+# RUN sed -i 's/deb.debian.org/kartolo.sby.datautama.net.id/g' /etc/apt/sources.list.d/debian.sources
 
 RUN apt-get update && apt-get install -y \
     nginx \
@@ -62,7 +62,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 80
 EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
