@@ -84,7 +84,7 @@
                 <div class="relative overflow-hidden h-48">
                   @if($article->thumbnail)
                     <img
-                      src="{{ asset('ArticleStorage/Thumbnail/' . $article->thumbnail) }}"
+                      src="{{ asset('storage/ArticleStorage/Thumbnail/' . $article->thumbnail) }}"
                       alt="{{ $article->title }}"
                       class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -104,7 +104,7 @@
                     <div class="flex items-center gap-2">
                       @if($article->organization)
                         @if($article->organization->logo_img)
-                          <img src="{{ asset('OrganizationStorage/Logo/' . $article->organization->logo_img) }}" alt="{{ $article->organization->name }}" class="w-8 h-8 rounded-full object-cover">
+                          <img src="{{ asset('storage/OrganizationStorage/Logo/' . $article->organization->logo_img) }}" alt="{{ $article->organization->name }}" class="w-8 h-8 rounded-full object-cover">
                         @else
                           <div class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center">
                             <span class="text-xs font-bold text-primary-foreground">{{ substr($article->organization->name, 0, 1) }}</span>

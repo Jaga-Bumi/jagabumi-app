@@ -48,6 +48,6 @@ class Prize extends Model
             return $value;
         }
         // Otherwise, prepend the storage path
-        return asset('PrizeStorage/' . $value);
+        return asset('storage/PrizeStorage/' . $value);
     }
 }

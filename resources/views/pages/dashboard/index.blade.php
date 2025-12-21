@@ -74,7 +74,7 @@
                             {{-- Organization Logo --}}
                             <div class="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-secondary/10 flex items-center justify-center">
                                 @if($invitation->organization->logo_img)
-                                    <img src="{{ asset('OrganizationStorage/Logo/' . $invitation->organization->logo_img) }}" 
+                                    <img src="{{ asset('storage/OrganizationStorage/Logo/' . $invitation->organization->logo_img) }}" 
                                          alt="{{ $invitation->organization->name }}" 
                                          class="w-full h-full object-cover">
                                 @else

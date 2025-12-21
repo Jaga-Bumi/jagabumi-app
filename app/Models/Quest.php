@@ -97,6 +97,6 @@ class Quest extends Model
             return $value;
         }
         // Otherwise, prepend the storage path
-        return asset('QuestStorage/Banner/' . $value);
+        return asset('storage/QuestStorage/Banner/' . $value);
     }
 }

@@ -58,7 +58,7 @@
               <div class="p-6">
                 <div class="flex items-start gap-4 mb-4">
                   @if($org->logo_img)
-                    <img src="{{ asset('OrganizationStorage/Logo/' . $org->logo_img) }}" alt="{{ $org->name }}" class="w-16 h-16 rounded-2xl object-cover flex-shrink-0 bg-muted">
+                    <img src="{{ asset('storage/OrganizationStorage/Logo/' . $org->logo_img) }}" alt="{{ $org->name }}" class="w-16 h-16 rounded-2xl object-cover flex-shrink-0 bg-muted">
                   @else
                     <div class="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center text-3xl flex-shrink-0">
                       {{ strtoupper(substr($org->name, 0, 1)) }}

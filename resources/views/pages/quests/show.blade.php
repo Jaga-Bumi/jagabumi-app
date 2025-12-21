@@ -45,7 +45,7 @@
 
           <a href="{{ route('organizations.all') }}" class="inline-flex items-center gap-3 mb-6 group">
             @if($quest->organization->logo_img)
-              <img src="{{ asset('OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-emerald-500/20 group-hover:ring-emerald-500/40 transition-all">
+              <img src="{{ asset('storage/OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-emerald-500/20 group-hover:ring-emerald-500/40 transition-all">
             @else
               <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold text-lg ring-2 ring-emerald-500/20 group-hover:ring-emerald-500/40 transition-all">
                 {{ substr($quest->organization->name, 0, 1) }}

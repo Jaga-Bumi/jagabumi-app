@@ -129,7 +129,7 @@
                 <h3 class="font-semibold text-lg mb-1">{{ $quest->title }}</h3>
                 <div class="flex items-center gap-2 text-sm text-muted-foreground">
                   @if($quest->organization->logo_img)
-                    <img src="{{ asset('OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-5 h-5 rounded-full object-cover">
+                    <img src="{{ asset('storage/OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-5 h-5 rounded-full object-cover">
                   @else
                     <div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
                       {{ substr($quest->organization->name ?? 'O', 0, 1) }}

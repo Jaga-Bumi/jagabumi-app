@@ -29,7 +29,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
     {{-- Banner & Logo --}}
     <div class="glass-card overflow-hidden rounded-xl">
       <div class="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20">
-        <img :src="bannerPreview || '{{ asset('OrganizationStorage/Banner/' . $organization->banner_img) }}?v={{ time() }}'" 
+        <img :src="bannerPreview || '{{ asset('storage/OrganizationStorage/Banner/' . $organization->banner_img) }}?v={{ time() }}'" 
              alt="{{ $organization->name }}" 
              class="w-full h-full object-cover"
              x-show="bannerPreview || {{ $organization->banner_img ? 'true' : 'false' }}">
@@ -51,7 +51,7 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
         <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4 -mt-16 sm:-mt-12">
           <div class="relative">
             <div class="w-28 h-28 rounded-2xl bg-card border-4 border-background shadow-card flex items-center justify-center overflow-hidden">
-              <img :src="logoPreview || '{{ asset('OrganizationStorage/Logo/' . $organization->logo_img) }}?v={{ time() }}'" 
+              <img :src="logoPreview || '{{ asset('storage/OrganizationStorage/Logo/' . $organization->logo_img) }}?v={{ time() }}'" 
                    alt="{{ $organization->name }}" 
                    class="w-full h-full object-cover"
                    x-show="logoPreview || {{ $organization->logo_img ? 'true' : 'false' }}">

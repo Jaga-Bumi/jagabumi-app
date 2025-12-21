@@ -703,7 +703,7 @@ $isInReview = $quest->status === 'IN REVIEW';
         <h3 class="font-semibold mb-4">Organisai</h3>
         <div class="flex items-center gap-3">
           @if($quest->organization->logo_img)
-            <img src="{{ asset('OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-12 h-12 rounded-full object-cover">
+            <img src="{{ asset('storage/OrganizationStorage/Logo/' . $quest->organization->logo_img) }}" alt="{{ $quest->organization->name }}" class="w-12 h-12 rounded-full object-cover">
           @else
             <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
               {{ substr($quest->organization->name, 0, 1) }}
