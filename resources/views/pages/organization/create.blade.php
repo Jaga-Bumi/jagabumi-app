@@ -25,6 +25,28 @@
                 </div>
             </div>
 
+            @if ($errors->any())
+                <div class="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-xl animate-pulse">
+                    <div class="flex items-center gap-3 text-red-500 font-bold mb-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <h3>Terdapat Error Pada Inputan:</h3>
+                    </div>
+                    <ul class="list-disc list-inside text-red-400 text-sm space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-xl">
+                    <p class="text-red-500 font-bold">{{ session('error') }}</p>
+                </div>
+            @endif
+
             {{-- Form --}}
             <div class="max-w-4xl mx-auto">
                 <form id="create-org-form" action="{{ route('organization.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
