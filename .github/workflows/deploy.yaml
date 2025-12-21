@@ -1,0 +1,88 @@
+name: Build & Update GitOps Repository
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/jaga-bumi
+
+  INFRA_REPO: Jaga-Bumi/jagabumi-infra
+
+  DEPLOYMENT_FILE_PATH: dev/app/laravel-deployment.yaml
+
+  GIT_EMAIL: action@github.com
+  GIT_NAME: JagaBumi Bot
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      short_sha: ${{ steps.slug.outputs.sha8 }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Get Short SHA
+        id: slug
+        run: echo "sha8=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKER_IMAGE }}:latest
+            ${{ env.DOCKER_IMAGE }}:${{ steps.slug.outputs.sha8 }}
+
+  update-infra:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Infra Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.INFRA_REPO }}
+          token: ${{ secrets.GH_PAT_INFRA_ACCESS }}
+
+      - name: Update Image Tag in YAML
+        run: |
+          NEW_TAG=${{ needs.build-and-push.outputs.short_sha }}
+          FILE=${{ env.DEPLOYMENT_FILE_PATH }}
+
+          echo "Updating file: $FILE"
+          echo "New Tag: $NEW_TAG"
+
+          if [ ! -f "$FILE" ]; then
+            echo "File $FILE does not exist!"
+            exit 1
+          fi
+
+          sed -i "s|image: ${{ env.DOCKER_IMAGE }}:.*|image: ${{ env.DOCKER_IMAGE }}:$NEW_TAG|g" $FILE
+
+          echo "Updated file content:"
+          grep "image:" $FILE
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.email "${{ env.GIT_EMAIL }}"
+          git config --global user.name "${{ env.GIT_NAME }}"
+
+          if git diff --quiet; then
+            echo "No changes detected. Skipping push."
+          else
+            git add .
+            git commit -m "Auto-deploy: Update image tag to ${{ needs.build-and-push.outputs.short_sha }}"
+            git push origin main
+          fi

@@ -1,0 +1,70 @@
+FROM php:8.3-fpm AS build
+
+RUN sed -i 's/deb.debian.org/kartolo.sby.datautama.net.id/g' /etc/apt/sources.list.d/debian.sources
+
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libgmp-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    nodejs \
+    npm
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd gmp
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY composer.json composer.lock ./
+
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+
+COPY . .
+
+RUN composer dump-autoload --optimize
+
+RUN npm install && npm run build
+
+FROM php:8.3-fpm
+
+RUN sed -i 's/deb.debian.org/kartolo.sby.datautama.net.id/g' /etc/apt/sources.list.d/debian.sources
+
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libgmp-dev \
+    zip \
+    unzip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd gmp
+
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
+WORKDIR /var/www/html
+
+COPY --from=build /var/www/html /var/www/html
+
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Expose port 80
+EXPOSE 80
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
