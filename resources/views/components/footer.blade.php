@@ -107,7 +107,7 @@
         © {{ date('Y') }} JagaBumi.id. All rights reserved.
       </p>
       <p class="text-sm text-muted-foreground">
-        Made with <span class="text-primary animate-pulse">💚</span> for Mother Earth
+        Made with <span class="text-primary animate-pulse">💚</span> for the Mother Earth
       </p>
     </div>
   </div>
