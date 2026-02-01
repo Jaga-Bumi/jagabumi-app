@@ -734,7 +734,7 @@ $isInReview = $quest->status === 'IN REVIEW';
       </template>
 
       {{-- Quest Status Management (only for ACTIVE, ENDED, CANCELLED) --}}
-      @if(!in_array($quest->status, ['IN REVIEW', 'REJECTED']))
+      @if(!in_array($quest->status, ['REJECTED']))
       <div class="glass-card rounded-xl p-6" x-data="{ 
           currentStatus: '{{ $quest->status }}',
           isUpdating: false,
@@ -776,6 +776,7 @@ $isInReview = $quest->status === 'IN REVIEW';
         <div class="flex items-center justify-between gap-3 mb-4">
           <span class="px-3 py-1.5 rounded-lg text-sm font-medium"
                 :class="{
+                  'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20': currentStatus === 'IN REVIEW',
                   'bg-green-500/10 text-green-500 border border-green-500/20': currentStatus === 'ACTIVE',
                   'bg-blue-500/10 text-blue-500 border border-blue-500/20': currentStatus === 'ENDED',
                   'bg-red-500/10 text-red-500 border border-red-500/20': currentStatus === 'CANCELLED'
@@ -800,6 +801,15 @@ $isInReview = $quest->status === 'IN REVIEW';
                  x-transition
                  class="absolute right-0 mt-2 w-44 rounded-lg shadow-lg bg-card border border-border z-50">
               <div class="py-1">
+                <button @click="updateStatus('IN REVIEW')"
+                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
+                        :class="currentStatus === 'IN REVIEW' ? 'bg-yellow-500/5' : ''">
+                  <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                  <span class="flex-1">In Review</span>
+                  <svg x-show="currentStatus === 'IN REVIEW'" class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
                 <button @click="updateStatus('ACTIVE')"
                         class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors flex items-center gap-3"
                         :class="currentStatus === 'ACTIVE' ? 'bg-green-500/5' : ''">
