@@ -476,7 +476,7 @@ $questsData = $quests ?? collect([]);
               <template x-if="selectedSubmission.video_url">
                 <div>
                   <h4 class="text-sm font-medium mb-3">Proof Video</h4>
-                  <video :src="selectedSubmission.video_url" controls class="w-full rounded-xl border border-border">
+                  <video :src="'{{ asset('storage/QuestSubmissionStorage') }}/' + selectedSubmission.video_url" controls class="w-full rounded-xl border border-border">
                     Browser Anda tidak mendukung tag video.
                   </video>
                 </div>

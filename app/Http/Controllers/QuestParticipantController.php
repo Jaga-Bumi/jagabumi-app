@@ -167,7 +167,7 @@ class QuestParticipantController extends Controller
             'success' => true,
             'message' => 'Proof submitted successfully! Your submission is now under review.',
             'data' => [
-                'video_url' => $videoUrl,
+                'video_url' => asset('storage/QuestSubmissionStorage/' . $videoUrl),
                 'submission_date' => $participant->submission_date->format('M d, Y H:i'),
             ],
         ]);

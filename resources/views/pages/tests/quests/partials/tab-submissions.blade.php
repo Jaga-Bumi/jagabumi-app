@@ -139,7 +139,7 @@
             <div>
               <p class="text-sm text-gray-600 mb-2">Proof Video</p>
               <video controls class="w-full rounded-lg bg-black" controlsList="nodownload">
-                <source src="${submission.video_url}" type="video/mp4">
+                <source src="{{ asset('storage/QuestSubmissionStorage') }}/${submission.video_url}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
