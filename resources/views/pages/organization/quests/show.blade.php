@@ -831,22 +831,6 @@ $isInReview = $quest->status === 'IN REVIEW';
             </div>
           </div>
         </div>
-        
-        {{-- Status Descriptions --}}
-        <div class="text-xs space-y-2 pt-3 border-t border-border">
-          <div class="flex items-center gap-2" :class="currentStatus === 'ACTIVE' ? 'text-green-500' : 'text-muted-foreground'">
-            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-            <span>Active - Buka untuk peserta</span>
-          </div>
-          <div class="flex items-center gap-2" :class="currentStatus === 'ENDED' ? 'text-blue-500' : 'text-muted-foreground'">
-            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-            <span>Ended - Quest selesai</span>
-          </div>
-          <div class="flex items-center gap-2" :class="currentStatus === 'CANCELLED' ? 'text-red-500' : 'text-muted-foreground'">
-            <span class="w-2 h-2 rounded-full bg-red-500"></span>
-            <span>Cancelled - Quest dibatalkan</span>
-          </div>
-        </div>
       </div>
       @endif
 

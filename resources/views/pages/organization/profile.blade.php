@@ -275,33 +275,6 @@ $isCreator = $currentOrg['role'] === 'CREATOR';
           </div>
         </div>
       </div>
-      
-      {{-- Status Descriptions --}}
-      <div class="mt-4 pt-4 border-t border-border">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'ACTIVE' ? 'bg-green-500/5' : ''">
-            <span class="w-2 h-2 rounded-full bg-green-500 mt-1 flex-shrink-0"></span>
-            <div>
-              <span class="font-medium text-green-600 dark:text-green-400">Active</span>
-              <p class="text-muted-foreground">Terlihat oleh publik, dapat membuat quest.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'HIATUS' ? 'bg-yellow-500/5' : ''">
-            <span class="w-2 h-2 rounded-full bg-yellow-500 mt-1 flex-shrink-0"></span>
-            <div>
-              <span class="font-medium text-yellow-600 dark:text-yellow-400">Hiatus</span>
-              <p class="text-muted-foreground">Dihentikan sementara, visibilitas terbatas.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-2 p-2 rounded-lg" :class="currentStatus === 'INACTIVE' ? 'bg-red-500/5' : ''">
-            <span class="w-2 h-2 rounded-full bg-red-500 mt-1 flex-shrink-0"></span>
-            <div>
-              <span class="font-medium text-red-600 dark:text-red-400">Inactive</span>
-              <p class="text-muted-foreground">Tersembunyi dari publik, tidak ada quest baru.</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     @endif
 
