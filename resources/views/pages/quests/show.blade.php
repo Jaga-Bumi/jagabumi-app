@@ -117,22 +117,46 @@
                 </div>
               </button>
               @if($userParticipation)
-                <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all" data-tab="attendance">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>Kehadiran</span>
-                  </div>
-                </button>
-                <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all" data-tab="dashboard">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                    </svg>
-                    <span>Dashboard</span>
-                  </div>
-                </button>
+                @php
+                  $now = now();
+                  $questIsActive = $now->gte($quest->quest_start_at) && $now->lte($quest->quest_end_at);
+                @endphp
+                
+                @if($questIsActive)
+                  <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all" data-tab="attendance">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      <span>Kehadiran</span>
+                    </div>
+                  </button>
+                  <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all" data-tab="dashboard">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                      </svg>
+                      <span>Dashboard</span>
+                    </div>
+                  </button>
+                @else
+                  <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-medium border-b-2 border-transparent text-muted-foreground/50 cursor-not-allowed" disabled title="Quest belum dimulai atau sudah berakhir">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                      </svg>
+                      <span>Kehadiran</span>
+                    </div>
+                  </button>
+                  <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-medium border-b-2 border-transparent text-muted-foreground/50 cursor-not-allowed" disabled title="Quest belum dimulai atau sudah berakhir">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                      </svg>
+                      <span>Dashboard</span>
+                    </div>
+                  </button>
+                @endif
               @else
                 <button class="tab-button flex-shrink-0 px-6 py-4 text-sm font-medium border-b-2 border-transparent text-muted-foreground/50 cursor-not-allowed" disabled>
                   <div class="flex items-center gap-2">
@@ -160,8 +184,14 @@
             @include('pages.quests.partials.tab-managers', ['quest' => $quest])
             @include('pages.quests.partials.tab-submissions', ['quest' => $quest, 'submissions' => $submissions])
             @if($userParticipation)
-              @include('pages.quests.partials.tab-attendance', ['quest' => $quest, 'userParticipation' => $userParticipation])
-              @include('pages.quests.partials.tab-dashboard', ['quest' => $quest, 'userParticipation' => $userParticipation])
+              @php
+                $now = now();
+                $questIsActive = $now->gte($quest->quest_start_at) && $now->lte($quest->quest_end_at);
+              @endphp
+              @if($questIsActive)
+                @include('pages.quests.partials.tab-attendance', ['quest' => $quest, 'userParticipation' => $userParticipation])
+                @include('pages.quests.partials.tab-dashboard', ['quest' => $quest, 'userParticipation' => $userParticipation])
+              @endif
             @endif
           </div>
         </div>
