@@ -8,6 +8,7 @@
     <meta name="logout-route" content="{{ route('logout') }}">
     <meta name="web3auth-client-id" content="{{ config('services.web3auth.client_id') }}">
     <meta name="web3auth-network" content="{{ config('services.web3auth.network') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <title>@yield('title', 'JagaBumi - Gamifying Environmental Action')</title>
 

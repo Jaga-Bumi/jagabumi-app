@@ -915,9 +915,9 @@ class QuestController extends Controller
             ->findOrFail($id);
 
         // // Verify quest belongs to current organization
-        // if ($quest->org_id !== $orgId) {
-        //     abort(403, 'You do not have permission to view this quest.');
-        // }
+        if ($quest->org_id !== $orgId) {
+            abort(403, 'You do not have permission to view this quest.');
+        }
 
         // Separate certificate and coupon prizes
         $certificatePrize = $quest->prizes()->where('type', 'CERTIFICATE')->first();
