@@ -178,11 +178,6 @@
                     <p class="font-bold text-primary text-xl">{{ $user->completed_quests_count }}</p>
                     <p class="text-xs text-muted-foreground">quests</p>
                   </div>
-                  
-                  <div class="text-right">
-                    <p class="font-bold text-primary">{{ $user->completed_quests_count }}</p>
-                    <p class="text-xs text-muted-foreground">quests</p>
-                  </div>
                 </div>
               @empty
                 <div class="text-center py-12 text-muted-foreground">
