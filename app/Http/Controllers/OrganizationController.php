@@ -94,19 +94,21 @@ class OrganizationController extends Controller
         ->take(5)
         ->get();
 
-        // Participant growth data (last 6 months)
+        // Participant growth data (last 6 months) - cumulative count
         $participantData = [];
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
+            
+            // Count total participants up to this month (cumulative)
             $count = QuestParticipant::whereHas('quest', function($q) use ($organization) {
                 $q->where('org_id', $organization->id);
             })
-            ->whereMonth('created_at', $month->month)
-            ->whereYear('created_at', $month->year)
-            ->count();
+            ->where('created_at', '<=', $month->endOfMonth())
+            ->distinct('user_id')
+            ->count('user_id');
 
             $participantData[] = [
-                'month' => $month->format('M'),
+                'month' => $month->format('M Y'),
                 'participants' => $count,
             ];
         }

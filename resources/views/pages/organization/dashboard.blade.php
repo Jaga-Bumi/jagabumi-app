@@ -261,13 +261,24 @@ $subtitle = "Selamat datang kembali! Berikut ini adalah overview organisasi Anda
   {{-- Participant Growth Chart --}}
   <div class="mb-6">
     <div class="glass-card rounded-xl p-6">
-      <div class="flex items-center gap-2 mb-4">
-        <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <h2 class="text-base font-semibold">Pertumbuhan Peserta</h2>
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold">Pertumbuhan Peserta</h2>
+            <p class="text-sm text-muted-foreground">Total peserta kumulatif 6 bulan terakhir</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-2xl font-bold text-secondary">{{ end($participantData)['participants'] ?? 0 }}</p>
+          <p class="text-xs text-muted-foreground">Total Peserta</p>
+        </div>
       </div>
-      <div class="h-64">
+      <div class="h-72">
         <canvas id="participantChart"></canvas>
       </div>
     </div>
@@ -380,40 +391,82 @@ $subtitle = "Selamat datang kembali! Berikut ini adalah overview organisasi Anda
   @push('scripts')
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const ctx = document.getElementById('participantChart').getContext('2d');
-    const participantData = @json($participantData);
-    
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: participantData.map(d => d.month),
-        datasets: [{
-          label: 'Participants',
-          data: participantData.map(d => d.participants),
-          borderColor: 'hsl(var(--secondary))',
-          backgroundColor: 'hsl(var(--secondary) / 0.1)',
-          tension: 0.4,
-          fill: true,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
+    const ctx = document.getElementById('participantChart');
+    if (ctx) {
+      const participantData = @json($participantData);
+      
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: participantData.map(d => d.month),
+          datasets: [{
+            label: 'Total Peserta',
+            data: participantData.map(d => d.participants),
+            borderColor: 'hsl(142, 76%, 36%)',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: 'hsl(142, 76%, 36%)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          }]
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            intersect: false,
+            mode: 'index',
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: 'hsl(142, 76%, 36%)',
+              borderWidth: 1,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return 'Peserta: ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                font: {
+                  size: 12
+                }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0,
+                font: {
+                  size: 12
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              }
             }
           }
         }
-      }
-    });
+      });
+    }
   </script>
   @endpush
 @endsection

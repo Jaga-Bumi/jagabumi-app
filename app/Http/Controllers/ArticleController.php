@@ -85,7 +85,7 @@ class ArticleController extends Controller
         $text = $dom->saveHTML();
         $thumbnailPath = $request->file('thumbnail');
         $thumbnailName = Str::uuid() . '_' . str_replace(' ', '_', $thumbnailPath->getClientOriginalName());
-        $thumbnailPath->storeAs('public/ArticleStorage/Thumbnail/' . $thumbnailName);
+        $thumbnailPath->storeAs('ArticleStorage/Thumbnail', $thumbnailName, 'public');
 
         $slug = Str::slug($request->title);
         $originalSlug = $slug;
@@ -183,12 +183,12 @@ class ArticleController extends Controller
 
         // Handle thumbnail update
         if ($request->hasFile('thumbnail')) {
-            if ($article->thumbnail && Storage::exists('public/ArticleStorage/Thumbnail/' . $article->thumbnail)) {
-                Storage::delete('public/ArticleStorage/Thumbnail/' . $article->thumbnail);
+            if ($article->thumbnail && Storage::disk('public')->exists('ArticleStorage/Thumbnail/' . $article->thumbnail)) {
+                Storage::disk('public')->delete('ArticleStorage/Thumbnail/' . $article->thumbnail);
             }
             $thumbnailPath = $request->file('thumbnail');
             $thumbnailName = Str::uuid() . '_' . str_replace(' ', '_', $thumbnailPath->getClientOriginalName());
-            $thumbnailPath->storeAs('public/ArticleStorage/Thumbnail/' . $thumbnailName);
+            $thumbnailPath->storeAs('ArticleStorage/Thumbnail', $thumbnailName, 'public');
             $article->thumbnail = $thumbnailName;
         }
 
@@ -223,8 +223,8 @@ class ArticleController extends Controller
 
         $this->deleteArticleImages($article->body);
 
-        if ($article->thumbnail && Storage::exists('public/ArticleStorage/Thumbnail/' . $article->thumbnail)) {
-            Storage::delete('public/ArticleStorage/Thumbnail/' . $article->thumbnail);
+        if ($article->thumbnail && Storage::disk('public')->exists('ArticleStorage/Thumbnail/' . $article->thumbnail)) {
+            Storage::disk('public')->delete('ArticleStorage/Thumbnail/' . $article->thumbnail);
         }
 
         $article->delete();
