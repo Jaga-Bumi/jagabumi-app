@@ -238,7 +238,7 @@
             </h4>
             <div class="rounded-xl overflow-hidden border border-border bg-black">
               <video controls class="w-full max-h-96">
-                <source src="{{ $latestSubmission->video_url }}" type="video/mp4">
+                <source src="{{ asset('storage/QuestSubmissionStorage/' . $latestSubmission->video_url) }}" type="video/mp4">
                 Browser Anda tidak mendukung tag video.
               </video>
             </div>
