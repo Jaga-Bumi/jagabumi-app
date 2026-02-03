@@ -10,6 +10,7 @@ use App\Http\Requests\Attendance\CheckOutAttendanceRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AttendanceController extends Controller
 {
@@ -60,8 +61,8 @@ class AttendanceController extends Controller
             if ($request->hasFile('proof_photo')) {
                 $proofPhoto = $request->file('proof_photo');
                 $photoName = time() . '_' . $proofPhoto->getClientOriginalName();
-                $proofPhoto->move(public_path('AttendanceStorage'), $photoName);
-                $photoUrl = '/AttendanceStorage/' . $photoName;
+                $proofPhoto->storeAs('AttendanceStorage', $photoName, 'public');
+                $photoUrl = '/storage/AttendanceStorage/' . $photoName;
             }
 
             // Calculate distance using Haversine formula
@@ -165,8 +166,8 @@ class AttendanceController extends Controller
             if ($request->hasFile('proof_photo')) {
                 $proofPhoto = $request->file('proof_photo');
                 $photoName = time() . '_' . $proofPhoto->getClientOriginalName();
-                $proofPhoto->move(public_path('AttendanceStorage'), $photoName);
-                $photoUrl = '/AttendanceStorage/' . $photoName;
+                $proofPhoto->storeAs('AttendanceStorage', $photoName, 'public');
+                $photoUrl = '/storage/AttendanceStorage/' . $photoName;
             }
 
             // Calculate distance using Haversine formula
