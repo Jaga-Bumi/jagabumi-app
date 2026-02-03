@@ -114,4 +114,14 @@ Route::prefix('admin')->group(function () {
   Route::get('/quests', [AdminController::class, 'questsView'])->name('admin.quests');
   Route::post('/quests/{id}/approve', [AdminController::class, 'approveQuest'])->name('admin.quests.approve');
   Route::post('/quests/{id}/reject', [AdminController::class, 'rejectQuest'])->name('admin.quests.reject');
+  
+  Route::get('/users', [AdminController::class, 'usersView'])->name('admin.users');
+  Route::get('/users/{id}', [AdminController::class, 'getUserDetail'])->name('admin.users.detail');
+  Route::post('/users/{id}/remove', [AdminController::class, 'removeUserAction'])->name('admin.users.remove');
+  
+  Route::get('/organizations', [AdminController::class, 'organizationsView'])->name('admin.organizations');
+  Route::post('/organizations/{id}/update-status', [AdminController::class, 'updateOrganizationStatus'])->name('admin.organizations.update-status');
+  
+  Route::get('/articles', [AdminController::class, 'articlesView'])->name('admin.articles');
+  Route::delete('/articles/{id}', [AdminController::class, 'deleteArticle'])->name('admin.articles.delete');
 });

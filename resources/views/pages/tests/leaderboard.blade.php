@@ -43,7 +43,7 @@
     <ol>
       @foreach($topUsers as $user)
         <li>
-          <strong>{{ $user->name }}</strong> @({{ $user->handle }})<br>
+          <strong>{{ $user->name }}</strong> ({{ '@' . $user->handle }})<br>
           Completed Quests: {{ $user->completed_quests_count }}
         </li>
       @endforeach
@@ -59,7 +59,7 @@
     <ol>
       @foreach($topOrganizations as $org)
         <li>
-          <strong>{{ $org->name }}</strong> @({{ $org->handle }})<br>
+          <strong>{{ $org->name }}</strong> ({{ '@' . $org->handle }})<br>
           Total Quests: {{ $org->quests_count }}
         </li>
       @endforeach
@@ -76,7 +76,7 @@
       @foreach($topQuests as $quest)
         <li>
           <strong>{{ $quest->title }}</strong><br>
-          Organizer: {{ $quest->organization->name ?? 'N/A' }} @({{ $quest->organization->handle ?? 'N/A' }})<br>
+          Organizer: {{ $quest->organization->name ?? 'N/A' }} ({{ '@' . ($quest->organization->handle ?? 'N/A') }})<br>
           Status: {{ $quest->status }}<br>
           Total Participants: {{ $quest->quest_participants_count }}
         </li>

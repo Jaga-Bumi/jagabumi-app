@@ -445,4 +445,187 @@ class AdminController extends Controller
         return response()->json(['message' => 'Article removed successfully'], 200);
     }
 
+    // Users view
+    public function usersView(Request $request)
+    {
+        $search = $request->query('search', '');
+        $role = $request->query('role', 'all');
+        
+        $query = User::query()
+            ->where('is_removed', false)
+            ->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('handle', 'like', "%{$search}%")
+                  ->orWhere('wallet_address', 'like', "%{$search}%");
+            });
+        }
+
+        if ($role !== 'all') {
+            $query->where('role', $role);
+        }
+
+        $users = $query->paginate(15);
+        $totalUsers = User::where('is_removed', false)->count();
+        $adminCount = User::where('role', 'admin')->where('is_removed', false)->count();
+
+        return view('pages.tests.admin.users', compact('users', 'totalUsers', 'adminCount'));
+    }
+
+    // Organizations view
+    public function organizationsView(Request $request)
+    {
+        $status = $request->query('status', 'all');
+        $search = $request->query('search', '');
+        
+        $query = Organization::with(['creator:id,name,handle'])
+            ->withCount(['quests', 'articles', 'members'])
+            ->orderBy('created_at', 'desc');
+
+        if ($status !== 'all' && in_array(strtoupper($status), ['ACTIVE', 'INACTIVE'])) {
+            $query->where('status', strtoupper($status));
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('handle', 'like', "%{$search}%")
+                  ->orWhere('org_email', 'like', "%{$search}%");
+            });
+        }
+
+        $organizations = $query->paginate(15);
+        $totalOrganizations = Organization::count();
+        $activeCount = Organization::where('status', 'ACTIVE')->count();
+
+        return view('pages.tests.admin.organizations', compact('organizations', 'totalOrganizations', 'activeCount'));
+    }
+
+    // Update organization status
+    public function updateOrganizationStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:ACTIVE,INACTIVE',
+        ]);
+
+        $organization = Organization::find($id);
+
+        if (!$organization) {
+            return redirect()->route('admin.organizations')
+                ->with('error', 'Organization not found.');
+        }
+
+        $organization->update([
+            'status' => $request->input('status'),
+        ]);
+
+        return redirect()->route('admin.organizations')
+            ->with('success', 'Organization status updated: ' . $organization->name);
+    }
+
+    // Articles view
+    public function articlesView(Request $request)
+    {
+        $search = $request->query('search', '');
+        $filter = $request->query('filter', 'all');
+        
+        $query = Article::with(['user:id,name,handle', 'organization:id,name,slug,logo_img'])
+            ->where('is_deleted', false)
+            ->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('body', 'like', "%{$search}%");
+            });
+        }
+
+        if ($filter === 'organization') {
+            $query->whereNotNull('org_id');
+        } elseif ($filter === 'user') {
+            $query->whereNull('org_id');
+        }
+
+        $articles = $query->paginate(15);
+        $totalArticles = Article::where('is_deleted', false)->count();
+        $orgArticles = Article::where('is_deleted', false)->whereNotNull('org_id')->count();
+        $userArticles = Article::where('is_deleted', false)->whereNull('org_id')->count();
+
+        return view('pages.tests.admin.articles', compact('articles', 'totalArticles', 'orgArticles', 'userArticles'));
+    }
+
+    // Delete article
+    public function deleteArticle($id)
+    {
+        $article = Article::find($id);
+
+        if (!$article) {
+            return redirect()->route('admin.articles')
+                ->with('error', 'Article not found.');
+        }
+
+        $article->update(['is_deleted' => true]);
+
+        return redirect()->route('admin.articles')
+            ->with('success', 'Article deleted: ' . $article->title);
+    }
+
+    // Get user detail for modal
+    public function getUserDetail($id)
+    {
+        $user = User::withCount(['articles', 'questParticipants'])
+            ->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'handle' => $user->handle,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'bio' => $user->bio,
+                'wallet_address' => $user->wallet_address,
+                'avatar_url' => $user->avatar_url,
+                'auth_provider' => $user->auth_provider,
+                'role' => $user->role,
+                'articles_count' => $user->articles_count ?? 0,
+                'quest_participations_count' => $user->quest_participants_count ?? 0,
+                'created_at' => $user->created_at->format('M d, Y'),
+                'created_at_human' => $user->created_at->diffForHumans(),
+            ]
+        ]);
+    }
+
+    // Remove user action
+    public function removeUserAction($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect()->route('admin.users')
+                ->with('error', 'User not found.');
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.users')
+                ->with('error', 'Cannot remove admin users.');
+        }
+
+        $user->update(['is_removed' => true]);
+
+        return redirect()->route('admin.users')
+            ->with('success', 'User removed: ' . ($user->name ?? $user->handle ?? 'Unknown'));
+    }
+
 }
