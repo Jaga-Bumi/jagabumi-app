@@ -470,7 +470,7 @@ class AdminController extends Controller
 
         $users = $query->paginate(15);
         $totalUsers = User::where('is_removed', false)->count();
-        $adminCount = User::where('role', 'admin')->where('is_removed', false)->count();
+        $adminCount = User::where('role', 'SUPER_ADMIN')->where('is_removed', false)->count();
 
         return view('pages.tests.admin.users', compact('users', 'totalUsers', 'adminCount'));
     }
@@ -617,7 +617,7 @@ class AdminController extends Controller
                 ->with('error', 'User not found.');
         }
 
-        if ($user->role === 'admin') {
+        if ($user->role === 'SUPER_ADMIN') {
             return redirect()->route('admin.users')
                 ->with('error', 'Cannot remove admin users.');
         }
@@ -648,10 +648,10 @@ class AdminController extends Controller
         }
 
         // Toggle the role
-        $newRole = $user->role === 'admin' ? 'user' : 'admin';
+        $newRole = $user->role === 'SUPER_ADMIN' ? 'USER' : 'SUPER_ADMIN';
         $user->update(['role' => $newRole]);
 
-        $action = $newRole === 'admin' ? 'promoted to admin' : 'demoted to user';
+        $action = $newRole === 'SUPER_ADMIN' ? 'promoted to admin' : 'demoted to user';
         
         return redirect()->route('admin.users')
             ->with('success', ($user->name ?? $user->handle ?? 'User') . ' has been ' . $action . '.');

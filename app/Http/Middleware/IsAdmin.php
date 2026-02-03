@@ -30,8 +30,8 @@ class IsAdmin
 
         $user = Auth::user();
 
-        // Check if user has admin role
-        if ($user->role !== 'admin') {
+        // Check if user has admin role (SUPER_ADMIN)
+        if ($user->role !== 'SUPER_ADMIN') {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,

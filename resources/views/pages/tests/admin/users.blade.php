@@ -75,8 +75,8 @@ $subtitle = 'View and manage all registered users on the platform.';
       <div class="flex items-center gap-2">
         <select name="role" class="px-4 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50">
           <option value="all" {{ request('role') === 'all' || !request('role') ? 'selected' : '' }}>All Roles</option>
-          <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-          <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>User</option>
+          <option value="SUPER_ADMIN" {{ request('role') === 'SUPER_ADMIN' ? 'selected' : '' }}>Admin</option>
+          <option value="USER" {{ request('role') === 'USER' ? 'selected' : '' }}>User</option>
         </select>
         
         <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all">
@@ -172,7 +172,7 @@ $subtitle = 'View and manage all registered users on the platform.';
                   @endif
                 </td>
                 <td class="px-5 py-4">
-                  @if($user->role === 'admin')
+                  @if($user->role === 'SUPER_ADMIN')
                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-highlight/10 text-highlight">Admin</span>
                   @else
                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-secondary/10 text-secondary">User</span>
@@ -205,9 +205,9 @@ $subtitle = 'View and manage all registered users on the platform.';
                       <button 
                         @click="showAdminModal = true"
                         class="p-2 hover:bg-highlight/10 text-highlight rounded-lg transition-colors" 
-                        title="{{ $user->role === 'admin' ? 'Remove Admin' : 'Make Admin' }}"
+                        title="{{ $user->role === 'SUPER_ADMIN' ? 'Remove Admin' : 'Make Admin' }}"
                       >
-                        @if($user->role === 'admin')
+                        @if($user->role === 'SUPER_ADMIN')
                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
@@ -219,7 +219,7 @@ $subtitle = 'View and manage all registered users on the platform.';
                       </button>
                     @endif
                     
-                    @if($user->role !== 'admin')
+                    @if($user->role !== 'SUPER_ADMIN')
                       {{-- Remove User Button --}}
                       <button 
                         @click="showRemoveModal = true"
@@ -276,8 +276,8 @@ $subtitle = 'View and manage all registered users on the platform.';
                               <p class="text-sm text-muted-foreground" x-show="userDetail.handle">@<span x-text="userDetail.handle"></span></p>
                               <span 
                                 class="inline-block mt-1 px-2.5 py-0.5 text-xs font-medium rounded-full"
-                                :class="userDetail.role === 'admin' ? 'bg-highlight/10 text-highlight' : 'bg-secondary/10 text-secondary'"
-                                x-text="userDetail.role === 'admin' ? 'Administrator' : 'User'"
+                                :class="userDetail.role === 'SUPER_ADMIN' ? 'bg-highlight/10 text-highlight' : 'bg-secondary/10 text-secondary'"
+                                x-text="userDetail.role === 'SUPER_ADMIN' ? 'Administrator' : 'User'"
                               ></span>
                             </div>
                           </div>
@@ -357,7 +357,7 @@ $subtitle = 'View and manage all registered users on the platform.';
                   </div>
 
                   {{-- Remove User Modal --}}
-                  @if($user->role !== 'admin')
+                  @if($user->role !== 'SUPER_ADMIN')
                     <div x-show="showRemoveModal" x-cloak 
                       x-transition:enter="transition ease-out duration-200"
                       x-transition:enter-start="opacity-0"
@@ -431,7 +431,7 @@ $subtitle = 'View and manage all registered users on the platform.';
                           class="relative glass-card rounded-2xl p-6 w-full max-w-md shadow-2xl" @click.stop>
                           <div class="flex items-center gap-3 mb-4">
                             <div class="w-12 h-12 rounded-full bg-highlight/10 flex items-center justify-center">
-                              @if($user->role === 'admin')
+                              @if($user->role === 'SUPER_ADMIN')
                                 <svg class="w-6 h-6 text-highlight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -442,12 +442,12 @@ $subtitle = 'View and manage all registered users on the platform.';
                               @endif
                             </div>
                             <div>
-                              <h3 class="text-lg font-bold">{{ $user->role === 'admin' ? 'Remove Admin Role' : 'Grant Admin Role' }}</h3>
-                              <p class="text-sm text-muted-foreground">{{ $user->role === 'admin' ? 'This user will lose admin privileges.' : 'This user will gain admin privileges.' }}</p>
+                              <h3 class="text-lg font-bold">{{ $user->role === 'SUPER_ADMIN' ? 'Remove Admin Role' : 'Grant Admin Role' }}</h3>
+                              <p class="text-sm text-muted-foreground">{{ $user->role === 'SUPER_ADMIN' ? 'This user will lose admin privileges.' : 'This user will gain admin privileges.' }}</p>
                             </div>
                           </div>
                           <p class="text-sm text-muted-foreground mb-4">
-                            @if($user->role === 'admin')
+                            @if($user->role === 'SUPER_ADMIN')
                               Are you sure you want to remove admin privileges from <strong class="text-foreground">{{ $user->name ?? $user->handle ?? 'this user' }}</strong>? 
                               They will no longer be able to access the admin panel.
                             @else
@@ -462,7 +462,7 @@ $subtitle = 'View and manage all registered users on the platform.';
                                 Cancel
                               </button>
                               <button type="submit" class="px-4 py-2 text-sm font-medium rounded-xl bg-highlight text-white hover:opacity-90 transition-all">
-                                {{ $user->role === 'admin' ? 'Remove Admin' : 'Make Admin' }}
+                                {{ $user->role === 'SUPER_ADMIN' ? 'Remove Admin' : 'Make Admin' }}
                               </button>
                             </div>
                           </form>
