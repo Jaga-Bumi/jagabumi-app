@@ -104,8 +104,8 @@ Route::middleware('auth')->group(function () {
   
 });
 
-// Admin routes (TODO: add auth middleware later)
-Route::prefix('admin')->group(function () {
+// Admin routes - requires authentication and admin role
+Route::prefix('admin')->middleware(['auth', 'is.admin'])->group(function () {
   Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
   Route::get('/organization-requests', [AdminController::class, 'organizationRequestsView'])->name('admin.organization-requests');
   Route::post('/organization-requests/{id}/approve', [AdminController::class, 'approveOrganizationRequest'])->name('admin.organization-requests.approve');
@@ -118,6 +118,7 @@ Route::prefix('admin')->group(function () {
   Route::get('/users', [AdminController::class, 'usersView'])->name('admin.users');
   Route::get('/users/{id}', [AdminController::class, 'getUserDetail'])->name('admin.users.detail');
   Route::post('/users/{id}/remove', [AdminController::class, 'removeUserAction'])->name('admin.users.remove');
+  Route::post('/users/{id}/toggle-admin', [AdminController::class, 'toggleAdminRole'])->name('admin.users.toggle-admin');
   
   Route::get('/organizations', [AdminController::class, 'organizationsView'])->name('admin.organizations');
   Route::post('/organizations/{id}/update-status', [AdminController::class, 'updateOrganizationStatus'])->name('admin.organizations.update-status');

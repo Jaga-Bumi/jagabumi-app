@@ -628,4 +628,33 @@ class AdminController extends Controller
             ->with('success', 'User removed: ' . ($user->name ?? $user->handle ?? 'Unknown'));
     }
 
+    /**
+     * Toggle admin role for a user
+     */
+    public function toggleAdminRole(Request $request, $id)
+    {
+        $user = User::find($id);
+        
+        if (!$user) {
+            return redirect()->route('admin.users')
+                ->with('error', 'User not found.');
+        }
+
+        // Prevent self-demotion
+        $currentUser = Auth::user();
+        if ($user->id === $currentUser->id) {
+            return redirect()->route('admin.users')
+                ->with('error', 'You cannot change your own admin status.');
+        }
+
+        // Toggle the role
+        $newRole = $user->role === 'admin' ? 'user' : 'admin';
+        $user->update(['role' => $newRole]);
+
+        $action = $newRole === 'admin' ? 'promoted to admin' : 'demoted to user';
+        
+        return redirect()->route('admin.users')
+            ->with('success', ($user->name ?? $user->handle ?? 'User') . ' has been ' . $action . '.');
+    }
+
 }

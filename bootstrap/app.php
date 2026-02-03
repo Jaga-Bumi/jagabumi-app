@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'org.manager' => \App\Http\Middleware\IsOrgManager::class,
             'has.profile' => \App\Http\Middleware\HasProfile::class,
+            'is.admin' => \App\Http\Middleware\IsAdmin::class,
         ]);
         
         $middleware->redirectGuestsTo('/');
