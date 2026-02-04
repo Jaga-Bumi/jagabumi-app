@@ -234,125 +234,116 @@ $subtitle = 'View and manage all registered users on the platform.';
                   </div>
 
                   {{-- View Details Modal --}}
-                  <div x-show="showDetailModal" x-cloak 
-                    x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="fixed inset-0 z-[100] overflow-y-auto" 
-                    @keydown.escape.window="showDetailModal = false">
-                    <div class="flex min-h-screen items-center justify-center p-4">
-                      <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="showDetailModal = false"></div>
-                      <div x-show="showDetailModal"
-                        x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 scale-95"
-                        x-transition:enter-end="opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-150"
-                        x-transition:leave-start="opacity-100 scale-100"
-                        x-transition:leave-end="opacity-0 scale-95"
-                        class="relative glass-card rounded-2xl p-6 w-full max-w-lg shadow-2xl" @click.stop>
-                      <button @click="showDetailModal = false" class="absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
+                  <div x-show="showDetailModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4" @keydown.escape.window="showDetailModal = false">
+                    <div class="fixed inset-0 bg-black/50" @click="showDetailModal = false"></div>
+                    <div x-show="showDetailModal"
+                      x-transition:enter="transition ease-out duration-150"
+                      x-transition:enter-start="opacity-0 scale-95"
+                      x-transition:enter-end="opacity-100 scale-100"
+                      x-transition:leave="transition ease-in duration-100"
+                      x-transition:leave-start="opacity-100 scale-100"
+                      x-transition:leave-end="opacity-0 scale-95"
+                      class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md z-10" @click.stop>
                       
                       <template x-if="userDetail">
                         <div>
-                          {{-- User Header --}}
-                          <div class="flex items-center gap-4 mb-6">
-                            <template x-if="userDetail.avatar_url">
-                              <img :src="userDetail.avatar_url" :alt="userDetail.name" class="w-16 h-16 rounded-full object-cover" />
-                            </template>
-                            <template x-if="!userDetail.avatar_url">
-                              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-primary font-bold text-xl">
-                                <span x-text="(userDetail.name || 'U').substring(0, 2).toUpperCase()"></span>
+                          {{-- Header --}}
+                          <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="font-semibold">User Details</h3>
+                            <button @click="showDetailModal = false" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+
+                          {{-- Content --}}
+                          <div class="p-4 max-h-[70vh] overflow-y-auto">
+                            {{-- User Header --}}
+                            <div class="flex items-center gap-3 mb-4">
+                              <template x-if="userDetail.avatar_url">
+                                <img :src="userDetail.avatar_url" :alt="userDetail.name" class="w-12 h-12 rounded-full object-cover" />
+                              </template>
+                              <template x-if="!userDetail.avatar_url">
+                                <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">
+                                  <span x-text="(userDetail.name || 'U').substring(0, 1).toUpperCase()"></span>
+                                </div>
+                              </template>
+                              <div class="flex-1 min-w-0">
+                                <p class="font-semibold truncate" x-text="userDetail.name || 'Unnamed'"></p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-show="userDetail.handle">@<span x-text="userDetail.handle"></span></p>
                               </div>
-                            </template>
-                            <div>
-                              <h3 class="text-xl font-bold" x-text="userDetail.name || 'Unnamed'"></h3>
-                              <p class="text-sm text-muted-foreground" x-show="userDetail.handle">@<span x-text="userDetail.handle"></span></p>
                               <span 
-                                class="inline-block mt-1 px-2.5 py-0.5 text-xs font-medium rounded-full"
-                                :class="userDetail.role === 'SUPER_ADMIN' ? 'bg-highlight/10 text-highlight' : 'bg-secondary/10 text-secondary'"
-                                x-text="userDetail.role === 'SUPER_ADMIN' ? 'Administrator' : 'User'"
+                                class="px-2 py-0.5 text-xs rounded shrink-0"
+                                :class="userDetail.role === 'SUPER_ADMIN' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'"
+                                x-text="userDetail.role === 'SUPER_ADMIN' ? 'Admin' : 'User'"
                               ></span>
                             </div>
-                          </div>
 
-                          {{-- User Info --}}
-                          <div class="space-y-4">
-                            {{-- Bio --}}
-                            <div x-show="userDetail.bio">
-                              <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Bio</p>
-                              <p class="text-sm" x-text="userDetail.bio"></p>
-                            </div>
+                            {{-- Info Grid --}}
+                            <div class="space-y-3 text-sm">
+                              <div x-show="userDetail.bio">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Bio</p>
+                                <p x-text="userDetail.bio"></p>
+                              </div>
 
-                            {{-- Contact --}}
-                            <div class="grid grid-cols-2 gap-4">
                               <div x-show="userDetail.email">
-                                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Email</p>
-                                <p class="text-sm" x-text="userDetail.email"></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Email</p>
+                                <p class="truncate" x-text="userDetail.email"></p>
                               </div>
+
                               <div x-show="userDetail.phone">
-                                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Phone</p>
-                                <p class="text-sm" x-text="userDetail.phone"></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Phone</p>
+                                <p x-text="userDetail.phone"></p>
                               </div>
-                            </div>
 
-                            {{-- Wallet --}}
-                            <div x-show="userDetail.wallet_address">
-                              <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Wallet Address</p>
-                              <div class="flex items-center gap-2">
-                                <code class="text-xs bg-muted px-2 py-1 rounded font-mono break-all" x-text="userDetail.wallet_address"></code>
-                                <button 
-                                  @click="navigator.clipboard.writeText(userDetail.wallet_address)"
-                                  class="p-1 hover:bg-muted rounded transition-colors flex-shrink-0"
-                                  title="Copy"
-                                >
-                                  <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                  </svg>
-                                </button>
+                              <div x-show="userDetail.wallet_address">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Wallet Address</p>
+                                <div class="flex items-center gap-2">
+                                  <code class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded font-mono truncate flex-1" x-text="userDetail.wallet_address"></code>
+                                  <button 
+                                    @click="navigator.clipboard.writeText(userDetail.wallet_address)"
+                                    class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
+                                    title="Copy"
+                                  >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                  </button>
+                                </div>
                               </div>
-                            </div>
 
-                            {{-- Auth Provider --}}
-                            <div>
-                              <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Auth Provider</p>
-                              <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-muted" x-text="userDetail.auth_provider || 'Unknown'"></span>
-                            </div>
-
-                            {{-- Stats --}}
-                            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-border">
-                              <div class="text-center p-3 bg-muted/50 rounded-xl">
-                                <p class="text-2xl font-bold" x-text="userDetail.articles_count || 0"></p>
-                                <p class="text-xs text-muted-foreground">Articles</p>
+                              <div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Auth Provider</p>
+                                <span class="inline-block px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 rounded" x-text="userDetail.auth_provider || 'Unknown'"></span>
                               </div>
-                              <div class="text-center p-3 bg-muted/50 rounded-xl">
-                                <p class="text-2xl font-bold" x-text="userDetail.quest_participations_count || 0"></p>
-                                <p class="text-xs text-muted-foreground">Quest Participations</p>
-                              </div>
-                            </div>
 
-                            {{-- Member Since --}}
-                            <div class="pt-4 border-t border-border">
-                              <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Member Since</p>
-                              <p class="text-sm"><span x-text="userDetail.created_at"></span> (<span x-text="userDetail.created_at_human"></span>)</p>
+                              <div class="grid grid-cols-2 gap-2 pt-2">
+                                <div class="text-center p-2 bg-gray-50 dark:bg-gray-700/50 rounded">
+                                  <p class="text-lg font-bold" x-text="userDetail.articles_count || 0"></p>
+                                  <p class="text-xs text-gray-500 dark:text-gray-400">Articles</p>
+                                </div>
+                                <div class="text-center p-2 bg-gray-50 dark:bg-gray-700/50 rounded">
+                                  <p class="text-lg font-bold" x-text="userDetail.quest_participations_count || 0"></p>
+                                  <p class="text-xs text-gray-500 dark:text-gray-400">Quests</p>
+                                </div>
+                              </div>
+
+                              <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Member Since</p>
+                                <p class="text-sm" x-text="userDetail.created_at_human"></p>
+                              </div>
                             </div>
                           </div>
 
-                          {{-- Close Button --}}
-                          <div class="mt-6 flex justify-end">
-                            <button @click="showDetailModal = false" class="px-4 py-2 text-sm font-medium rounded-xl border border-border hover:bg-muted transition-all">
+                          {{-- Footer --}}
+                          <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                            <button @click="showDetailModal = false" class="px-4 py-2 text-sm rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600">
                               Close
                             </button>
                           </div>
                         </div>
                       </template>
-                    </div>
                     </div>
                   </div>
 
