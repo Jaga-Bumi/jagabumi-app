@@ -104,7 +104,7 @@ Route::middleware('auth')->group(function () {
   
 });
 
-// Admin routes - requires authentication and admin role
+// Admin routes
 Route::prefix('admin')->middleware(['auth', 'is.admin'])->group(function () {
   Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
   Route::get('/organization-requests', [AdminController::class, 'organizationRequestsView'])->name('admin.organization-requests');
